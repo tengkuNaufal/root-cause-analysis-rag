@@ -8,6 +8,9 @@
 #   python3 scripts/fault_runner.py run --all
 #   python3 scripts/fault_runner.py --catalog faults/replica.yaml run --all
 #   python3 scripts/fault_runner.py plan --seed 42
+#   python3 scripts/fault_runner.py revert F07          # manual, kalau run berhenti dengan fault masih kepasang
+#
+# Exit code run: 0 semua ok, 1 ada fault tanpa gejala, 2 error, 3 lab gak pulih.
 import argparse
 import csv
 import json
@@ -109,32 +112,63 @@ def wait_for(fn, timeout, interval=1.0):
 
 def run_fault(fault, base_routes, symptom_timeout, recover_timeout):
     rec = {"fault_id": fault["id"], "class": fault["class"], "ground_truth": fault["ground_truth"],
-           "started_at_utc": datetime.now(timezone.utc).isoformat()}
+           "started_at_utc": datetime.now(timezone.utc).isoformat(), "observable": False,
+           "t_symptom_s": None, "symptoms": [], "recovered": False, "t_recover_s": None, "error": None}
     t0 = time.monotonic()
     try:
         apply_steps(fault["inject"]["router"], fault["inject"]["steps"])
-    except RuntimeError:
-        # Mencoba revert dulu kalau inject gagal di tengah, biar lab gak ketinggalan setengah rusak.
-        apply_steps(fault["revert"]["router"], fault["revert"]["steps"])
-        raise
-    rec["t_inject_s"] = round(time.monotonic() - t0, 2)
-
-    seen, t_sym = wait_for(lambda: symptoms(base_routes)[1], symptom_timeout, interval=2)
-    rec["observable"] = bool(seen)
-    rec["t_symptom_s"] = round(t_sym, 1) if seen else None
-    rec["symptoms"] = seen or []
-    if seen:
-        evidence, _ = symptoms(base_routes)
-        rec["evidence"] = {"failures": evidence["failures"], "ping_ok": sum(evidence["ping"].values()),
-                           "ping_total": len(evidence["ping"])}
-
-    t1 = time.monotonic()
-    apply_steps(fault["revert"]["router"], fault["revert"]["steps"])
-    healthy, t_rec = wait_for(lambda: not symptoms(base_routes)[1], recover_timeout, interval=2)
-    rec["recovered"] = bool(healthy)
-    rec["t_recover_s"] = round(time.monotonic() - t1, 1) if healthy else None
+        rec["t_inject_s"] = round(time.monotonic() - t0, 2)
+        seen, t_sym = wait_for(lambda: symptoms(base_routes)[1], symptom_timeout, interval=2)
+        rec["observable"] = bool(seen)
+        rec["t_symptom_s"] = round(t_sym, 1) if seen else None
+        rec["symptoms"] = seen or []
+        if seen:
+            evidence, _ = symptoms(base_routes)
+            rec["evidence"] = {"failures": evidence["failures"], "ping_ok": sum(evidence["ping"].values()),
+                               "ping_total": len(evidence["ping"])}
+    except Exception as e:
+        rec["error"] = f"{type(e).__name__}: {e}"
+    finally:
+        # Selalu revert, termasuk kalau inject atau observasi gagal di tengah.
+        rec.update(revert_and_verify(fault, base_routes, recover_timeout))
     rec["t_total_s"] = round(time.monotonic() - t0, 1)
+    rec["status"] = classify(rec)
     return rec
+
+
+def revert_and_verify(fault, base_routes, recover_timeout):
+    out = {"revert_error": None}
+    t1 = time.monotonic()
+    try:
+        apply_steps(fault["revert"]["router"], fault["revert"]["steps"])
+    except Exception as e:
+        out["revert_error"] = f"{type(e).__name__}: {e}"
+    try:
+        healthy, _ = wait_for(lambda: not symptoms(base_routes)[1], recover_timeout, interval=2)
+    except Exception as e:
+        healthy = False
+        out["revert_error"] = out["revert_error"] or f"{type(e).__name__}: {e}"
+    out["recovered"] = bool(healthy)
+    out["t_recover_s"] = round(time.monotonic() - t1, 1) if healthy else None
+    return out
+
+
+def classify(rec):
+    if not rec["recovered"]:
+        return "not_recovered"
+    if rec["error"]:
+        return "error"
+    return "ok" if rec["observable"] else "not_observable"
+
+
+EXIT = {"ok": 0, "not_observable": 1, "error": 2, "not_recovered": 3}
+
+
+def check_baseline():
+    base = check(LAB)
+    if base["failures"]:
+        sys.exit("Baseline tidak sehat, jalankan check_lab.py dulu:\n  " + "\n  ".join(base["failures"]))
+    return loopback_routes()
 
 
 def cmd_run(args):
@@ -146,26 +180,36 @@ def cmd_run(args):
         if missing:
             sys.exit(f"ID tidak ada di katalog: {', '.join(sorted(missing))}")
 
-    base = check(LAB)
-    if base["failures"]:
-        sys.exit("Baseline tidak sehat, jalankan check_lab.py dulu:\n  " + "\n  ".join(base["failures"]))
-    base_routes = loopback_routes()
-
+    base_routes = check_baseline()
     out_dir = ROOT / args.out
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"{LAB}_faults_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.jsonl"
+    worst = 0
     with path.open("w") as fh:
         for f in faults:
             rec = run_fault(f, base_routes, args.symptom_timeout, args.recover_timeout)
             fh.write(json.dumps(rec) + "\n")
             fh.flush()
-            status = "OK" if rec["observable"] and rec["recovered"] else "PERIKSA"
+            worst = max(worst, EXIT[rec["status"]])
             print(f"{f['id']} {f['class']:<22} gejala {fmt_t(rec['t_symptom_s'])} "
-                  f"({len(rec['symptoms'])} temuan)  pulih {fmt_t(rec['t_recover_s'])}  {status}", flush=True)
-            if not rec["recovered"]:
-                print("Lab tidak pulih, run dihentikan supaya fault berikutnya tidak kecampur.")
+                  f"({len(rec['symptoms'])} temuan)  pulih {fmt_t(rec['t_recover_s'])}  {rec['status']}", flush=True)
+            for key in ("error", "revert_error"):
+                if rec.get(key):
+                    print(f"    {key}: {rec[key]}")
+            if rec["status"] in ("error", "not_recovered"):
+                print("Run dihentikan supaya fault berikutnya tidak kecampur. Cek lab dulu sebelum lanjut.")
                 break
     print(f"Hasil: {path}")
+    sys.exit(worst)
+
+
+def cmd_revert(args):
+    faults = {f["id"]: f for f in load_catalog(args.catalog)}
+    if args.id not in faults:
+        sys.exit(f"ID tidak ada di katalog: {args.id}")
+    f = faults[args.id]
+    apply_steps(f["revert"]["router"], f["revert"]["steps"])
+    print(f"Revert {args.id} sudah dijalankan. Cek lab dengan check_lab.py sebelum lanjut.")
 
 
 def fmt_t(v):
@@ -201,12 +245,14 @@ def main():
     r.add_argument("--symptom-timeout", type=float, default=70)
     r.add_argument("--recover-timeout", type=float, default=120)
     r.add_argument("--out", default="data/runs")
+    v = sub.add_parser("revert")
+    v.add_argument("id")
     p = sub.add_parser("plan")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--trials", type=int, default=5)
     p.add_argument("--out", default="data/benchmark_plan.csv")
     args = ap.parse_args()
-    {"list": cmd_list, "run": cmd_run, "plan": cmd_plan}[args.cmd](args)
+    {"list": cmd_list, "run": cmd_run, "plan": cmd_plan, "revert": cmd_revert}[args.cmd](args)
 
 
 if __name__ == "__main__":
