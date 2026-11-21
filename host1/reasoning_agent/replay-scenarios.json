@@ -1,0 +1,165 @@
+{
+  "scenarios": [
+    {
+      "synthetic": false,
+      "input": {
+        "path": "results/evidence-retrieval/replay-final-20261119/L12-before.json",
+        "sha256": "0cccb08c17d6080e2d3c0381df93bfb6566ee20a85afb1ec26530502ffe46f9d"
+      },
+      "profile": "temporal-bound",
+      "id": "temporal.l12.baseline",
+      "description": "Historical L12 baseline replay; focus link only"
+    },
+    {
+      "synthetic": false,
+      "input": {
+        "path": "results/evidence-retrieval/replay-final-20261119/L12-down.json",
+        "sha256": "31df3ba9bf5f142221873c2f978ebfb4e084f4ed8db633fe97a3475794d69cbd"
+      },
+      "profile": "temporal-bound",
+      "id": "temporal.l12.fault",
+      "description": "Historical L12 fault replay; focus link only"
+    },
+    {
+      "synthetic": false,
+      "input": {
+        "path": "results/evidence-retrieval/replay-final-20261119/L12-restored.json",
+        "sha256": "c26c087a472352b563ccf8f85639adf6a5c6709f7bbb8ab5ce7f69fe1669e934"
+      },
+      "profile": "temporal-bound",
+      "id": "temporal.l12.recovered",
+      "description": "Historical L12 recovered replay; focus link only"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L12-baseline.json",
+        "sha256": "c511f8d008399818125cdb4eaf0575ecb7666acbfef3b16ddbdb6515a95fb2e8"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l12.baseline",
+      "description": "Synthetic L12 MTU baseline; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L12-fault.json",
+        "sha256": "38db9dd9e900a8b7726cb0bf81d7675e4808053cffb869f84afa43d951e3a5e8"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l12.fault",
+      "description": "Synthetic L12 MTU fault; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L12-recovered.json",
+        "sha256": "9b78274ce9d5a786543788238c1b8ef7959d1d8c916986e85a1b67bc27a2cdf8"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l12.recovered",
+      "description": "Synthetic L12 MTU recovered; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L12-partial.json",
+        "sha256": "5cec557367000dab54019eb0a573783f75fe87c96233a5251a712817659a0f5c"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l12.partial",
+      "description": "Synthetic L12 MTU partial; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L12-unknown_mtu.json",
+        "sha256": "c7c4c54630255ac06e5fe736b2e7571fbd7b1aa96485bc20677cc4de2607f7b1"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l12.invalid-mtu",
+      "description": "Synthetic L12 MTU invalid-mtu; routing impact not established"
+    },
+    {
+      "synthetic": false,
+      "input": {
+        "path": "results/evidence-retrieval/replay-final-20261119/L35-before.json",
+        "sha256": "702a8ac5b22f34e45c0f5e40d56f725a79b1dec9eae5d3e726497ac6171edc6e"
+      },
+      "profile": "temporal-bound",
+      "id": "temporal.l35.baseline",
+      "description": "Historical L35 baseline replay; focus link only"
+    },
+    {
+      "synthetic": false,
+      "input": {
+        "path": "results/evidence-retrieval/replay-final-20261119/L35-down.json",
+        "sha256": "3e38e7563227c2bd00a7e0f33613263c20aa0508947e02155e83dcf37a58f539"
+      },
+      "profile": "temporal-bound",
+      "id": "temporal.l35.fault",
+      "description": "Historical L35 fault replay; focus link only"
+    },
+    {
+      "synthetic": false,
+      "input": {
+        "path": "results/evidence-retrieval/replay-final-20261119/L35-restored.json",
+        "sha256": "f51a5285bccf3ac081059cb0b80af9646f8f952ff26bc810d20eb74c01bc813b"
+      },
+      "profile": "temporal-bound",
+      "id": "temporal.l35.recovered",
+      "description": "Historical L35 recovered replay; focus link only"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L35-baseline.json",
+        "sha256": "e87a04f0a11f3c15beaf0351f285e2d18f29a83ff8336a9cc8bce1da6d19aa82"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l35.baseline",
+      "description": "Synthetic L35 MTU baseline; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L35-fault.json",
+        "sha256": "0301e6576fd7a3cc7aae1eefc1ef31b20d398b1b5f2d7885d21a7a4ce8a939fc"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l35.fault",
+      "description": "Synthetic L35 MTU fault; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L35-recovered.json",
+        "sha256": "2b4306127d7626702ff0eabfffa276689dd9a3518ba42d5c6412bc6a3c39e740"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l35.recovered",
+      "description": "Synthetic L35 MTU recovered; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L35-partial.json",
+        "sha256": "37b9eac46973416a8b53673d574ced65b18d7483f8c5fe942cdc246957e63e54"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l35.partial",
+      "description": "Synthetic L35 MTU partial; routing impact not established"
+    },
+    {
+      "synthetic": true,
+      "input": {
+        "path": "results/mtu-replay/20261120T143211Z/L35-unknown_mtu.json",
+        "sha256": "0669814bcec7a02d1516c77c4a573971c0fb7996937447beff1df01059a63f67"
+      },
+      "profile": "mtu-observation",
+      "id": "mtu.l35.invalid-mtu",
+      "description": "Synthetic L35 MTU invalid-mtu; routing impact not established"
+    }
+  ],
+  "schema_version": "replay-catalog-1.0"
+}

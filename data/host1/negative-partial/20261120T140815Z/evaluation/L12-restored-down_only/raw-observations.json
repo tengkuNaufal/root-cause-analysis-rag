@@ -1,0 +1,13 @@
+{
+  "admin_down": [],
+  "carrier_down": [],
+  "peer_states": [
+    "Full/-",
+    "Full/-"
+  ],
+  "physical": "up",
+  "history_complete": false,
+  "events_time_order": [
+    "DOWN"
+  ]
+}

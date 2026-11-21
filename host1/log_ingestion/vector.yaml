@@ -1,0 +1,85 @@
+data_dir: /var/lib/vector
+timezone: UTC
+api:
+  enabled: false
+sources:
+  frr_files:
+    type: file
+    include: [/frr/r1/events.log, /frr/r2/events.log, /frr/r3/events.log, /frr/r4/events.log, /frr/r5/events.log, /frr/r6/events.log]
+    read_from: beginning
+    fingerprint:
+      strategy: checksum
+      lines: 1
+transforms:
+  normalize:
+    type: remap
+    inputs: [frr_files]
+    source: |
+      raw = to_string!(.message)
+      path = to_string!(.file)
+      identity = parse_regex!(path, r'^/frr/(?P<router>r[1-6])/events\.log$')
+      parsed, err = parse_regex(raw, r'^(?P<time>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}\.\d+) (?P<severity>[a-z]+): (?P<daemon>[A-Z0-9_]+): (?P<body>.*)$')
+      event_time = null
+      severity = null
+      daemon = null
+      body = raw
+      status = "unparsed"
+      if err == null {
+        event_time, time_error = parse_timestamp(parsed.time, format: "%Y/%m/%d %H:%M:%S%.f", timezone: "UTC")
+        if time_error == null {
+          severity = parsed.severity
+          daemon = parsed.daemon
+          body = parsed.body
+          status = "parsed"
+        }
+      }
+      . = {
+        "schema_version": 1,
+        "lab": "rca",
+        "router": identity.router,
+        "event_timestamp": event_time,
+        "ingested_at": now(),
+        "source_type": "frr_file",
+        "source_file": path,
+        "daemon": daemon,
+        "severity": severity,
+        "parse_status": status,
+        "message": body,
+        "raw_message": raw
+      }
+sinks:
+  archive:
+    type: file
+    inputs: [normalize]
+    path: /logs/%Y-%m-%d/{{ router }}.jsonl
+    encoding:
+      codec: json
+    buffer:
+      type: disk
+      max_size: 268435488
+      when_full: block
+tests:
+  - name: parsed-frr
+    inputs:
+      - insert_at: normalize
+        type: log
+        log_fields:
+          file: /frr/r3/events.log
+          message: '2026/11/19 09:38:48.239975 informational: BGP: marker'
+    outputs:
+      - extract_from: normalize
+        conditions:
+          - type: vrl
+            source: 'assert_eq!(.router, "r3"); assert_eq!(.daemon, "BGP"); assert_eq!(.severity, "informational"); assert_eq!(.parse_status, "parsed"); assert_eq!(.message, "marker"); assert!(is_timestamp(.event_timestamp))'
+  - name: preserve-unparsed
+    inputs:
+      - insert_at: normalize
+        type: log
+        log_fields:
+          file: /frr/r6/events.log
+          message: 'unexpected format retained'
+    outputs:
+      - extract_from: normalize
+        conditions:
+          - type: vrl
+            source: 'assert_eq!(.router, "r6"); assert_eq!(.parse_status, "unparsed"); assert_eq!(.event_timestamp, null); assert_eq!(.raw_message, "unexpected format retained")'

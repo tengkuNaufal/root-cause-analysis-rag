@@ -72,7 +72,7 @@ foreach ($arg in $Rest) {
         exit 2
     }
 }
-$remote = "wsl -d $Distro -u $LinuxUser --cd $RepoPath -- " + $remoteArgs[$Action]
+$remote = "wsl -d $Distro -u $LinuxUser --cd `"$RepoPath`" -- " + $remoteArgs[$Action]
 if ($Rest) { $remote += ' ' + ($Rest -join ' ') }
 
 $sw = [Diagnostics.Stopwatch]::StartNew()

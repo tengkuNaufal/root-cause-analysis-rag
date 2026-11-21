@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "request_id": "t-6b806f44",
+  "status": "hypothesis",
+  "root_cause_hypothesis": "Healthy at this snapshot; provided history records DOWN followed by UP.",
+  "confidence": null,
+  "claims": [
+    {
+      "statement": "Healthy at this snapshot; provided history records DOWN followed by UP.",
+      "evidence_ids": [
+        "R129",
+        "R366",
+        "R201",
+        "R757",
+        "R393"
+      ]
+    }
+  ],
+  "missing_evidence": [],
+  "proposed_patch": [],
+  "execution_allowed": false
+}

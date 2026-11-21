@@ -1,0 +1,15 @@
+{
+  "model": "llama3.1:8b",
+  "expected_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "endpoint": "http://127.0.0.1:11434",
+  "stream": false,
+  "keep_alive": "5m",
+  "options": {
+    "num_ctx": 2048,
+    "num_gpu": 20,
+    "num_predict": 64,
+    "temperature": 0,
+    "seed": 42
+  },
+  "scope": "Standalone setup profile. Output budget 64 is for smoke only; select evidence and output budget before reasoning integration."
+}

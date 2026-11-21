@@ -1,0 +1,2 @@
+# Decompression helper only; install to runtime/ollama/python-deps, not retriever venv.
+zstandard==0.25.0

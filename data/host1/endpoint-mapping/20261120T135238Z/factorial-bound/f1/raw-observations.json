@@ -1,0 +1,18 @@
+{
+  "admin_down": [
+    "r1:eth1"
+  ],
+  "carrier_down": [
+    "r1:eth1",
+    "r2:eth1"
+  ],
+  "peer_states": [
+    "absent",
+    "absent"
+  ],
+  "physical": "down",
+  "history_complete": true,
+  "events_time_order": [
+    "DOWN"
+  ]
+}

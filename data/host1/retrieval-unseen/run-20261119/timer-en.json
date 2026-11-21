@@ -1,0 +1,266 @@
+{
+  "case": {
+    "case": "timer-en",
+    "answerable": true,
+    "reference_anchor_ranks": [
+      1
+    ],
+    "gate_expected": "context_ready",
+    "gate_actual": "context_ready",
+    "gate_matches": true,
+    "accepted": 4,
+    "provenance_verified": 5
+  },
+  "query": "For one BGP peer, how are the interval between keepalive messages and the timeout before declaring the peer dead specified?",
+  "intent": "network_context",
+  "anchor_pattern": "neighbor\\s+PEER\\s+timers\\s+\\(0-65535\\)",
+  "input_evidence": {
+    "path": "results/evidence-retrieval/replay-final-20261119/L35-down.json",
+    "sha256": "3e38e7563227c2bd00a7e0f33613263c20aa0508947e02155e83dcf37a58f539"
+  },
+  "retrieval": {
+    "query": "For one BGP peer, how are the interval between keepalive messages and the timeout before declaring the peer dead specified?",
+    "platform_filter": "frr",
+    "top_k": 5,
+    "mode": "hybrid",
+    "hits": [
+      {
+        "rank": 1,
+        "id": "fce939df869ce64ba15a993f3b3dc88d97b9fb31bee35a9cf39a698bc9f6d041",
+        "text": "frr 10.7.1 frr-bgp.rst\n\n   Setup the minimum route advertisement interval(MRAI) for the\n   peer in question. This number is between 0 and 600 seconds,\n   with the default advertisement interval being 0.\n\n.. note::\n\n   If the conditional advertisement feature is enabled, the advertisement-interval\n   value (MRAI) will be ignored during the conditional advertisement phase.\n\n   This is because the conditional advertisement feature has its own timers to\n   trigger the advertisement/scanning of desired routes.\n\n.. clicmd:: neighbor PEER timers (0-65535) (0-65535)\n\n   Set keepalive and hold timers for a neighbor. The first value is keepalive\n   and the second is hold time.\n\n.. clicmd:: neighbor PEER timers connect (1-65535)\n\n   Set connect timer for a neighbor. The connect timer controls how long BGP\n   waits between connection attempts to a neighbor.\n\n.. clicmd:: neighbor PEER timers delayopen (1-240)\n\n   This command allows the user enable the",
+        "metadata": {
+          "document_version": "10.7.1",
+          "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "id": "frr-bgp.rst",
+          "format": "rst",
+          "content_sha256": "57ac2fbe3a50d1434b1b6f4afc6a6238fc7142c9aa8d1205e19f218b1c8e33fe",
+          "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "content_kind": "cli_documentation",
+          "sha256": "1135a724810b42e31ba0915e09b9d3cafabe5b6e1fb64833fe935697387fa08a",
+          "line_start": 2367,
+          "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2367-L2392",
+          "model_revision": "",
+          "platform": "frr",
+          "repository_path": "doc/user/bgp.rst",
+          "fetched_at": "2026-11-19T10:13:05.028001+00:00",
+          "repository": "FRRouting/frr",
+          "line_end": 2392,
+          "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+          "filename": "frr-bgp.rst"
+        },
+        "cosine_distance": 0.3468218445777893,
+        "dense_rank": 2,
+        "lexical_rank": 2,
+        "bm25": 22.794503957203624,
+        "rrf_score": 0.016129032258064516
+      },
+      {
+        "rank": 2,
+        "id": "b94618abf51dabe63fc7f4bed5423fd3bfacd77830c6cd7a64542500d4c14d84",
+        "text": "frr 10.7.1 frr-bgp.rst\n.. clicmd:: bgp tcp-keepalive (1-65535) (1-65535) (1-30)\n\n   This command allows user to configure TCP keepalive with new BGP peers.\n   Each parameter respectively stands for TCP keepalive idle timer (seconds),\n   interval (seconds), and maximum probes. By default, TCP keepalive is\n   disabled.\n\nDisplaying Information about Peers\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. clicmd:: show bgp <afi> <safi> neighbors WORD bestpath-routes [detail] [json] [wide]\n\n   For the given neighbor, WORD, that is specified list the routes selected\n   by BGP as having the best path.\n\n   If ``detail`` option is specified, the detailed version of all routes",
+        "metadata": {
+          "platform": "frr",
+          "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+          "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+          "model_revision": "",
+          "filename": "frr-bgp.rst",
+          "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "format": "rst",
+          "line_end": 2419,
+          "repository": "FRRouting/frr",
+          "repository_path": "doc/user/bgp.rst",
+          "document_version": "10.7.1",
+          "line_start": 2404,
+          "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "content_kind": "cli_documentation",
+          "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2404-L2419",
+          "sha256": "1135a724810b42e31ba0915e09b9d3cafabe5b6e1fb64833fe935697387fa08a",
+          "content_sha256": "8dea7d068cc5425a5c17f5e453c6c01a1d6be7ff4fd9b7db7c8e08f4e5bc0545",
+          "fetched_at": "2026-11-19T10:13:05.028001+00:00",
+          "id": "frr-bgp.rst"
+        },
+        "cosine_distance": 0.3260420560836792,
+        "dense_rank": 1,
+        "lexical_rank": 4,
+        "bm25": 16.48797053098522,
+        "rrf_score": 0.015855532786885243
+      },
+      {
+        "rank": 3,
+        "id": "67f605831af898f040d61eceea0b6bfbb1363caf8c53c9da8fe2db6938f85a84",
+        "text": "frr 10.7.1 frr-bgp.rst\n.. clicmd:: neighbor PEER timers delayopen (1-240)\n\n   This command allows the user enable the\n   `RFC 4271 <https://tools.ietf.org/html/rfc4271/>` DelayOpenTimer with the\n   specified interval or disable it with the negating command for the peer. By\n   default, the DelayOpenTimer is disabled. The timer interval may be set to a\n   duration of 1 to 240 seconds.\n\n.. clicmd:: bgp minimum-holdtime (1-65535)\n\n   This command allows user to prevent session establishment with BGP peers\n   with lower holdtime less than configured minimum holdtime.\n   When this command is not set, minimum holdtime does not work.\n\n.. clicmd:: bgp tcp-keepalive (1-65535) (1-65535) (1-30)\n\n   This command allows user to configure TCP keepalive with new BGP peers.",
+        "metadata": {
+          "platform": "frr",
+          "content_kind": "cli_documentation",
+          "format": "rst",
+          "fetched_at": "2026-11-19T10:13:05.028001+00:00",
+          "line_start": 2390,
+          "id": "frr-bgp.rst",
+          "model_revision": "",
+          "content_sha256": "cce2cc086458afe808e8b89a3cd29d5ba7d414061385dc0dad95d175dff04974",
+          "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+          "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2390-L2406",
+          "sha256": "1135a724810b42e31ba0915e09b9d3cafabe5b6e1fb64833fe935697387fa08a",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "line_end": 2406,
+          "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+          "filename": "frr-bgp.rst",
+          "repository_path": "doc/user/bgp.rst",
+          "document_version": "10.7.1",
+          "repository": "FRRouting/frr"
+        },
+        "cosine_distance": 0.38322198390960693,
+        "dense_rank": 3,
+        "lexical_rank": 5,
+        "bm25": 16.232964994259827,
+        "rrf_score": 0.01553113553113553
+      },
+      {
+        "rank": 4,
+        "id": "7d3634ae3db11016a862a718a05422208ee09885922a71fb1e14d54519a5325f",
+        "text": "frr 10.7.1 frr-bgp.rst\nafter restart.\n\nRestarting Router : The usage of route election deferral timer is specified\nin https://tools.ietf.org/html/rfc4724#section-4.1\n\nOnce the session between the Restarting Speaker and the Receiving Speaker is\nre-established, the Restarting Speaker will receive and process BGP messages\nfrom its peers.\n\nHowever, it MUST defer route selection for an address family until it either.\n\n1. Receives the End-of-RIB marker from all its peers (excluding the ones with\n   the \"Restart State\" bit set in the received capability and excluding the ones\n   that do not advertise the graceful restart capability).\n2. The Selection_Deferral_Timer timeout.\n\n.. clicmd:: bgp graceful-restart select-defer-time (0-3600)\n\n   This is command, will set deferral time to value specified.\n\n\n.. clicmd:: bgp graceful-restart rib-stale-time (1-3600)\n",
+        "metadata": {
+          "model_revision": "",
+          "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L1036-L1058",
+          "fetched_at": "2026-11-19T10:13:05.028001+00:00",
+          "line_start": 1036,
+          "content_sha256": "b461ee6e57093b95ece37c5b98f0ff060381a3e4d9abbfa63dd43d2db7c99821",
+          "line_end": 1058,
+          "platform": "frr",
+          "repository": "FRRouting/frr",
+          "document_version": "10.7.1",
+          "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+          "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+          "sha256": "1135a724810b42e31ba0915e09b9d3cafabe5b6e1fb64833fe935697387fa08a",
+          "id": "frr-bgp.rst",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "repository_path": "doc/user/bgp.rst",
+          "format": "rst",
+          "filename": "frr-bgp.rst",
+          "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst",
+          "content_kind": "cli_documentation"
+        },
+        "cosine_distance": 0.4260174036026001,
+        "dense_rank": 8,
+        "lexical_rank": 8,
+        "bm25": 15.506629398707897,
+        "rrf_score": 0.014705882352941176
+      },
+      {
+        "rank": 5,
+        "id": "1b791c2ca8dc23d3be9210fe24eddb707a56a9e5705ac912983e7fb4b289c465",
+        "text": "frr 10.7.1 frr-ospfd.rst\n\n.. clicmd:: ip ospf dead-interval (1-65535)\n\n.. clicmd:: ip ospf dead-interval minimal hello-multiplier (2-20)\n\n\n   Set number of seconds for RouterDeadInterval timer value used for Wait Timer\n   and Inactivity Timer. This value must be the same for all routers attached\n   to a common network. The default value is 40 seconds.\n\n   If 'minimal' is specified instead, then the dead-interval is set to 1 second\n   and one must specify a hello-multiplier. The hello-multiplier specifies how\n   many Hellos to send per second, from 2 (every 500ms) to 20 (every 50ms).\n   Thus one can have 1s convergence time for OSPF. If this form is specified,\n   then the hello-interval advertised in Hello packets is set to 0 and the\n   hello-interval on received Hello packets is not checked, thus the\n   hello-multiplier need NOT be the same across multiple routers on a common",
+        "metadata": {
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "platform": "frr",
+          "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+          "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+          "line_end": 729,
+          "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+          "format": "rst",
+          "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+          "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+          "content_kind": "cli_documentation",
+          "id": "frr-ospfd.rst",
+          "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+          "document_version": "10.7.1",
+          "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L713-L729",
+          "content_sha256": "bfcfb417fbe5b47d165f24a4a79626d67a1fe10aa3d8364f02d04e7dc8a9e222",
+          "filename": "frr-ospfd.rst",
+          "model_revision": "",
+          "repository_path": "doc/user/ospfd.rst",
+          "repository": "FRRouting/frr",
+          "line_start": 713
+        },
+        "cosine_distance": 0.5511606335639954,
+        "dense_rank": 40,
+        "lexical_rank": 1,
+        "bm25": 23.537326923328234,
+        "rrf_score": 0.014475409836065573
+      }
+    ],
+    "seconds": 0.24567638799999258,
+    "semantics": "Ranked documentation evidence, not diagnosis/confidence or validated CLI patch"
+  },
+  "gate": {
+    "gate_version": "1.0",
+    "intent": "network_context",
+    "mode": "replay",
+    "decision": "context_ready",
+    "reasons": [],
+    "hit_checks": [
+      {
+        "group": 0,
+        "id": "fce939df869ce64ba15a993f3b3dc88d97b9fb31bee35a9cf39a698bc9f6d041",
+        "accepted": true,
+        "rule": "requires_frr_bgp_and_two_topic_terms;matched=2",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "b94618abf51dabe63fc7f4bed5423fd3bfacd77830c6cd7a64542500d4c14d84",
+        "accepted": true,
+        "rule": "requires_frr_bgp_and_two_topic_terms;matched=2",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "67f605831af898f040d61eceea0b6bfbb1363caf8c53c9da8fe2db6938f85a84",
+        "accepted": true,
+        "rule": "requires_frr_bgp_and_two_topic_terms;matched=3",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "7d3634ae3db11016a862a718a05422208ee09885922a71fb1e14d54519a5325f",
+        "accepted": true,
+        "rule": "requires_frr_bgp_and_two_topic_terms;matched=2",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "1b791c2ca8dc23d3be9210fe24eddb707a56a9e5705ac912983e7fb4b289c465",
+        "accepted": false,
+        "rule": "requires_frr_bgp_and_two_topic_terms;matched=0",
+        "provenance": true
+      }
+    ],
+    "accepted_citations": [
+      {
+        "id": "fce939df869ce64ba15a993f3b3dc88d97b9fb31bee35a9cf39a698bc9f6d041",
+        "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2367-L2392",
+        "group": 0
+      },
+      {
+        "id": "b94618abf51dabe63fc7f4bed5423fd3bfacd77830c6cd7a64542500d4c14d84",
+        "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2404-L2419",
+        "group": 0
+      },
+      {
+        "id": "67f605831af898f040d61eceea0b6bfbb1363caf8c53c9da8fe2db6938f85a84",
+        "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2390-L2406",
+        "group": 0
+      },
+      {
+        "id": "7d3634ae3db11016a862a718a05422208ee09885922a71fb1e14d54519a5325f",
+        "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L1036-L1058",
+        "group": 0
+      }
+    ],
+    "diagnosis_allowed": false,
+    "execution_allowed": false,
+    "semantics": "Rule-based topical context eligibility only; not semantic entailment, confidence or root cause",
+    "freshness": {
+      "age_seconds": 18648.480788,
+      "enforced": false,
+      "max_age_seconds": 120
+    },
+    "next_action": "Review eligible context; diagnosis still requires reasoning and validation"
+  }
+}

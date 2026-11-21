@@ -1,0 +1,38 @@
+{
+  "documentation": {
+    "ref": "R359",
+    "text": ".. clicmd:: bgp fast-external-failover This command causes bgp to take down ebgp peers immediately when a link flaps. `bgp fast-external-failover` is the default and will not be displayed as part of a `show run`. The no form of the command turns off this ability."
+  },
+  "history": {
+    "complete": true,
+    "events": []
+  },
+  "current": {
+    "interfaces": [
+      {
+        "ref": "R129",
+        "node": "r5:eth1",
+        "admin_up": true,
+        "carrier_up": true,
+        "peer_state": "Established"
+      },
+      {
+        "ref": "R366",
+        "node": "r3:eth4",
+        "admin_up": true,
+        "carrier_up": true,
+        "peer_state": "Established"
+      }
+    ],
+    "graph": {
+      "ref": "R201",
+      "physical": "up"
+    },
+    "protocol": "bgp"
+  },
+  "required_current_refs": [
+    "R129",
+    "R366",
+    "R201"
+  ]
+}

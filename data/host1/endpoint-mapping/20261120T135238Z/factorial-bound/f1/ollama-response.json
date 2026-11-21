@@ -1,0 +1,14 @@
+{
+  "model": "llama3.1:8b",
+  "created_at": "2026-11-20T14:01:56.47158189Z",
+  "response": "{\n  \"phase\": \"fault\"\n}",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 997253540,
+  "load_duration": 16878805,
+  "prompt_eval_count": 266,
+  "prompt_eval_cached_count": 219,
+  "prompt_eval_duration": 382332000,
+  "eval_count": 10,
+  "eval_duration": 579887000
+}

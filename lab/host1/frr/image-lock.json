@@ -1,0 +1,12 @@
+{
+  "selected_on": "2026-11-19",
+  "repository": "quay.io/frrouting/frr",
+  "tag": "containerlab-10.7.1",
+  "digest": "sha256:f7d98e4faa24333c1fdb638f72678111de07a7aef90566132655dbadceca86c7",
+  "platform_verified": "linux/amd64",
+  "binary_version_observed": "10.7.1_git",
+  "containerlab_version_verified": "0.82.0",
+  "kind": "frr",
+  "validation": "syntax and runtime baseline passed; L12/internal and L35/eBGP link failover and restoration passed; final 5 OSPF adjacencies, 9 BGP sessions, 30/30 service ping directions; full redeploy reset not tested",
+  "evidence": "../../../data/host1/frr-config/"
+}

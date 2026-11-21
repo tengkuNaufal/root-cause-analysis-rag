@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "request_id": "t-6b6a50b4",
+  "lab": "rca",
+  "question": "Classify current state and phase within the supplied observation window.",
+  "mode": "replay",
+  "snapshot_completed_at": "2026-11-19T10:06:20.650266+00:00",
+  "gate": {
+    "version": "temporal-1.0/link-rca-1.0",
+    "decision": "context_ready",
+    "answer_supported": true,
+    "reasons": []
+  },
+  "evidence": [
+    {
+      "id": "R247",
+      "kind": "documentation",
+      "source_path": "knowledge/supplemental-mtu/rfc2328.txt",
+      "sha256": "981690e297fbba9e8ef655802552b5529cb17f1ffe790ad2d55706cc522ff50c",
+      "locator": "https://www.rfc-editor.org/rfc/rfc2328.txt;local_lines=3739:3747",
+      "content": "            Event:  InterfaceDown\n\n        New state:  Down\n\n           Action:  All interface variables are reset, and interface\n                    timers disabled.  Also, all neighbor connections\n                    associated with the interface are destroyed.  This\n                    is done by generating the event KillNbr on all\n                    associated neighbors (see Section 10.2)."
+    },
+    {
+      "id": "R539",
+      "kind": "telemetry",
+      "source_path": "results/integration-faults/20261119T100613Z/L12/before/snapshot.json",
+      "sha256": "2093af5bba7f0cd9c1da84358e480ca8a26eeb4865eccacb41b2c566770f2e2e",
+      "locator": "/routers/r1/sources/interfaces/data/3",
+      "content": "{\"router\":\"r1\",\"name\":\"eth1\",\"admin_up\":true,\"lower_up\":true,\"mtu\":1500}"
+    },
+    {
+      "id": "R616",
+      "kind": "telemetry",
+      "source_path": "results/integration-faults/20261119T100613Z/L12/before/snapshot.json",
+      "sha256": "2093af5bba7f0cd9c1da84358e480ca8a26eeb4865eccacb41b2c566770f2e2e",
+      "locator": "/routers/r2/sources/interfaces/data/4",
+      "content": "{\"router\":\"r2\",\"name\":\"eth1\",\"admin_up\":true,\"lower_up\":true,\"mtu\":1500}"
+    },
+    {
+      "id": "R505",
+      "kind": "graph",
+      "source_path": "results/integration-faults/20261119T100613Z/graphs/L12/before/graph.json",
+      "sha256": "c2f6236694fd8c15139972d5031b3c0448e0b6c92e1008206533139a1206f1f6",
+      "locator": "/edges",
+      "content": "{\"physical\":[{\"kind\":\"physical\",\"link_id\":\"L12\",\"state\":\"up\",\"expected\":{\"id\":\"L12\",\"endpoints\":[{\"router\":\"r1\",\"interface\":\"eth1\",\"ipv4\":\"10.0.12.1/30\"},{\"router\":\"r2\",\"interface\":\"eth1\",\"ipv4\":\"10.0.12.2/30\"}],\"protocol\":\"ospf\",\"ospf_area\":\"0.0.0.0\",\"ospf_cost\":10,\"mtu\":1500},\"observed_mtu\":[1500,1500],\"mtu_matches_expected\":true,\"evidence\":[{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L12/before/snapshot.json\",\"pointer\":\"/routers/r1/sources/interfaces\",\"raw_file\":\"raw/r1-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:20.018705+00:00\",\"completed_at\":\"2026-11-19T10:06:20.138105+00:00\"},{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L12/before/snapshot.json\",\"pointer\":\"/routers/r2/sources/interfaces\",\"raw_file\":\"raw/r2-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:20.018940+00:00\",\"completed_at\":\"2026-11-19T10:06:20.138890+00:00\"}],\"source\":\"interface:r1:eth1\",\"target\":\"interface:r2:eth1\",\"key\":\"L12\"},{\"kind\":\"physical\",\"link_id\":\"L12\",\"state\":\"up\",\"expected\":{\"id\":\"L12\",\"endpoints\":[{\"router\":\"r1\",\"interface\":\"eth1\",\"ipv4\":\"10.0.12.1/30\"},{\"router\":\"r2\",\"interface\":\"eth1\",\"ipv4\":\"10.0.12.2/30\"}],\"protocol\":\"ospf\",\"ospf_area\":\"0.0.0.0\",\"ospf_cost\":10,\"mtu\":1500},\"observed_mtu\":[1500,1500],\"mtu_matches_expected\":true,\"evidence\":[{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L12/before/snapshot.json\",\"pointer\":\"/routers/r1/sources/interfaces\",\"raw_file\":\"raw/r1-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:20.018705+00:00\",\"completed_at\":\"2026-11-19T10:06:20.138105+00:00\"},{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L12/before/snapshot.json\",\"pointer\":\"/routers/r2/sources/interfaces\",\"raw_file\":\"raw/r2-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:20.018940+00:00\",\"completed_at\":\"2026-11-19T10:06:20.138890+00:00\"}],\"source\":\"interface:r2:eth1\",\"target\":\"interface:r1:eth1\",\"key\":\"L12\"}],\"sessions\":[{\"kind\":\"ospf\",\"state\":\"Full/-\",\"healthy\":true,\"peer_address\":\"10.0.12.2\",\"link_id\":\"L12\",\"observed\":[{\"router_id\":\"10.255.0.2\",\"state\":\"Full/-\",\"converged\":\"Full\",\"interface\":\"eth1:10.0.12.1\",\"peer_address\":\"10.0.12.2\",\"uptime_ms\":1606696,\"dead_timer_remaining_ms\":3424}],\"expected\":true,\"evidence\":{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L12/before/snapshot.json\",\"pointer\":\"/routers/r1/sources/ospf\",\"raw_file\":\"raw/r1-ospf.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:20.141876+00:00\",\"completed_at\":\"2026-11-19T10:06:20.266633+00:00\"},\"source\":\"router:r1\",\"target\":\"router:r2\",\"key\":\"ospf:L12\"},{\"kind\":\"ospf\",\"state\":\"Full/-\",\"healthy\":true,\"peer_address\":\"10.0.12.1\",\"link_id\":\"L12\",\"observed\":[{\"router_id\":\"10.255.0.1\",\"state\":\"Full/-\",\"converged\":\"Full\",\"interface\":\"eth1:10.0.12.2\",\"peer_address\":\"10.0.12.1\",\"uptime_ms\":1606698,\"dead_timer_remaining_ms\":3423}],\"expected\":true,\"evidence\":{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L12/before/snapshot.json\",\"pointer\":\"/routers/r2/sources/ospf\",\"raw_file\":\"raw/r2-ospf.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:20.145106+00:00\",\"completed_at\":\"2026-11-19T10:06:20.267318+00:00\"},\"source\":\"router:r2\",\"target\":\"router:r1\",\"key\":\"ospf:L12\"}]}"
+    }
+  ],
+  "execution_allowed": false
+}

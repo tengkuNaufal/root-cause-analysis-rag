@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "request_id": "t-6b6a50b4",
+  "status": "hypothesis",
+  "root_cause_hypothesis": "Healthy at this snapshot; no DOWN/UP transition in the complete provided history.",
+  "confidence": null,
+  "claims": [
+    {
+      "statement": "Healthy at this snapshot; no DOWN/UP transition in the complete provided history.",
+      "evidence_ids": [
+        "R616",
+        "R539",
+        "R505"
+      ]
+    }
+  ],
+  "missing_evidence": [],
+  "proposed_patch": [],
+  "execution_allowed": false
+}

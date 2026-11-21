@@ -1,0 +1,89 @@
+{
+  "model": "llama3.1:8b",
+  "prompt": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nExtract facts only. admin_down lists nodes with admin_up=false; carrier_down lists nodes with carrier_up=false. peer_states copies the two peer_state strings in interface list order. Copy graph physical and history complete. events_time_order lists event values sorted by timestamp, not list order. Use empty lists when none. Do not classify phase.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{\"current\":{\"interfaces\":[{\"ref\":\"T1\",\"node\":\"r1:eth1\",\"admin_up\":false,\"carrier_up\":false,\"peer_state\":\"absent\"},{\"ref\":\"T2\",\"node\":\"r2:eth1\",\"admin_up\":true,\"carrier_up\":false,\"peer_state\":\"absent\"}],\"graph\":{\"ref\":\"G1\",\"physical\":\"down\"},\"protocol\":\"ospf\"},\"history\":{\"complete\":true,\"events\":[{\"ref\":\"L1\",\"time\":\"2026-11-19T10:06:20.832830Z\",\"event\":\"DOWN\"}]}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+  "raw": true,
+  "stream": false,
+  "format": {
+    "additionalProperties": false,
+    "properties": {
+      "admin_down": {
+        "items": {
+          "type": "string",
+          "enum": [
+            "r1:eth1",
+            "r2:eth1"
+          ]
+        },
+        "maxItems": 2,
+        "title": "Admin Down",
+        "type": "array"
+      },
+      "carrier_down": {
+        "items": {
+          "type": "string",
+          "enum": [
+            "r1:eth1",
+            "r2:eth1"
+          ]
+        },
+        "maxItems": 2,
+        "title": "Carrier Down",
+        "type": "array"
+      },
+      "peer_states": {
+        "items": {
+          "type": "string",
+          "enum": [
+            "absent"
+          ]
+        },
+        "maxItems": 2,
+        "minItems": 2,
+        "title": "Peer States",
+        "type": "array"
+      },
+      "physical": {
+        "enum": [
+          "up",
+          "down"
+        ],
+        "title": "Physical",
+        "type": "string"
+      },
+      "history_complete": {
+        "title": "History Complete",
+        "type": "boolean"
+      },
+      "events_time_order": {
+        "items": {
+          "enum": [
+            "DOWN",
+            "UP"
+          ],
+          "type": "string"
+        },
+        "maxItems": 2,
+        "title": "Events Time Order",
+        "type": "array"
+      }
+    },
+    "required": [
+      "admin_down",
+      "carrier_down",
+      "peer_states",
+      "physical",
+      "history_complete",
+      "events_time_order"
+    ],
+    "title": "ObservationDraft",
+    "type": "object"
+  },
+  "keep_alive": "5m",
+  "options": {
+    "num_ctx": 2048,
+    "num_gpu": 20,
+    "num_predict": 256,
+    "temperature": 0,
+    "seed": 42
+  }
+}

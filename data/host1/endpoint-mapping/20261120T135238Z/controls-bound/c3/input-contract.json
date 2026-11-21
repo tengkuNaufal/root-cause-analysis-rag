@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "request_id": "t-543bd07b",
+  "lab": "rca",
+  "question": "Classify current state and phase within the supplied observation window.",
+  "mode": "replay",
+  "snapshot_completed_at": "2026-11-19T10:06:32.121122+00:00",
+  "gate": {
+    "version": "temporal-1.0/link-rca-1.0",
+    "decision": "context_ready",
+    "answer_supported": true,
+    "reasons": []
+  },
+  "evidence": [
+    {
+      "id": "R359",
+      "kind": "documentation",
+      "source_path": "knowledge/sources/frr-bgp.rst",
+      "sha256": "1135a724810b42e31ba0915e09b9d3cafabe5b6e1fb64833fe935697387fa08a",
+      "locator": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2244-L2249",
+      "content": ".. clicmd:: bgp fast-external-failover\n\n   This command causes bgp to take down ebgp peers immediately\n   when a link flaps.  `bgp fast-external-failover` is the default\n   and will not be displayed as part of a `show run`.  The no form\n   of the command turns off this ability."
+    },
+    {
+      "id": "R366",
+      "kind": "telemetry",
+      "source_path": "results/integration-faults/20261119T100613Z/L35/before/snapshot.json",
+      "sha256": "0d531c83a850da6978df7574365108d051e3c47b9c7f7bd5c528fa6416affddf",
+      "locator": "/routers/r3/sources/interfaces/data/5",
+      "content": "{\"router\":\"r3\",\"name\":\"eth4\",\"admin_up\":true,\"lower_up\":true,\"mtu\":1500}"
+    },
+    {
+      "id": "R129",
+      "kind": "telemetry",
+      "source_path": "results/integration-faults/20261119T100613Z/L35/before/snapshot.json",
+      "sha256": "0d531c83a850da6978df7574365108d051e3c47b9c7f7bd5c528fa6416affddf",
+      "locator": "/routers/r5/sources/interfaces/data/3",
+      "content": "{\"router\":\"r5\",\"name\":\"eth1\",\"admin_up\":true,\"lower_up\":true,\"mtu\":1500}"
+    },
+    {
+      "id": "R201",
+      "kind": "graph",
+      "source_path": "results/integration-faults/20261119T100613Z/graphs/L35/before/graph.json",
+      "sha256": "f34c640ca000c421e308826a94a9f0cbc7c02826e1c8ee45614c604fb6d2ebb4",
+      "locator": "/edges",
+      "content": "{\"physical\":[{\"kind\":\"physical\",\"link_id\":\"L35\",\"state\":\"up\",\"expected\":{\"id\":\"L35\",\"endpoints\":[{\"router\":\"r3\",\"interface\":\"eth4\",\"ipv4\":\"10.0.35.1/30\"},{\"router\":\"r5\",\"interface\":\"eth1\",\"ipv4\":\"10.0.35.2/30\"}],\"protocol\":\"ebgp\",\"ospf_area\":null,\"ospf_cost\":null,\"mtu\":1500},\"observed_mtu\":[1500,1500],\"mtu_matches_expected\":true,\"evidence\":[{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/before/snapshot.json\",\"pointer\":\"/routers/r3/sources/interfaces\",\"raw_file\":\"raw/r3-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:31.447926+00:00\",\"completed_at\":\"2026-11-19T10:06:31.572062+00:00\"},{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/before/snapshot.json\",\"pointer\":\"/routers/r5/sources/interfaces\",\"raw_file\":\"raw/r5-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:31.448942+00:00\",\"completed_at\":\"2026-11-19T10:06:31.571730+00:00\"}],\"source\":\"interface:r3:eth4\",\"target\":\"interface:r5:eth1\",\"key\":\"L35\"},{\"kind\":\"physical\",\"link_id\":\"L35\",\"state\":\"up\",\"expected\":{\"id\":\"L35\",\"endpoints\":[{\"router\":\"r3\",\"interface\":\"eth4\",\"ipv4\":\"10.0.35.1/30\"},{\"router\":\"r5\",\"interface\":\"eth1\",\"ipv4\":\"10.0.35.2/30\"}],\"protocol\":\"ebgp\",\"ospf_area\":null,\"ospf_cost\":null,\"mtu\":1500},\"observed_mtu\":[1500,1500],\"mtu_matches_expected\":true,\"evidence\":[{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/before/snapshot.json\",\"pointer\":\"/routers/r3/sources/interfaces\",\"raw_file\":\"raw/r3-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:31.447926+00:00\",\"completed_at\":\"2026-11-19T10:06:31.572062+00:00\"},{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/before/snapshot.json\",\"pointer\":\"/routers/r5/sources/interfaces\",\"raw_file\":\"raw/r5-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:31.448942+00:00\",\"completed_at\":\"2026-11-19T10:06:31.571730+00:00\"}],\"source\":\"interface:r5:eth1\",\"target\":\"interface:r3:eth4\",\"key\":\"L35\"}],\"sessions\":[{\"kind\":\"bgp\",\"state\":\"Established\",\"healthy\":true,\"peer_address\":\"10.0.35.2\",\"link_id\":\"L35\",\"observed\":[{\"address\":\"10.0.35.2\",\"remote_as\":65002,\"state\":\"Established\",\"peer_state\":\"OK\",\"uptime_ms\":1617000,\"prefixes_received\":2,\"prefixes_sent\":4,\"messages_received\":546,\"messages_sent\":550,\"connections_established\":1,\"connections_dropped\":0}],\"expected\":true,\"evidence\":{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/before/snapshot.json\",\"pointer\":\"/routers/r3/sources/bgp\",\"raw_file\":\"raw/r3-bgp.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:31.709780+00:00\",\"completed_at\":\"2026-11-19T10:06:31.840282+00:00\"},\"source\":\"router:r3\",\"target\":\"router:r5\",\"key\":\"bgp:L35\"},{\"kind\":\"bgp\",\"state\":\"Established\",\"healthy\":true,\"peer_address\":\"10.0.35.1\",\"link_id\":\"L35\",\"observed\":[{\"address\":\"10.0.35.1\",\"remote_as\":65001,\"state\":\"Established\",\"peer_state\":\"OK\",\"uptime_ms\":1617000,\"prefixes_received\":4,\"prefixes_sent\":2,\"messages_received\":549,\"messages_sent\":546,\"connections_established\":1,\"connections_dropped\":0}],\"expected\":true,\"evidence\":{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/before/snapshot.json\",\"pointer\":\"/routers/r5/sources/bgp\",\"raw_file\":\"raw/r5-bgp.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:31.577245+00:00\",\"completed_at\":\"2026-11-19T10:06:31.705329+00:00\"},\"source\":\"router:r5\",\"target\":\"router:r3\",\"key\":\"bgp:L35\"}]}"
+    }
+  ],
+  "execution_allowed": false
+}

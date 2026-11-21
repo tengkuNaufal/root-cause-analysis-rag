@@ -1,0 +1,12 @@
+{
+  "current": "fault",
+  "phase": "fault",
+  "target": "r3:eth4",
+  "explanation": "An administrative-down condition with carrier/protocol loss is observed.",
+  "citations": [
+    "T1",
+    "T2",
+    "G1",
+    "L1"
+  ]
+}

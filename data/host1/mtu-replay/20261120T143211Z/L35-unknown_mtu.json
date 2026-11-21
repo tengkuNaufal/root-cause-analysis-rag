@@ -1,0 +1,11 @@
+{
+  "schema_version": "mtu-sequence-1.0",
+  "synthetic": true,
+  "history_complete": true,
+  "snapshots": [
+    {
+      "path": "results/mtu-replay/20261120T143211Z/fixtures/L35/unknown_mtu/bundle.json",
+      "sha256": "c0c9d01e625390b4cb13a66d266bab65c4f58995cd61d9fe628f0917af926ab8"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "model_called": true,
+  "llm_requests": 4,
+  "status": "hypothesis",
+  "analysis_origin": "source_bound_llm_temporal_no_rule_substitution",
+  "execution_allowed": false,
+  "diagnosis_allowed": false,
+  "mode": "replay",
+  "options": {
+    "reverse_endpoints": false
+  },
+  "extractor": "bound",
+  "bundle": {
+    "path": "results/evidence-retrieval/replay-final-20261119/L12-down.json",
+    "sha256": "31df3ba9bf5f142221873c2f978ebfb4e084f4ed8db633fe97a3475794d69cbd"
+  },
+  "endpoint_rows_validated": 2,
+  "observation_origin": "model_values_aggregated_with_controller_owned_source_identity",
+  "facts_validated": true,
+  "phase_input_normalization": "sorted_verified_model_lists",
+  "raw_phase_prediction": {
+    "phase": "fault"
+  },
+  "raw_prediction": {
+    "current": "fault",
+    "phase": "fault",
+    "target": "r1:eth1",
+    "explanation": "An administrative-down condition with carrier/protocol loss is observed.",
+    "citations": [
+      "T1",
+      "T2",
+      "G1",
+      "L1"
+    ]
+  },
+  "explanation_origin": "controller_rendering_of_model_chosen_phase",
+  "citation_origin": "controller_binding_of_verified_source_refs",
+  "contract_valid": true,
+  "prompt_eval_count": 266,
+  "eval_count": 10,
+  "wall_seconds": 9.152271476999886
+}

@@ -1,0 +1,51 @@
+{
+  "model_called": true,
+  "llm_requests": 4,
+  "status": "hypothesis",
+  "analysis_origin": "source_bound_llm_temporal_no_rule_substitution",
+  "execution_allowed": false,
+  "diagnosis_allowed": false,
+  "mode": "replay",
+  "options": {
+    "reverse_endpoints": true,
+    "citation_map": {
+      "D1": "R359",
+      "T1": "R366",
+      "T2": "R129",
+      "G1": "R201",
+      "L1": "R757",
+      "L2": "R393"
+    }
+  },
+  "extractor": "bound",
+  "bundle": {
+    "path": "results/evidence-retrieval/replay-final-20261119/L35-restored.json",
+    "sha256": "f51a5285bccf3ac081059cb0b80af9646f8f952ff26bc810d20eb74c01bc813b"
+  },
+  "endpoint_rows_validated": 2,
+  "observation_origin": "model_values_aggregated_with_controller_owned_source_identity",
+  "facts_validated": true,
+  "phase_input_normalization": "sorted_verified_model_lists",
+  "raw_phase_prediction": {
+    "phase": "recovered"
+  },
+  "raw_prediction": {
+    "current": "healthy",
+    "phase": "recovered",
+    "target": null,
+    "explanation": "Healthy at this snapshot; provided history records DOWN followed by UP.",
+    "citations": [
+      "R129",
+      "R366",
+      "R201",
+      "R757",
+      "R393"
+    ]
+  },
+  "explanation_origin": "controller_rendering_of_model_chosen_phase",
+  "citation_origin": "controller_binding_of_verified_source_refs",
+  "contract_valid": true,
+  "prompt_eval_count": 252,
+  "eval_count": 11,
+  "wall_seconds": 12.282597772000372
+}

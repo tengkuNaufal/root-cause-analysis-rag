@@ -1,0 +1,14 @@
+{
+  "admin_down": [],
+  "carrier_down": [],
+  "peer_states": [
+    "Established",
+    "Established"
+  ],
+  "physical": "up",
+  "history_complete": true,
+  "events_time_order": [
+    "DOWN",
+    "UP"
+  ]
+}

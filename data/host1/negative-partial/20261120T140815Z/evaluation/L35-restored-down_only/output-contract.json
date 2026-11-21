@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "request_id": "t-efbeeee9",
+  "status": "hypothesis",
+  "root_cause_hypothesis": "Healthy at this snapshot; supplied history cannot establish baseline versus recovery.",
+  "confidence": null,
+  "claims": [
+    {
+      "statement": "Healthy at this snapshot; supplied history cannot establish baseline versus recovery.",
+      "evidence_ids": [
+        "N412",
+        "N411",
+        "N413"
+      ]
+    }
+  ],
+  "missing_evidence": [
+    "History is insufficient to distinguish baseline from recovery."
+  ],
+  "proposed_patch": [],
+  "execution_allowed": false
+}
