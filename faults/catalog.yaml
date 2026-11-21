@@ -1,0 +1,760 @@
+version: 1
+lab: replika (lab/replica/six-node)
+status: belum disesuaikan dengan topologi Host 1
+faults:
+- id: F01
+  class: mtu_mismatch
+  layer: L2/L3
+  link: r1-r2
+  ground_truth:
+    router: r1
+    root_cause: MTU r1 eth1 1400, sisi lain 1500
+  expected_symptom: OSPF macet di ExStart/Init, loopback tidak terjangkau
+  inject:
+    router: r1
+    steps:
+    - type: shell
+      cmd: ip link set eth1 mtu 1400
+  revert:
+    router: r1
+    steps:
+    - type: shell
+      cmd: ip link set eth1 mtu 1500
+- id: F02
+  class: mtu_mismatch
+  layer: L2/L3
+  link: r3-r4
+  ground_truth:
+    router: r3
+    root_cause: MTU r3 eth1 1400, sisi lain 1500
+  expected_symptom: OSPF macet di ExStart/Init, loopback tidak terjangkau
+  inject:
+    router: r3
+    steps:
+    - type: shell
+      cmd: ip link set eth1 mtu 1400
+  revert:
+    router: r3
+    steps:
+    - type: shell
+      cmd: ip link set eth1 mtu 1500
+- id: F03
+  class: mtu_mismatch
+  layer: L2/L3
+  link: r5-r6
+  ground_truth:
+    router: r5
+    root_cause: MTU r5 eth1 1400, sisi lain 1500
+  expected_symptom: OSPF macet di ExStart/Init, loopback tidak terjangkau
+  inject:
+    router: r5
+    steps:
+    - type: shell
+      cmd: ip link set eth1 mtu 1400
+  revert:
+    router: r5
+    steps:
+    - type: shell
+      cmd: ip link set eth1 mtu 1500
+- id: F04
+  class: link_down
+  layer: L1/L2
+  link: r1-r2
+  ground_truth:
+    router: r1
+    root_cause: interface r1 eth1 down
+  expected_symptom: OSPF hilang, loopback tidak terjangkau
+  inject:
+    router: r1
+    steps:
+    - type: shell
+      cmd: ip link set eth1 down
+  revert:
+    router: r1
+    steps:
+    - type: shell
+      cmd: ip link set eth1 up
+- id: F05
+  class: link_down
+  layer: L1/L2
+  link: r2-r4
+  ground_truth:
+    router: r2
+    root_cause: interface r2 eth2 down
+  expected_symptom: sesi eBGP putus, trafik pindah lewat AS ketiga
+  inject:
+    router: r2
+    steps:
+    - type: shell
+      cmd: ip link set eth2 down
+  revert:
+    router: r2
+    steps:
+    - type: shell
+      cmd: ip link set eth2 up
+- id: F06
+  class: link_down
+  layer: L1/L2
+  link: r4-r6
+  ground_truth:
+    router: r4
+    root_cause: interface r4 eth3 down
+  expected_symptom: sesi eBGP putus, trafik pindah lewat AS ketiga
+  inject:
+    router: r4
+    steps:
+    - type: shell
+      cmd: ip link set eth3 down
+  revert:
+    router: r4
+    steps:
+    - type: shell
+      cmd: ip link set eth3 up
+- id: F07
+  class: ospf_hello_mismatch
+  layer: OSPF
+  link: r1-r2
+  ground_truth:
+    router: r1
+    root_cause: hello-interval OSPF r1 eth1 5 detik, sisi lain 10
+  expected_symptom: tetangga OSPF hilang setelah dead interval habis
+  inject:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - ip ospf hello-interval 5
+  revert:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf hello-interval
+- id: F08
+  class: ospf_hello_mismatch
+  layer: OSPF
+  link: r3-r4
+  ground_truth:
+    router: r3
+    root_cause: hello-interval OSPF r3 eth1 5 detik, sisi lain 10
+  expected_symptom: tetangga OSPF hilang setelah dead interval habis
+  inject:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - ip ospf hello-interval 5
+  revert:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf hello-interval
+- id: F09
+  class: ospf_hello_mismatch
+  layer: OSPF
+  link: r5-r6
+  ground_truth:
+    router: r5
+    root_cause: hello-interval OSPF r5 eth1 5 detik, sisi lain 10
+  expected_symptom: tetangga OSPF hilang setelah dead interval habis
+  inject:
+    router: r5
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - ip ospf hello-interval 5
+  revert:
+    router: r5
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf hello-interval
+- id: F10
+  class: ospf_area_mismatch
+  layer: OSPF
+  link: r1-r2
+  ground_truth:
+    router: r1
+    root_cause: interface r1 eth1 masuk area 0.0.0.1, sisi lain area 0
+  expected_symptom: adjacency OSPF tidak terbentuk
+  inject:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf area 0
+      - ip ospf area 1
+  revert:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf area 1
+      - ip ospf area 0
+- id: F11
+  class: ospf_area_mismatch
+  layer: OSPF
+  link: r3-r4
+  ground_truth:
+    router: r3
+    root_cause: interface r3 eth1 masuk area 0.0.0.1, sisi lain area 0
+  expected_symptom: adjacency OSPF tidak terbentuk
+  inject:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf area 0
+      - ip ospf area 1
+  revert:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf area 1
+      - ip ospf area 0
+- id: F12
+  class: ospf_area_mismatch
+  layer: OSPF
+  link: r5-r6
+  ground_truth:
+    router: r5
+    root_cause: interface r5 eth1 masuk area 0.0.0.1, sisi lain area 0
+  expected_symptom: adjacency OSPF tidak terbentuk
+  inject:
+    router: r5
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf area 0
+      - ip ospf area 1
+  revert:
+    router: r5
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf area 1
+      - ip ospf area 0
+- id: F13
+  class: ospf_auth_mismatch
+  layer: OSPF
+  link: r1-r2
+  ground_truth:
+    router: r1
+    root_cause: autentikasi MD5 OSPF aktif hanya di r1 eth1
+  expected_symptom: tetangga OSPF hilang setelah dead interval habis
+  inject:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - ip ospf authentication message-digest
+      - ip ospf message-digest-key 1 md5 kunci-salah
+  revert:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf message-digest-key 1
+      - no ip ospf authentication
+- id: F14
+  class: ospf_auth_mismatch
+  layer: OSPF
+  link: r3-r4
+  ground_truth:
+    router: r3
+    root_cause: autentikasi MD5 OSPF aktif hanya di r3 eth1
+  expected_symptom: tetangga OSPF hilang setelah dead interval habis
+  inject:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - ip ospf authentication message-digest
+      - ip ospf message-digest-key 1 md5 kunci-salah
+  revert:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf message-digest-key 1
+      - no ip ospf authentication
+- id: F15
+  class: ospf_auth_mismatch
+  layer: OSPF
+  link: r5-r6
+  ground_truth:
+    router: r5
+    root_cause: autentikasi MD5 OSPF aktif hanya di r5 eth1
+  expected_symptom: tetangga OSPF hilang setelah dead interval habis
+  inject:
+    router: r5
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - ip ospf authentication message-digest
+      - ip ospf message-digest-key 1 md5 kunci-salah
+  revert:
+    router: r5
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip ospf message-digest-key 1
+      - no ip ospf authentication
+- id: F16
+  class: bgp_neighbor_shutdown
+  layer: BGP
+  link: r2-r4
+  ground_truth:
+    router: r2
+    root_cause: neighbor 10.0.24.2 di r2 di-shutdown
+  expected_symptom: sesi eBGP Idle (Admin), trafik pindah lewat AS ketiga
+  inject:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65001
+      - neighbor 10.0.24.2 shutdown
+  revert:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65001
+      - no neighbor 10.0.24.2 shutdown
+- id: F17
+  class: bgp_neighbor_shutdown
+  layer: BGP
+  link: r4-r6
+  ground_truth:
+    router: r4
+    root_cause: neighbor 10.0.46.2 di r4 di-shutdown
+  expected_symptom: sesi eBGP Idle (Admin), trafik pindah lewat AS ketiga
+  inject:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65002
+      - neighbor 10.0.46.2 shutdown
+  revert:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65002
+      - no neighbor 10.0.46.2 shutdown
+- id: F18
+  class: bgp_neighbor_shutdown
+  layer: BGP
+  link: r6-r2
+  ground_truth:
+    router: r6
+    root_cause: neighbor 10.0.26.2 di r6 di-shutdown
+  expected_symptom: sesi eBGP Idle (Admin), trafik pindah lewat AS ketiga
+  inject:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65003
+      - neighbor 10.0.26.2 shutdown
+  revert:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65003
+      - no neighbor 10.0.26.2 shutdown
+- id: F19
+  class: bgp_wrong_remote_as
+  layer: BGP
+  link: r2-r4
+  ground_truth:
+    router: r2
+    root_cause: remote-as 10.0.24.2 di r2 salah (65102, seharusnya 65002)
+  expected_symptom: sesi eBGP tidak Established
+  inject:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65001
+      - neighbor 10.0.24.2 remote-as 65102
+  revert:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65001
+      - neighbor 10.0.24.2 remote-as 65002
+      - address-family ipv4 unicast
+      - neighbor 10.0.24.2 route-map RM-EBGP-IN in
+      - neighbor 10.0.24.2 route-map RM-EBGP-OUT out
+- id: F20
+  class: bgp_wrong_remote_as
+  layer: BGP
+  link: r4-r6
+  ground_truth:
+    router: r4
+    root_cause: remote-as 10.0.46.2 di r4 salah (65103, seharusnya 65003)
+  expected_symptom: sesi eBGP tidak Established
+  inject:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65002
+      - neighbor 10.0.46.2 remote-as 65103
+  revert:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65002
+      - neighbor 10.0.46.2 remote-as 65003
+      - address-family ipv4 unicast
+      - neighbor 10.0.46.2 route-map RM-EBGP-IN in
+      - neighbor 10.0.46.2 route-map RM-EBGP-OUT out
+- id: F21
+  class: bgp_wrong_remote_as
+  layer: BGP
+  link: r6-r2
+  ground_truth:
+    router: r6
+    root_cause: remote-as 10.0.26.2 di r6 salah (65101, seharusnya 65001)
+  expected_symptom: sesi eBGP tidak Established
+  inject:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65003
+      - neighbor 10.0.26.2 remote-as 65101
+  revert:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65003
+      - neighbor 10.0.26.2 remote-as 65001
+      - address-family ipv4 unicast
+      - neighbor 10.0.26.2 route-map RM-EBGP-IN in
+      - neighbor 10.0.26.2 route-map RM-EBGP-OUT out
+- id: F22
+  class: bgp_inbound_filter
+  layer: BGP
+  link: r2-r4
+  ground_truth:
+    router: r2
+    root_cause: route-map inbound dari 10.0.24.2 di r2 menolak 10.255.0.3/32
+  expected_symptom: rute 10.255.0.3/32 dari 10.0.24.2 ditolak; r2 memakai jalur lain lewat AS ketiga
+  inject:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - ip prefix-list PL-FAULT seq 5 permit 10.255.0.3/32
+      - route-map RM-IN-FAULT deny 5
+      - match ip address prefix-list PL-FAULT
+      - exit
+      - route-map RM-IN-FAULT permit 10
+      - match ip address prefix-list PL-LOOPBACKS
+      - exit
+      - router bgp 65001
+      - address-family ipv4 unicast
+      - neighbor 10.0.24.2 route-map RM-IN-FAULT in
+  revert:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65001
+      - address-family ipv4 unicast
+      - neighbor 10.0.24.2 route-map RM-EBGP-IN in
+      - exit-address-family
+      - exit
+      - no route-map RM-IN-FAULT
+      - no ip prefix-list PL-FAULT
+- id: F23
+  class: bgp_inbound_filter
+  layer: BGP
+  link: r4-r6
+  ground_truth:
+    router: r4
+    root_cause: route-map inbound dari 10.0.46.2 di r4 menolak 10.255.0.5/32
+  expected_symptom: rute 10.255.0.5/32 dari 10.0.46.2 ditolak; r4 memakai jalur lain lewat AS ketiga
+  inject:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - ip prefix-list PL-FAULT seq 5 permit 10.255.0.5/32
+      - route-map RM-IN-FAULT deny 5
+      - match ip address prefix-list PL-FAULT
+      - exit
+      - route-map RM-IN-FAULT permit 10
+      - match ip address prefix-list PL-LOOPBACKS
+      - exit
+      - router bgp 65002
+      - address-family ipv4 unicast
+      - neighbor 10.0.46.2 route-map RM-IN-FAULT in
+  revert:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65002
+      - address-family ipv4 unicast
+      - neighbor 10.0.46.2 route-map RM-EBGP-IN in
+      - exit-address-family
+      - exit
+      - no route-map RM-IN-FAULT
+      - no ip prefix-list PL-FAULT
+- id: F24
+  class: bgp_inbound_filter
+  layer: BGP
+  link: r6-r2
+  ground_truth:
+    router: r6
+    root_cause: route-map inbound dari 10.0.26.2 di r6 menolak 10.255.0.1/32
+  expected_symptom: rute 10.255.0.1/32 dari 10.0.26.2 ditolak; r6 memakai jalur lain lewat AS ketiga
+  inject:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - ip prefix-list PL-FAULT seq 5 permit 10.255.0.1/32
+      - route-map RM-IN-FAULT deny 5
+      - match ip address prefix-list PL-FAULT
+      - exit
+      - route-map RM-IN-FAULT permit 10
+      - match ip address prefix-list PL-LOOPBACKS
+      - exit
+      - router bgp 65003
+      - address-family ipv4 unicast
+      - neighbor 10.0.26.2 route-map RM-IN-FAULT in
+  revert:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65003
+      - address-family ipv4 unicast
+      - neighbor 10.0.26.2 route-map RM-EBGP-IN in
+      - exit-address-family
+      - exit
+      - no route-map RM-IN-FAULT
+      - no ip prefix-list PL-FAULT
+- id: F25
+  class: bgp_missing_network
+  layer: BGP
+  link: r2-r4
+  ground_truth:
+    router: r2
+    root_cause: network 10.255.0.1/32 hilang dari BGP r2
+  expected_symptom: 10.255.0.1/32 tidak terjangkau dari AS lain
+  inject:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65001
+      - address-family ipv4 unicast
+      - no network 10.255.0.1/32
+  revert:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65001
+      - address-family ipv4 unicast
+      - network 10.255.0.1/32
+- id: F26
+  class: bgp_missing_network
+  layer: BGP
+  link: r4-r6
+  ground_truth:
+    router: r4
+    root_cause: network 10.255.0.3/32 hilang dari BGP r4
+  expected_symptom: 10.255.0.3/32 tidak terjangkau dari AS lain
+  inject:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65002
+      - address-family ipv4 unicast
+      - no network 10.255.0.3/32
+  revert:
+    router: r4
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65002
+      - address-family ipv4 unicast
+      - network 10.255.0.3/32
+- id: F27
+  class: bgp_missing_network
+  layer: BGP
+  link: r6-r2
+  ground_truth:
+    router: r6
+    root_cause: network 10.255.0.5/32 hilang dari BGP r6
+  expected_symptom: 10.255.0.5/32 tidak terjangkau dari AS lain
+  inject:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65003
+      - address-family ipv4 unicast
+      - no network 10.255.0.5/32
+  revert:
+    router: r6
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - router bgp 65003
+      - address-family ipv4 unicast
+      - network 10.255.0.5/32
+- id: F28
+  class: wrong_ip_address
+  layer: L3
+  link: r1-r2
+  ground_truth:
+    router: r1
+    root_cause: IP r1 eth1 salah (10.0.13.1/30, seharusnya 10.0.12.1/30)
+  expected_symptom: tetangga di link ini hilang
+  inject:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip address 10.0.12.1/30
+      - ip address 10.0.13.1/30
+  revert:
+    router: r1
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip address 10.0.13.1/30
+      - ip address 10.0.12.1/30
+- id: F29
+  class: wrong_ip_address
+  layer: L3
+  link: r3-r4
+  ground_truth:
+    router: r3
+    root_cause: IP r3 eth1 salah (10.0.35.1/30, seharusnya 10.0.34.1/30)
+  expected_symptom: tetangga di link ini hilang
+  inject:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip address 10.0.34.1/30
+      - ip address 10.0.35.1/30
+  revert:
+    router: r3
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth1
+      - no ip address 10.0.35.1/30
+      - ip address 10.0.34.1/30
+- id: F30
+  class: wrong_ip_address
+  layer: L3
+  link: r2-r4
+  ground_truth:
+    router: r2
+    root_cause: IP r2 eth2 salah (10.0.25.1/30, seharusnya 10.0.24.1/30)
+  expected_symptom: tetangga di link ini hilang
+  inject:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth2
+      - no ip address 10.0.24.1/30
+      - ip address 10.0.25.1/30
+  revert:
+    router: r2
+    steps:
+    - type: vtysh
+      lines:
+      - conf t
+      - interface eth2
+      - no ip address 10.0.25.1/30
+      - ip address 10.0.24.1/30

@@ -1,0 +1,26 @@
+# Lab latihan dua router, r1-r2 satu link OSPF area 0.
+name: lab2
+
+topology:
+  defaults:
+    kind: linux
+    image: quay.io/frrouting/frr:10.4.1
+  nodes:
+    r1:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r1/frr.conf:/etc/frr/frr.conf
+    r2:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r2/frr.conf:/etc/frr/frr.conf
+  links:
+    - type: veth
+      mtu: 1500
+      endpoints:
+        - node: r1
+          interface: eth1
+        - node: r2
+          interface: eth1

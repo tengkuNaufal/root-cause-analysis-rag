@@ -1,0 +1,88 @@
+# Replika enam router: AS 65001 (r1-r2), 65002 (r3-r4), 65003 (r5-r6), OSPF di dalam AS.
+# r2, r4, r6 jadi border dan saling eBGP membentuk segitiga.
+name: topik8
+
+topology:
+  defaults:
+    kind: linux
+    image: quay.io/frrouting/frr:10.4.1
+  nodes:
+    r1:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r1/frr.conf:/etc/frr/frr.conf
+    r2:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r2/frr.conf:/etc/frr/frr.conf
+    r3:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r3/frr.conf:/etc/frr/frr.conf
+    r4:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r4/frr.conf:/etc/frr/frr.conf
+    r5:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r5/frr.conf:/etc/frr/frr.conf
+    r6:
+      binds:
+        - ../daemons:/etc/frr/daemons
+        - ../vtysh.conf:/etc/frr/vtysh.conf
+        - configs/r6/frr.conf:/etc/frr/frr.conf
+  links:
+    # r1-r2
+    - type: veth
+      mtu: 1500
+      endpoints:
+        - node: r1
+          interface: eth1
+        - node: r2
+          interface: eth1
+    # r3-r4
+    - type: veth
+      mtu: 1500
+      endpoints:
+        - node: r3
+          interface: eth1
+        - node: r4
+          interface: eth1
+    # r5-r6
+    - type: veth
+      mtu: 1500
+      endpoints:
+        - node: r5
+          interface: eth1
+        - node: r6
+          interface: eth1
+    # r2-r4
+    - type: veth
+      mtu: 1500
+      endpoints:
+        - node: r2
+          interface: eth2
+        - node: r4
+          interface: eth2
+    # r4-r6
+    - type: veth
+      mtu: 1500
+      endpoints:
+        - node: r4
+          interface: eth3
+        - node: r6
+          interface: eth2
+    # r6-r2
+    - type: veth
+      mtu: 1500
+      endpoints:
+        - node: r6
+          interface: eth3
+        - node: r2
+          interface: eth3
