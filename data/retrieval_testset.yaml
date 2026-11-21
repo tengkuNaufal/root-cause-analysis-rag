@@ -1,0 +1,142 @@
+# Set uji retrieval: satu pertanyaan per fault katalog, dalam bahasa Indonesia (id)
+# dan Inggris (en). Sebagian sengaja ditulis dengan banyak rincian (IP, nama
+# router, potongan log, timestamp) seperti gejala yang dilihat agen.
+#
+# Relevansi ditentukan oleh kata kunci, bukan nama file, supaya set ini tetap
+# bisa dipakai pada korpus dokumentasi milik retriever kelompok:
+#   sebuah chunk relevan jika memuat SEMUA istilah di salah satu grup (huruf kecil).
+# Grup per kelas ada di `relevance`; item boleh menimpanya dengan field `relevant`.
+
+relevance:
+  mtu_mismatch:           [["mtu", "mismatch"], ["mtu", "exstart"]]
+  ospf_timer_mismatch:    [["hello-interval", "mismatch"], ["dead-interval", "mismatch"], ["hellointerval"], ["deadinterval"]]
+  ospf_area_mismatch:     [["area", "mismatch"]]
+  ospf_auth_mismatch:     [["ospf", "authentication", "mismatch"], ["message-digest-key"]]
+  ospf_passive_interface: [["passive"]]
+  interface_down:         [["no shutdown", "interface"], ["admin down"]]
+  ip_address_wrong:       [["ip address", "subnet"], ["same subnet"], ["interface network"]]
+  bgp_remote_as_wrong:    [["bad peer as"], ["remote-as", "does not match"], ["remote as", "expected"]]
+  bgp_prefix_list_block:  [["prefix-list", "neighbor"], ["prefix list", "deny"]]
+  bgp_route_map_deny:     [["route-map", "deny"], ["route map", "deny"]]
+
+questions:
+  - fault_id: F01
+    class: mtu_mismatch
+    id: "Tetangga OSPF r1-r2 di eth1 macet di status ExStart, ping kecil berhasil tapi ping 1472 byte gagal. Apa penyebabnya?"
+    en: "OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?"
+  - fault_id: F02
+    class: mtu_mismatch
+    id: "Log r3 jam 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 tidak pernah Full. Bagaimana memperbaikinya?"
+    en: "r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?"
+  - fault_id: F03
+    class: mtu_mismatch
+    id: "Ukuran paket di interface eth2 r5 berbeda dengan r6 sehingga tetangga OSPF tertahan di Exchange"
+    en: "Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange"
+  - fault_id: F04
+    class: ospf_timer_mismatch
+    id: "Adjacency OSPF antara r1 dan r2 lewat 10.0.12.0/30 hilang sekitar 40 detik setelah perubahan konfigurasi dan tidak kembali, show ip ospf neighbor kosong di eth1"
+    en: "The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1"
+  - fault_id: F05
+    class: ospf_timer_mismatch
+    id: "Interval hello dan dead di r4 eth2 tidak sama dengan r5, tetangga tidak terbentuk"
+    en: "Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form"
+  - fault_id: F06
+    class: ospf_timer_mismatch
+    id: "r6 mencatat 'Hello:RECV HelloInterval mismatch' dari 10.0.56.1 pada 2026/11/21 09:12:33, kenapa OSPF r5-r6 putus?"
+    en: "r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?"
+  - fault_id: F07
+    class: ospf_area_mismatch
+    id: "r1 dan r3 tidak menjadi tetangga OSPF di link 10.0.13.0/30, log menyebut area tidak cocok"
+    en: "r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch"
+  - fault_id: F08
+    class: ospf_area_mismatch
+    id: "Interface eth2 di r2 dipindah ke area 0.0.0.2 sementara r3 tetap di backbone, rute 10.255.0.3/32 hilang dari tabel OSPF r2"
+    en: "Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table"
+  - fault_id: F09
+    class: ospf_area_mismatch
+    id: "Kenapa r4 dan r5 tidak bertukar Hello OSPF padahal ping 10.0.45.1 ke 10.0.45.2 lancar dan interface up?"
+    en: "Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?"
+  - fault_id: F10
+    class: ospf_auth_mismatch
+    id: "r1 menolak paket OSPF dari r2 dengan pesan autentikasi MD5 gagal di eth1"
+    en: "r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1"
+  - fault_id: F11
+    class: ospf_auth_mismatch
+    id: "Setelah kunci message-digest ditambahkan di r3 eth1 (10.0.13.2), tetangga 10.255.0.1 turun dari Full ke Down dan tidak naik lagi"
+    en: "After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back"
+  - fault_id: F12
+    class: ospf_auth_mismatch
+    id: "Jenis autentikasi OSPF di r6 berbeda dengan r5"
+    en: "OSPF authentication type on r6 differs from r5"
+  - fault_id: F13
+    class: ospf_passive_interface
+    id: "r2 masih mengiklankan subnet 10.0.23.0/30 ke OSPF tetapi tidak lagi mengirim Hello ke r3 di eth2"
+    en: "r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2"
+  - fault_id: F14
+    class: ospf_passive_interface
+    id: "Interface eth2 r4 diset pasif sehingga adjacency dengan r5 hilang"
+    en: "Interface eth2 on r4 was set passive so the adjacency with r5 is gone"
+  - fault_id: F15
+    class: ospf_passive_interface
+    id: "Tidak ada paket Hello OSPF yang keluar dari r5 eth2 menuju 10.0.56.2 menurut tcpdump jam 14:02, padahal konfigurasi area benar"
+    en: "No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct"
+  - fault_id: F16
+    class: interface_down
+    id: "Sesi eBGP r1-r6 turun dan show interface brief di r1 menunjukkan eth3 admin down"
+    en: "The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down"
+  - fault_id: F17
+    class: interface_down
+    id: "Link r1-r3 mati total, ping 10.0.13.1 dari r3 gagal dan semua adjacency di eth1 lenyap, bagaimana menyalakan lagi interface-nya?"
+    en: "The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?"
+  - fault_id: F18
+    class: interface_down
+    id: "Interface eth3 di r5 (10.0.25.2) status DOWN di kernel sejak 03:15, sesi BGP ke 10.0.25.1 Idle"
+    en: "Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle"
+  - fault_id: F19
+    class: ip_address_wrong
+    id: "Alamat IP eth1 r2 berubah menjadi 10.0.12.6/30 sehingga tidak satu subnet dengan r1"
+    en: "The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1"
+  - fault_id: F20
+    class: ip_address_wrong
+    id: "OSPF di r5 mencatat Hello dari 10.0.54.1 ditolak karena sumber tidak berada di jaringan interface eth1, rute ke 10.255.0.4 hilang"
+    en: "OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing"
+  - fault_id: F21
+    class: ip_address_wrong
+    id: "r6 tidak bisa ping r1 di 10.0.16.1, ARP gagal, dan sesi eBGP Active; alamat interface eth2 r6 terlihat aneh"
+    en: "r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd"
+  - fault_id: F22
+    class: bgp_remote_as_wrong
+    id: "Sesi BGP r3 ke 10.0.34.2 bolak-balik Idle/Active dan log menulis 'bad OPEN, remote AS is 65002, expected 65020' jam 11:20:45"
+    en: "The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45"
+  - fault_id: F23
+    class: bgp_remote_as_wrong
+    id: "Nomor AS tetangga BGP di r5 untuk peer 10.0.25.1 salah"
+    en: "The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong"
+  - fault_id: F24
+    class: bgp_remote_as_wrong
+    id: "Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error"
+    en: "The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error"
+  - fault_id: F25
+    class: bgp_prefix_list_block
+    id: "Sesi eBGP r4-r3 Established tetapi r4 menerima 0 prefix dari 10.0.34.1, loopback AS 65001 tidak terjangkau dari AS 65002"
+    en: "The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002"
+  - fault_id: F26
+    class: bgp_prefix_list_block
+    id: "Filter prefix di r2 memblokir rute 10.255.0.0/24 dari r5"
+    en: "A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5"
+  - fault_id: F27
+    class: bgp_prefix_list_block
+    id: "r1 tidak lagi menerima rute apa pun dari r6 lewat 10.0.16.2 walaupun sesi BGP naik; di r6 ada daftar prefix RCA-BLOCK yang terpasang keluar"
+    en: "r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound"
+  - fault_id: F28
+    class: bgp_route_map_deny
+    id: "r3 berhenti mengiklankan prefix ke r4 setelah route-map RCA-DENY dipasang, sesi tetap Established"
+    en: "r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established"
+  - fault_id: F29
+    class: bgp_route_map_deny
+    id: "Kebijakan masuk di r5 untuk peer 10.255.0.4 menolak semua rute, tabel BGP r5 kosong dari r4"
+    en: "Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4"
+  - fault_id: F30
+    class: bgp_route_map_deny
+    id: "Pukul 16:05 jumlah prefix yang diterima r6 dari r1 (10.0.16.1) turun dari 3 ke 0, telemetry menunjukkan loopback 10.255.0.1-3 hilang di AS 65002 tetapi sesi tidak putus"
+    en: "At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop"

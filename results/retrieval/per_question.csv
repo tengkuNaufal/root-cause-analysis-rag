@@ -1,0 +1,661 @@
+fault_id,class,lang,config,rank,query,top1
+F01,mtu_mismatch,id,baseline,,"Tetangga OSPF r1-r2 di eth1 macet di status ExStart, ping kecil berhasil tapi ping 1472 byte gagal. Apa penyebabnya?",ospfd#5.0
+F01,mtu_mismatch,en,baseline,,"OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospfd#5.0
+F02,mtu_mismatch,id,baseline,,"Log r3 jam 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 tidak pernah Full. Bagaimana memperbaikinya?",bgpd#4.0
+F02,mtu_mismatch,en,baseline,,"r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?",troubleshooting-general#0.0
+F03,mtu_mismatch,id,baseline,,Ukuran paket di interface eth2 r5 berbeda dengan r6 sehingga tetangga OSPF tertahan di Exchange,zebra-interface#3.0
+F03,mtu_mismatch,en,baseline,,Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange,ospfd#2.0
+F04,ospf_timer_mismatch,id,baseline,,"Adjacency OSPF antara r1 dan r2 lewat 10.0.12.0/30 hilang sekitar 40 detik setelah perubahan konfigurasi dan tidak kembali, show ip ospf neighbor kosong di eth1",ospfd#5.0
+F04,ospf_timer_mismatch,en,baseline,,"The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#5.0
+F05,ospf_timer_mismatch,id,baseline,,"Interval hello dan dead di r4 eth2 tidak sama dengan r5, tetangga tidak terbentuk",zebra-interface#3.0
+F05,ospf_timer_mismatch,en,baseline,,"Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form",troubleshooting-general#0.0
+F06,ospf_timer_mismatch,id,baseline,,"r6 mencatat 'Hello:RECV HelloInterval mismatch' dari 10.0.56.1 pada 2026/11/21 09:12:33, kenapa OSPF r5-r6 putus?",ospfd#2.0
+F06,ospf_timer_mismatch,en,baseline,,"r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?",ospfd#2.0
+F07,ospf_area_mismatch,id,baseline,2,"r1 dan r3 tidak menjadi tetangga OSPF di link 10.0.13.0/30, log menyebut area tidak cocok",zebra-interface#3.0
+F07,ospf_area_mismatch,en,baseline,1,"r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,baseline,1,"Interface eth2 di r2 dipindah ke area 0.0.0.2 sementara r3 tetap di backbone, rute 10.255.0.3/32 hilang dari tabel OSPF r2",ospfd#2.0
+F08,ospf_area_mismatch,en,baseline,1,"Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,baseline,5,Kenapa r4 dan r5 tidak bertukar Hello OSPF padahal ping 10.0.45.1 ke 10.0.45.2 lancar dan interface up?,zebra-interface#3.0
+F09,ospf_area_mismatch,en,baseline,4,Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?,troubleshooting-general#3.0
+F10,ospf_auth_mismatch,id,baseline,1,r1 menolak paket OSPF dari r2 dengan pesan autentikasi MD5 gagal di eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,baseline,1,r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1,ospfd#4.0
+F11,ospf_auth_mismatch,id,baseline,,"Setelah kunci message-digest ditambahkan di r3 eth1 (10.0.13.2), tetangga 10.255.0.1 turun dari Full ke Down dan tidak naik lagi",zebra-interface#3.0
+F11,ospf_auth_mismatch,en,baseline,,"After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back",troubleshooting-general#0.0
+F12,ospf_auth_mismatch,id,baseline,2,Jenis autentikasi OSPF di r6 berbeda dengan r5,ospfd#5.0
+F12,ospf_auth_mismatch,en,baseline,1,OSPF authentication type on r6 differs from r5,ospfd#4.0
+F13,ospf_passive_interface,id,baseline,,r2 masih mengiklankan subnet 10.0.23.0/30 ke OSPF tetapi tidak lagi mengirim Hello ke r3 di eth2,zebra-interface#1.0
+F13,ospf_passive_interface,en,baseline,2,r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2,zebra-interface#1.0
+F14,ospf_passive_interface,id,baseline,,Interface eth2 r4 diset pasif sehingga adjacency dengan r5 hilang,zebra-interface#3.0
+F14,ospf_passive_interface,en,baseline,1,Interface eth2 on r4 was set passive so the adjacency with r5 is gone,ospfd#3.0
+F15,ospf_passive_interface,id,baseline,,"Tidak ada paket Hello OSPF yang keluar dari r5 eth2 menuju 10.0.56.2 menurut tcpdump jam 14:02, padahal konfigurasi area benar",zebra-interface#3.0
+F15,ospf_passive_interface,en,baseline,5,"No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,baseline,1,Sesi eBGP r1-r6 turun dan show interface brief di r1 menunjukkan eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,baseline,1,The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.0
+F17,interface_down,id,baseline,,"Link r1-r3 mati total, ping 10.0.13.1 dari r3 gagal dan semua adjacency di eth1 lenyap, bagaimana menyalakan lagi interface-nya?",zebra-interface#3.0
+F17,interface_down,en,baseline,1,"The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?",zebra-interface#2.0
+F18,interface_down,id,baseline,1,"Interface eth3 di r5 (10.0.25.2) status DOWN di kernel sejak 03:15, sesi BGP ke 10.0.25.1 Idle",zebra-interface#2.0
+F18,interface_down,en,baseline,1,"Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle",zebra-interface#2.0
+F19,ip_address_wrong,id,baseline,4,Alamat IP eth1 r2 berubah menjadi 10.0.12.6/30 sehingga tidak satu subnet dengan r1,zebra-interface#3.0
+F19,ip_address_wrong,en,baseline,1,The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1,zebra-interface#1.0
+F20,ip_address_wrong,id,baseline,2,"OSPF di r5 mencatat Hello dari 10.0.54.1 ditolak karena sumber tidak berada di jaringan interface eth1, rute ke 10.255.0.4 hilang",ospfd#2.0
+F20,ip_address_wrong,en,baseline,2,"OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing",ospfd#2.0
+F21,ip_address_wrong,id,baseline,3,"r6 tidak bisa ping r1 di 10.0.16.1, ARP gagal, dan sesi eBGP Active; alamat interface eth2 r6 terlihat aneh",zebra-interface#3.0
+F21,ip_address_wrong,en,baseline,1,"r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd",zebra-interface#1.0
+F22,bgp_remote_as_wrong,id,baseline,,"Sesi BGP r3 ke 10.0.34.2 bolak-balik Idle/Active dan log menulis 'bad OPEN, remote AS is 65002, expected 65020' jam 11:20:45",bgpd#2.0
+F22,bgp_remote_as_wrong,en,baseline,,"The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45",bgpd#2.0
+F23,bgp_remote_as_wrong,id,baseline,,Nomor AS tetangga BGP di r5 untuk peer 10.0.25.1 salah,bgpd#2.0
+F23,bgp_remote_as_wrong,en,baseline,,The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong,bgpd#1.0
+F24,bgp_remote_as_wrong,id,baseline,,"Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error",zebra-interface#2.0
+F24,bgp_remote_as_wrong,en,baseline,,"The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error",troubleshooting-general#3.0
+F25,bgp_prefix_list_block,id,baseline,5,"Sesi eBGP r4-r3 Established tetapi r4 menerima 0 prefix dari 10.0.34.1, loopback AS 65001 tidak terjangkau dari AS 65002",bgpd#1.0
+F25,bgp_prefix_list_block,en,baseline,,"The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002",troubleshooting-general#3.0
+F26,bgp_prefix_list_block,id,baseline,1,Filter prefix di r2 memblokir rute 10.255.0.0/24 dari r5,bgpd#3.0
+F26,bgp_prefix_list_block,en,baseline,1,A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5,bgpd#3.0
+F27,bgp_prefix_list_block,id,baseline,3,r1 tidak lagi menerima rute apa pun dari r6 lewat 10.0.16.2 walaupun sesi BGP naik; di r6 ada daftar prefix RCA-BLOCK yang terpasang keluar,bgpd#2.0
+F27,bgp_prefix_list_block,en,baseline,,r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound,troubleshooting-general#3.0
+F28,bgp_route_map_deny,id,baseline,1,"r3 berhenti mengiklankan prefix ke r4 setelah route-map RCA-DENY dipasang, sesi tetap Established",frr-overview#2.0
+F28,bgp_route_map_deny,en,baseline,,"r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established",troubleshooting-general#3.0
+F29,bgp_route_map_deny,id,baseline,,"Kebijakan masuk di r5 untuk peer 10.255.0.4 menolak semua rute, tabel BGP r5 kosong dari r4",bgpd#4.0
+F29,bgp_route_map_deny,en,baseline,,"Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4",bgpd#1.0
+F30,bgp_route_map_deny,id,baseline,5,"Pukul 16:05 jumlah prefix yang diterima r6 dari r1 (10.0.16.1) turun dari 3 ke 0, telemetry menunjukkan loopback 10.255.0.1-3 hilang di AS 65002 tetapi sesi tidak putus",zebra-interface#3.0
+F30,bgp_route_map_deny,en,baseline,,"At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop",troubleshooting-general#3.0
+F01,mtu_mismatch,id,+chunk kecil,,"Tetangga OSPF r1-r2 di eth1 macet di status ExStart, ping kecil berhasil tapi ping 1472 byte gagal. Apa penyebabnya?",ospfd#5.0
+F01,mtu_mismatch,en,+chunk kecil,,"OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospfd#5.1
+F02,mtu_mismatch,id,+chunk kecil,,"Log r3 jam 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 tidak pernah Full. Bagaimana memperbaikinya?",bgpd#4.0
+F02,mtu_mismatch,en,+chunk kecil,,"r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?",troubleshooting-general#0.0
+F03,mtu_mismatch,id,+chunk kecil,,Ukuran paket di interface eth2 r5 berbeda dengan r6 sehingga tetangga OSPF tertahan di Exchange,zebra-interface#3.0
+F03,mtu_mismatch,en,+chunk kecil,,Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange,ospfd#2.1
+F04,ospf_timer_mismatch,id,+chunk kecil,,"Adjacency OSPF antara r1 dan r2 lewat 10.0.12.0/30 hilang sekitar 40 detik setelah perubahan konfigurasi dan tidak kembali, show ip ospf neighbor kosong di eth1",ospfd#5.0
+F04,ospf_timer_mismatch,en,+chunk kecil,,"The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#2.1
+F05,ospf_timer_mismatch,id,+chunk kecil,,"Interval hello dan dead di r4 eth2 tidak sama dengan r5, tetangga tidak terbentuk",zebra-interface#3.0
+F05,ospf_timer_mismatch,en,+chunk kecil,,"Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form",troubleshooting-general#0.0
+F06,ospf_timer_mismatch,id,+chunk kecil,,"r6 mencatat 'Hello:RECV HelloInterval mismatch' dari 10.0.56.1 pada 2026/11/21 09:12:33, kenapa OSPF r5-r6 putus?",ospfd#2.0
+F06,ospf_timer_mismatch,en,+chunk kecil,,"r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?",ospfd#2.0
+F07,ospf_area_mismatch,id,+chunk kecil,1,"r1 dan r3 tidak menjadi tetangga OSPF di link 10.0.13.0/30, log menyebut area tidak cocok",ospfd#2.0
+F07,ospf_area_mismatch,en,+chunk kecil,1,"r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,+chunk kecil,2,"Interface eth2 di r2 dipindah ke area 0.0.0.2 sementara r3 tetap di backbone, rute 10.255.0.3/32 hilang dari tabel OSPF r2",ospfd#0.1
+F08,ospf_area_mismatch,en,+chunk kecil,1,"Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,+chunk kecil,,Kenapa r4 dan r5 tidak bertukar Hello OSPF padahal ping 10.0.45.1 ke 10.0.45.2 lancar dan interface up?,zebra-interface#3.0
+F09,ospf_area_mismatch,en,+chunk kecil,5,Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?,zebra-interface#1.1
+F10,ospf_auth_mismatch,id,+chunk kecil,1,r1 menolak paket OSPF dari r2 dengan pesan autentikasi MD5 gagal di eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,+chunk kecil,1,r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1,ospfd#4.1
+F11,ospf_auth_mismatch,id,+chunk kecil,,"Setelah kunci message-digest ditambahkan di r3 eth1 (10.0.13.2), tetangga 10.255.0.1 turun dari Full ke Down dan tidak naik lagi",zebra-interface#0.1
+F11,ospf_auth_mismatch,en,+chunk kecil,,"After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back",troubleshooting-general#2.1
+F12,ospf_auth_mismatch,id,+chunk kecil,2,Jenis autentikasi OSPF di r6 berbeda dengan r5,ospfd#5.0
+F12,ospf_auth_mismatch,en,+chunk kecil,1,OSPF authentication type on r6 differs from r5,ospfd#4.0
+F13,ospf_passive_interface,id,+chunk kecil,2,r2 masih mengiklankan subnet 10.0.23.0/30 ke OSPF tetapi tidak lagi mengirim Hello ke r3 di eth2,zebra-interface#1.1
+F13,ospf_passive_interface,en,+chunk kecil,3,r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2,zebra-interface#1.1
+F14,ospf_passive_interface,id,+chunk kecil,,Interface eth2 r4 diset pasif sehingga adjacency dengan r5 hilang,zebra-interface#3.0
+F14,ospf_passive_interface,en,+chunk kecil,1,Interface eth2 on r4 was set passive so the adjacency with r5 is gone,ospfd#3.1
+F15,ospf_passive_interface,id,+chunk kecil,,"Tidak ada paket Hello OSPF yang keluar dari r5 eth2 menuju 10.0.56.2 menurut tcpdump jam 14:02, padahal konfigurasi area benar",zebra-interface#3.0
+F15,ospf_passive_interface,en,+chunk kecil,,"No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,+chunk kecil,1,Sesi eBGP r1-r6 turun dan show interface brief di r1 menunjukkan eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,+chunk kecil,1,The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.1
+F17,interface_down,id,+chunk kecil,,"Link r1-r3 mati total, ping 10.0.13.1 dari r3 gagal dan semua adjacency di eth1 lenyap, bagaimana menyalakan lagi interface-nya?",zebra-interface#0.1
+F17,interface_down,en,+chunk kecil,3,"The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?",troubleshooting-general#1.1
+F18,interface_down,id,+chunk kecil,1,"Interface eth3 di r5 (10.0.25.2) status DOWN di kernel sejak 03:15, sesi BGP ke 10.0.25.1 Idle",zebra-interface#2.1
+F18,interface_down,en,+chunk kecil,1,"Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle",zebra-interface#2.1
+F19,ip_address_wrong,id,+chunk kecil,2,Alamat IP eth1 r2 berubah menjadi 10.0.12.6/30 sehingga tidak satu subnet dengan r1,troubleshooting-general#1.1
+F19,ip_address_wrong,en,+chunk kecil,2,The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1,troubleshooting-general#2.1
+F20,ip_address_wrong,id,+chunk kecil,1,"OSPF di r5 mencatat Hello dari 10.0.54.1 ditolak karena sumber tidak berada di jaringan interface eth1, rute ke 10.255.0.4 hilang",zebra-interface#1.1
+F20,ip_address_wrong,en,+chunk kecil,1,"OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing",zebra-interface#1.1
+F21,ip_address_wrong,id,+chunk kecil,3,"r6 tidak bisa ping r1 di 10.0.16.1, ARP gagal, dan sesi eBGP Active; alamat interface eth2 r6 terlihat aneh",zebra-interface#3.0
+F21,ip_address_wrong,en,+chunk kecil,4,"r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd",troubleshooting-general#1.1
+F22,bgp_remote_as_wrong,id,+chunk kecil,,"Sesi BGP r3 ke 10.0.34.2 bolak-balik Idle/Active dan log menulis 'bad OPEN, remote AS is 65002, expected 65020' jam 11:20:45",bgpd#2.0
+F22,bgp_remote_as_wrong,en,+chunk kecil,,"The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45",bgpd#2.0
+F23,bgp_remote_as_wrong,id,+chunk kecil,,Nomor AS tetangga BGP di r5 untuk peer 10.0.25.1 salah,bgpd#2.0
+F23,bgp_remote_as_wrong,en,+chunk kecil,,The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong,bgpd#0.0
+F24,bgp_remote_as_wrong,id,+chunk kecil,,"Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error",zebra-interface#0.1
+F24,bgp_remote_as_wrong,en,+chunk kecil,,"The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error",bgpd#0.1
+F25,bgp_prefix_list_block,id,+chunk kecil,,"Sesi eBGP r4-r3 Established tetapi r4 menerima 0 prefix dari 10.0.34.1, loopback AS 65001 tidak terjangkau dari AS 65002",zebra-interface#0.1
+F25,bgp_prefix_list_block,en,+chunk kecil,,"The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002",bgpd#2.1
+F26,bgp_prefix_list_block,id,+chunk kecil,1,Filter prefix di r2 memblokir rute 10.255.0.0/24 dari r5,bgpd#3.0
+F26,bgp_prefix_list_block,en,+chunk kecil,1,A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5,bgpd#3.0
+F27,bgp_prefix_list_block,id,+chunk kecil,5,r1 tidak lagi menerima rute apa pun dari r6 lewat 10.0.16.2 walaupun sesi BGP naik; di r6 ada daftar prefix RCA-BLOCK yang terpasang keluar,bgpd#2.0
+F27,bgp_prefix_list_block,en,+chunk kecil,,r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound,bgpd#2.1
+F28,bgp_route_map_deny,id,+chunk kecil,1,"r3 berhenti mengiklankan prefix ke r4 setelah route-map RCA-DENY dipasang, sesi tetap Established",frr-overview#2.0
+F28,bgp_route_map_deny,en,+chunk kecil,,"r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established",bgpd#2.1
+F29,bgp_route_map_deny,id,+chunk kecil,,"Kebijakan masuk di r5 untuk peer 10.255.0.4 menolak semua rute, tabel BGP r5 kosong dari r4",bgpd#4.0
+F29,bgp_route_map_deny,en,+chunk kecil,,"Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4",bgpd#1.1
+F30,bgp_route_map_deny,id,+chunk kecil,5,"Pukul 16:05 jumlah prefix yang diterima r6 dari r1 (10.0.16.1) turun dari 3 ke 0, telemetry menunjukkan loopback 10.255.0.1-3 hilang di AS 65002 tetapi sesi tidak putus",zebra-interface#0.1
+F30,bgp_route_map_deny,en,+chunk kecil,,"At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop",bgpd#2.1
+F01,mtu_mismatch,id,+dok FRR tambahan,2,"Tetangga OSPF r1-r2 di eth1 macet di status ExStart, ping kecil berhasil tapi ping 1472 byte gagal. Apa penyebabnya?",ospfd#5.0
+F01,mtu_mismatch,en,+dok FRR tambahan,2,"OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospfd#5.0
+F02,mtu_mismatch,id,+dok FRR tambahan,1,"Log r3 jam 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 tidak pernah Full. Bagaimana memperbaikinya?",ospf-mtu#0.0
+F02,mtu_mismatch,en,+dok FRR tambahan,1,"r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?",ospf-mtu#0.0
+F03,mtu_mismatch,id,+dok FRR tambahan,5,Ukuran paket di interface eth2 r5 berbeda dengan r6 sehingga tetangga OSPF tertahan di Exchange,zebra-interface#3.0
+F03,mtu_mismatch,en,+dok FRR tambahan,2,Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange,ospfd#2.0
+F04,ospf_timer_mismatch,id,+dok FRR tambahan,,"Adjacency OSPF antara r1 dan r2 lewat 10.0.12.0/30 hilang sekitar 40 detik setelah perubahan konfigurasi dan tidak kembali, show ip ospf neighbor kosong di eth1",ospfd#5.0
+F04,ospf_timer_mismatch,en,+dok FRR tambahan,4,"The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#5.0
+F05,ospf_timer_mismatch,id,+dok FRR tambahan,4,"Interval hello dan dead di r4 eth2 tidak sama dengan r5, tetangga tidak terbentuk",ospf-timers#0.0
+F05,ospf_timer_mismatch,en,+dok FRR tambahan,1,"Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form",ospf-timers#1.0
+F06,ospf_timer_mismatch,id,+dok FRR tambahan,3,"r6 mencatat 'Hello:RECV HelloInterval mismatch' dari 10.0.56.1 pada 2026/11/21 09:12:33, kenapa OSPF r5-r6 putus?",ospfd#2.0
+F06,ospf_timer_mismatch,en,+dok FRR tambahan,1,"r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?",ospf-timers#1.0
+F07,ospf_area_mismatch,id,+dok FRR tambahan,2,"r1 dan r3 tidak menjadi tetangga OSPF di link 10.0.13.0/30, log menyebut area tidak cocok",zebra-interface#3.0
+F07,ospf_area_mismatch,en,+dok FRR tambahan,1,"r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,+dok FRR tambahan,1,"Interface eth2 di r2 dipindah ke area 0.0.0.2 sementara r3 tetap di backbone, rute 10.255.0.3/32 hilang dari tabel OSPF r2",ospfd#2.0
+F08,ospf_area_mismatch,en,+dok FRR tambahan,1,"Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,+dok FRR tambahan,5,Kenapa r4 dan r5 tidak bertukar Hello OSPF padahal ping 10.0.45.1 ke 10.0.45.2 lancar dan interface up?,zebra-interface#3.0
+F09,ospf_area_mismatch,en,+dok FRR tambahan,5,Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?,troubleshooting-general#3.0
+F10,ospf_auth_mismatch,id,+dok FRR tambahan,1,r1 menolak paket OSPF dari r2 dengan pesan autentikasi MD5 gagal di eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,+dok FRR tambahan,1,r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1,ospfd#4.0
+F11,ospf_auth_mismatch,id,+dok FRR tambahan,,"Setelah kunci message-digest ditambahkan di r3 eth1 (10.0.13.2), tetangga 10.255.0.1 turun dari Full ke Down dan tidak naik lagi",zebra-interface#3.0
+F11,ospf_auth_mismatch,en,+dok FRR tambahan,,"After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back",bgp-neighbor#3.0
+F12,ospf_auth_mismatch,id,+dok FRR tambahan,2,Jenis autentikasi OSPF di r6 berbeda dengan r5,ospfd#5.0
+F12,ospf_auth_mismatch,en,+dok FRR tambahan,1,OSPF authentication type on r6 differs from r5,ospfd#4.0
+F13,ospf_passive_interface,id,+dok FRR tambahan,,r2 masih mengiklankan subnet 10.0.23.0/30 ke OSPF tetapi tidak lagi mengirim Hello ke r3 di eth2,zebra-interface#1.0
+F13,ospf_passive_interface,en,+dok FRR tambahan,2,r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2,zebra-interface#1.0
+F14,ospf_passive_interface,id,+dok FRR tambahan,,Interface eth2 r4 diset pasif sehingga adjacency dengan r5 hilang,zebra-interface#3.0
+F14,ospf_passive_interface,en,+dok FRR tambahan,1,Interface eth2 on r4 was set passive so the adjacency with r5 is gone,ospfd#3.0
+F15,ospf_passive_interface,id,+dok FRR tambahan,,"Tidak ada paket Hello OSPF yang keluar dari r5 eth2 menuju 10.0.56.2 menurut tcpdump jam 14:02, padahal konfigurasi area benar",zebra-interface#3.0
+F15,ospf_passive_interface,en,+dok FRR tambahan,,"No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,+dok FRR tambahan,1,Sesi eBGP r1-r6 turun dan show interface brief di r1 menunjukkan eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,+dok FRR tambahan,1,The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.0
+F17,interface_down,id,+dok FRR tambahan,,"Link r1-r3 mati total, ping 10.0.13.1 dari r3 gagal dan semua adjacency di eth1 lenyap, bagaimana menyalakan lagi interface-nya?",zebra-interface#3.0
+F17,interface_down,en,+dok FRR tambahan,1,"The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?",zebra-interface#2.0
+F18,interface_down,id,+dok FRR tambahan,1,"Interface eth3 di r5 (10.0.25.2) status DOWN di kernel sejak 03:15, sesi BGP ke 10.0.25.1 Idle",zebra-interface#2.0
+F18,interface_down,en,+dok FRR tambahan,1,"Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle",zebra-interface#2.0
+F19,ip_address_wrong,id,+dok FRR tambahan,5,Alamat IP eth1 r2 berubah menjadi 10.0.12.6/30 sehingga tidak satu subnet dengan r1,zebra-interface#3.0
+F19,ip_address_wrong,en,+dok FRR tambahan,1,The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1,zebra-interface#1.0
+F20,ip_address_wrong,id,+dok FRR tambahan,2,"OSPF di r5 mencatat Hello dari 10.0.54.1 ditolak karena sumber tidak berada di jaringan interface eth1, rute ke 10.255.0.4 hilang",ospfd#2.0
+F20,ip_address_wrong,en,+dok FRR tambahan,2,"OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing",ospfd#2.0
+F21,ip_address_wrong,id,+dok FRR tambahan,3,"r6 tidak bisa ping r1 di 10.0.16.1, ARP gagal, dan sesi eBGP Active; alamat interface eth2 r6 terlihat aneh",zebra-interface#3.0
+F21,ip_address_wrong,en,+dok FRR tambahan,2,"r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd",ospf-mtu#1.0
+F22,bgp_remote_as_wrong,id,+dok FRR tambahan,1,"Sesi BGP r3 ke 10.0.34.2 bolak-balik Idle/Active dan log menulis 'bad OPEN, remote AS is 65002, expected 65020' jam 11:20:45",bgp-neighbor#0.0
+F22,bgp_remote_as_wrong,en,+dok FRR tambahan,1,"The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45",bgp-neighbor#0.0
+F23,bgp_remote_as_wrong,id,+dok FRR tambahan,3,Nomor AS tetangga BGP di r5 untuk peer 10.0.25.1 salah,bgp-neighbor#1.0
+F23,bgp_remote_as_wrong,en,+dok FRR tambahan,2,The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong,bgp-neighbor#1.0
+F24,bgp_remote_as_wrong,id,+dok FRR tambahan,1,"Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error",bgp-neighbor#0.0
+F24,bgp_remote_as_wrong,en,+dok FRR tambahan,2,"The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,id,+dok FRR tambahan,5,"Sesi eBGP r4-r3 Established tetapi r4 menerima 0 prefix dari 10.0.34.1, loopback AS 65001 tidak terjangkau dari AS 65002",bgpd#1.0
+F25,bgp_prefix_list_block,en,+dok FRR tambahan,4,"The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002",bgp-neighbor#3.0
+F26,bgp_prefix_list_block,id,+dok FRR tambahan,1,Filter prefix di r2 memblokir rute 10.255.0.0/24 dari r5,bgpd#3.0
+F26,bgp_prefix_list_block,en,+dok FRR tambahan,1,A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5,prefix-list#2.0
+F27,bgp_prefix_list_block,id,+dok FRR tambahan,1,r1 tidak lagi menerima rute apa pun dari r6 lewat 10.0.16.2 walaupun sesi BGP naik; di r6 ada daftar prefix RCA-BLOCK yang terpasang keluar,prefix-list#1.0
+F27,bgp_prefix_list_block,en,+dok FRR tambahan,1,r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound,prefix-list#2.0
+F28,bgp_route_map_deny,id,+dok FRR tambahan,1,"r3 berhenti mengiklankan prefix ke r4 setelah route-map RCA-DENY dipasang, sesi tetap Established",route-map#0.0
+F28,bgp_route_map_deny,en,+dok FRR tambahan,1,"r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established",route-map#2.0
+F29,bgp_route_map_deny,id,+dok FRR tambahan,,"Kebijakan masuk di r5 untuk peer 10.255.0.4 menolak semua rute, tabel BGP r5 kosong dari r4",bgpd#4.0
+F29,bgp_route_map_deny,en,+dok FRR tambahan,1,"Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4",route-map#2.0
+F30,bgp_route_map_deny,id,+dok FRR tambahan,,"Pukul 16:05 jumlah prefix yang diterima r6 dari r1 (10.0.16.1) turun dari 3 ke 0, telemetry menunjukkan loopback 10.255.0.1-3 hilang di AS 65002 tetapi sesi tidak putus",zebra-interface#3.0
+F30,bgp_route_map_deny,en,+dok FRR tambahan,,"At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop",bgp-neighbor#3.0
+F01,mtu_mismatch,id,+terjemah ID->EN,,"neighbor OSPF r1-r2 on eth1 stuck on state ExStart, ping small works but ping 1472 byte fails. what cause?",ospfd#2.0
+F01,mtu_mismatch,en,+terjemah ID->EN,,"OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospfd#5.0
+F02,mtu_mismatch,id,+terjemah ID->EN,,"Log r3 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 never Full. how fix?",troubleshooting-general#0.0
+F02,mtu_mismatch,en,+terjemah ID->EN,,"r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?",troubleshooting-general#0.0
+F03,mtu_mismatch,id,+terjemah ID->EN,,packet size mtu on interface eth2 r5 differs from mismatch r6 so neighbor OSPF stuck on Exchange,ospfd#2.0
+F03,mtu_mismatch,en,+terjemah ID->EN,,Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange,ospfd#2.0
+F04,ospf_timer_mismatch,id,+terjemah ID->EN,,"Adjacency OSPF between r1 and r2 via 10.0.12.0/30 missing about 40 seconds after change configuration and not kembali, show ip ospf neighbor empty on eth1",ospfd#2.0
+F04,ospf_timer_mismatch,en,+terjemah ID->EN,,"The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#5.0
+F05,ospf_timer_mismatch,id,+terjemah ID->EN,,"Interval hello and dead on r4 eth2 mismatch with r5, neighbor does not form",zebra-interface#1.0
+F05,ospf_timer_mismatch,en,+terjemah ID->EN,,"Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form",troubleshooting-general#0.0
+F06,ospf_timer_mismatch,id,+terjemah ID->EN,,"r6 logs 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 on 2026/11/21 09:12:33, why OSPF r5-r6 down?",ospfd#2.0
+F06,ospf_timer_mismatch,en,+terjemah ID->EN,,"r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?",ospfd#2.0
+F07,ospf_area_mismatch,id,+terjemah ID->EN,1,"r1 and r3 not become neighbor OSPF on link 10.0.13.0/30, log mentions area mismatch",ospfd#2.0
+F07,ospf_area_mismatch,en,+terjemah ID->EN,1,"r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,+terjemah ID->EN,1,"Interface eth2 on r2 moved to area 0.0.0.2 while r3 stays on backbone, route 10.255.0.3/32 missing from table OSPF r2",ospfd#2.0
+F08,ospf_area_mismatch,en,+terjemah ID->EN,1,"Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,+terjemah ID->EN,5,why r4 and r5 not exchange Hello OSPF although ping 10.0.45.1 to 10.0.45.2 works and interface up?,zebra-interface#1.0
+F09,ospf_area_mismatch,en,+terjemah ID->EN,4,Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?,troubleshooting-general#3.0
+F10,ospf_auth_mismatch,id,+terjemah ID->EN,1,r1 rejects packet OSPF from r2 with message authentication MD5 fails on eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,+terjemah ID->EN,1,r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1,ospfd#4.0
+F11,ospf_auth_mismatch,id,+terjemah ID->EN,,"after key message-digest added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and not up again",troubleshooting-general#0.0
+F11,ospf_auth_mismatch,en,+terjemah ID->EN,,"After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back",troubleshooting-general#0.0
+F12,ospf_auth_mismatch,id,+terjemah ID->EN,1,type authentication OSPF on r6 differs from mismatch r5,ospfd#4.0
+F12,ospf_auth_mismatch,en,+terjemah ID->EN,1,OSPF authentication type on r6 differs from r5,ospfd#4.0
+F13,ospf_passive_interface,id,+terjemah ID->EN,2,r2 still advertises subnet 10.0.23.0/30 to OSPF but no longer sends Hello to r3 on eth2,zebra-interface#1.0
+F13,ospf_passive_interface,en,+terjemah ID->EN,2,r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2,zebra-interface#1.0
+F14,ospf_passive_interface,id,+terjemah ID->EN,1,Interface eth2 r4 set passive so adjacency with r5 missing,ospfd#3.0
+F14,ospf_passive_interface,en,+terjemah ID->EN,1,Interface eth2 on r4 was set passive so the adjacency with r5 is gone,ospfd#3.0
+F15,ospf_passive_interface,id,+terjemah ID->EN,4,"no packet Hello OSPF keluar from r5 eth2 towards 10.0.56.2 according to tcpdump 14:02, although configuration area correct",ospfd#2.0
+F15,ospf_passive_interface,en,+terjemah ID->EN,5,"No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,+terjemah ID->EN,1,session eBGP r1-r6 down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,+terjemah ID->EN,1,The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.0
+F17,interface_down,id,+terjemah ID->EN,1,"Link r1-r3 down, ping 10.0.13.1 from r3 fails and all adjacency on eth1 missing, how bring up no shutdown interface-nya?",zebra-interface#2.0
+F17,interface_down,en,+terjemah ID->EN,1,"The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?",zebra-interface#2.0
+F18,interface_down,id,+terjemah ID->EN,1,"Interface eth3 on r5 (10.0.25.2) state DOWN on kernel since 03:15, session BGP to 10.0.25.1 Idle",zebra-interface#2.0
+F18,interface_down,en,+terjemah ID->EN,1,"Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle",zebra-interface#2.0
+F19,ip_address_wrong,id,+terjemah ID->EN,1,ip address eth1 r2 changed to 10.0.12.6/30 so not same subnet with r1,zebra-interface#1.0
+F19,ip_address_wrong,en,+terjemah ID->EN,1,The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1,zebra-interface#1.0
+F20,ip_address_wrong,id,+terjemah ID->EN,3,"OSPF on r5 logs Hello from 10.0.54.1 rejected because source not berada on network interface eth1, route to 10.255.0.4 missing",ospfd#2.0
+F20,ip_address_wrong,en,+terjemah ID->EN,2,"OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing",ospfd#2.0
+F21,ip_address_wrong,id,+terjemah ID->EN,2,"r6 cannot ping r1 on 10.0.16.1, ARP fails, and session eBGP Active; address interface eth2 r6 looks wrong",troubleshooting-general#3.0
+F21,ip_address_wrong,en,+terjemah ID->EN,1,"r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd",zebra-interface#1.0
+F22,bgp_remote_as_wrong,id,+terjemah ID->EN,,"session BGP r3 to 10.0.34.2 flapping Idle/Active and log says 'bad OPEN, remote AS is 65002, expected 65020' 11:20:45",bgpd#2.0
+F22,bgp_remote_as_wrong,en,+terjemah ID->EN,,"The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45",bgpd#2.0
+F23,bgp_remote_as_wrong,id,+terjemah ID->EN,,as number remote-as neighbor BGP on r5 for peer 10.0.25.1 wrong,bgpd#0.0
+F23,bgp_remote_as_wrong,en,+terjemah ID->EN,,The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong,bgpd#1.0
+F24,bgp_remote_as_wrong,id,+terjemah ID->EN,,"Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error",zebra-interface#2.0
+F24,bgp_remote_as_wrong,en,+terjemah ID->EN,,"The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error",troubleshooting-general#3.0
+F25,bgp_prefix_list_block,id,+terjemah ID->EN,,"session eBGP r4-r3 Established but r4 receives 0 prefix from 10.0.34.1, loopback AS 65001 unreachable from AS 65002",troubleshooting-general#3.0
+F25,bgp_prefix_list_block,en,+terjemah ID->EN,,"The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002",troubleshooting-general#3.0
+F26,bgp_prefix_list_block,id,+terjemah ID->EN,1,prefix-list filter on r2 blocks route 10.255.0.0/24 from r5,bgpd#3.0
+F26,bgp_prefix_list_block,en,+terjemah ID->EN,1,A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5,bgpd#3.0
+F27,bgp_prefix_list_block,id,+terjemah ID->EN,,r1 no longer receives route any from r6 via 10.0.16.2 although session BGP up; on r6 prefix-list RCA-BLOCK applied keluar,troubleshooting-general#3.0
+F27,bgp_prefix_list_block,en,+terjemah ID->EN,,r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound,troubleshooting-general#3.0
+F28,bgp_route_map_deny,id,+terjemah ID->EN,,"r3 stopped advertises prefix to r4 after route-map RCA-DENY applied, session stays Established",troubleshooting-general#3.0
+F28,bgp_route_map_deny,en,+terjemah ID->EN,,"r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established",troubleshooting-general#3.0
+F29,bgp_route_map_deny,id,+terjemah ID->EN,,"inbound policy route-map on r5 for peer 10.255.0.4 rejects all route, table BGP r5 empty from r4",bgpd#1.0
+F29,bgp_route_map_deny,en,+terjemah ID->EN,,"Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4",bgpd#1.0
+F30,bgp_route_map_deny,id,+terjemah ID->EN,,"16:05 number prefix diterima r6 from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopback 10.255.0.1-3 missing on AS 65002 but session not down",troubleshooting-general#3.0
+F30,bgp_route_map_deny,en,+terjemah ID->EN,,"At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop",troubleshooting-general#3.0
+F01,mtu_mismatch,id,+buang rincian,,"Tetangga OSPF - di eth1 macet di status ExStart, ping kecil berhasil tapi ping 1472 byte gagal. Apa penyebabnya?",ospfd#5.0
+F01,mtu_mismatch,en,+buang rincian,,"OSPF neighbor - on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospfd#5.0
+F02,mtu_mismatch,id,+buang rincian,,"Log jam : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', adjacency - tidak pernah Full. Bagaimana memperbaikinya?",troubleshooting-general#0.0
+F02,mtu_mismatch,en,+buang rincian,,"log at : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', the - adjacency never reaches Full. How do I fix it?",troubleshooting-general#0.0
+F03,mtu_mismatch,id,+buang rincian,,Ukuran paket di interface eth2 berbeda dengan sehingga tetangga OSPF tertahan di Exchange,zebra-interface#3.0
+F03,mtu_mismatch,en,+buang rincian,,Packet size on eth2 differs from so the OSPF neighbor stays in Exchange,ospfd#2.0
+F04,ospf_timer_mismatch,id,+buang rincian,,"Adjacency OSPF antara dan lewat hilang sekitar 40 detik setelah perubahan konfigurasi dan tidak kembali, show ip ospf neighbor kosong di eth1",ospfd#5.0
+F04,ospf_timer_mismatch,en,+buang rincian,,"The OSPF adjacency between and over disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#5.0
+F05,ospf_timer_mismatch,id,+buang rincian,,"Interval hello dan dead di eth2 tidak sama dengan , tetangga tidak terbentuk",zebra-interface#3.0
+F05,ospf_timer_mismatch,en,+buang rincian,,"Hello and dead intervals on eth2 are not the same as on , the neighbor does not form",troubleshooting-general#0.0
+F06,ospf_timer_mismatch,id,+buang rincian,,"mencatat 'Hello:RECV HelloInterval mismatch' dari pada , kenapa OSPF - putus?",ospfd#2.0
+F06,ospf_timer_mismatch,en,+buang rincian,,"logged 'Hello:RECV HelloInterval mismatch' from at , why did OSPF - go down?",ospfd#5.0
+F07,ospf_area_mismatch,id,+buang rincian,1,"dan tidak menjadi tetangga OSPF di link , log menyebut area tidak cocok",ospfd#2.0
+F07,ospf_area_mismatch,en,+buang rincian,1,"and do not become OSPF neighbors on link , the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,+buang rincian,3,"Interface eth2 di dipindah ke area sementara tetap di backbone, rute hilang dari tabel OSPF",zebra-interface#3.0
+F08,ospf_area_mismatch,en,+buang rincian,1,"Interface eth2 on was moved to area while stays in the backbone, route vanished from 's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,+buang rincian,,Kenapa dan tidak bertukar Hello OSPF padahal ping ke lancar dan interface up?,zebra-interface#3.0
+F09,ospf_area_mismatch,en,+buang rincian,5,Why do and not exchange OSPF Hellos although ping from to works and the interface is up?,zebra-interface#1.0
+F10,ospf_auth_mismatch,id,+buang rincian,1,menolak paket OSPF dari dengan pesan autentikasi MD5 gagal di eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,+buang rincian,1,rejects OSPF packets from with an MD5 authentication failure message on eth1,ospfd#4.0
+F11,ospf_auth_mismatch,id,+buang rincian,,"Setelah kunci message-digest ditambahkan di eth1 , tetangga turun dari Full ke Down dan tidak naik lagi",zebra-interface#3.0
+F11,ospf_auth_mismatch,en,+buang rincian,5,"After a message-digest key was added on eth1 , neighbor dropped from Full to Down and never came back",troubleshooting-general#0.0
+F12,ospf_auth_mismatch,id,+buang rincian,3,Jenis autentikasi OSPF di berbeda dengan,ospfd#5.0
+F12,ospf_auth_mismatch,en,+buang rincian,1,OSPF authentication type on differs from,ospfd#4.0
+F13,ospf_passive_interface,id,+buang rincian,,masih mengiklankan subnet ke OSPF tetapi tidak lagi mengirim Hello ke di eth2,zebra-interface#1.0
+F13,ospf_passive_interface,en,+buang rincian,1,still advertises subnet into OSPF but no longer sends Hellos to on eth2,ospfd#3.0
+F14,ospf_passive_interface,id,+buang rincian,,Interface eth2 diset pasif sehingga adjacency dengan hilang,zebra-interface#3.0
+F14,ospf_passive_interface,en,+buang rincian,1,Interface eth2 on was set passive so the adjacency with is gone,ospfd#3.0
+F15,ospf_passive_interface,id,+buang rincian,,"Tidak ada paket Hello OSPF yang keluar dari eth2 menuju menurut tcpdump jam , padahal konfigurasi area benar",zebra-interface#3.0
+F15,ospf_passive_interface,en,+buang rincian,4,"No OSPF Hello packets leave eth2 towards according to tcpdump at , although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,+buang rincian,1,Sesi eBGP - turun dan show interface brief di menunjukkan eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,+buang rincian,1,The - eBGP session went down and show interface brief on shows eth3 admin down,zebra-interface#2.0
+F17,interface_down,id,+buang rincian,,"Link - mati total, ping dari gagal dan semua adjacency di eth1 lenyap, bagaimana menyalakan lagi interface-nya?",zebra-interface#3.0
+F17,interface_down,en,+buang rincian,1,"The - link is completely down, ping to from fails and every adjacency on eth1 vanished, how do I bring the interface back up?",zebra-interface#2.0
+F18,interface_down,id,+buang rincian,1,"Interface eth3 di status DOWN di kernel sejak , sesi BGP ke Idle",zebra-interface#2.0
+F18,interface_down,en,+buang rincian,1,"Interface eth3 on has been DOWN in the kernel since , the BGP session to is Idle",zebra-interface#2.0
+F19,ip_address_wrong,id,+buang rincian,4,Alamat IP eth1 berubah menjadi sehingga tidak satu subnet dengan,zebra-interface#3.0
+F19,ip_address_wrong,en,+buang rincian,1,The IP address of eth1 changed to so it is no longer in the same subnet as,zebra-interface#1.0
+F20,ip_address_wrong,id,+buang rincian,2,"OSPF di mencatat Hello dari ditolak karena sumber tidak berada di jaringan interface eth1, rute ke hilang",zebra-interface#3.0
+F20,ip_address_wrong,en,+buang rincian,1,"OSPF on logs that Hellos from are rejected because the source is not on the eth1 interface network, the route to is missing",zebra-interface#1.0
+F21,ip_address_wrong,id,+buang rincian,3,"tidak bisa ping di , ARP gagal, dan sesi eBGP Active; alamat interface eth2 terlihat aneh",zebra-interface#3.0
+F21,ip_address_wrong,en,+buang rincian,1,"cannot ping at , ARP fails and the eBGP session is Active; eth2 interface address looks odd",zebra-interface#1.0
+F22,bgp_remote_as_wrong,id,+buang rincian,,"Sesi BGP ke bolak-balik Idle/Active dan log menulis 'bad OPEN, remote AS is , expected ' jam",bgpd#2.0
+F22,bgp_remote_as_wrong,en,+buang rincian,,"The BGP session from to keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is , expected ' at",bgpd#2.0
+F23,bgp_remote_as_wrong,id,+buang rincian,,Nomor AS tetangga BGP di untuk peer salah,bgpd#2.0
+F23,bgp_remote_as_wrong,en,+buang rincian,,The BGP neighbor AS number on for peer is wrong,bgpd#1.0
+F24,bgp_remote_as_wrong,id,+buang rincian,,"Sesi iBGP - antar loopback tidak pernah Established, mengirim NOTIFICATION OPEN Message Error",bgpd#0.0
+F24,bgp_remote_as_wrong,en,+buang rincian,,"The - iBGP session between loopbacks never gets Established, sends a NOTIFICATION OPEN Message Error",troubleshooting-general#3.0
+F25,bgp_prefix_list_block,id,+buang rincian,2,"Sesi eBGP - Established tetapi menerima 0 prefix dari , loopback tidak terjangkau dari",bgpd#1.0
+F25,bgp_prefix_list_block,en,+buang rincian,,"The - eBGP session is Established but receives 0 prefixes from , loopbacks are unreachable from",bgpd#2.0
+F26,bgp_prefix_list_block,id,+buang rincian,1,Filter prefix di memblokir rute dari,bgpd#3.0
+F26,bgp_prefix_list_block,en,+buang rincian,1,A prefix filter on blocks the routes from,bgpd#3.0
+F27,bgp_prefix_list_block,id,+buang rincian,3,tidak lagi menerima rute apa pun dari lewat walaupun sesi BGP naik; di ada daftar prefix RCA-BLOCK yang terpasang keluar,bgpd#2.0
+F27,bgp_prefix_list_block,en,+buang rincian,,no longer receives any route from over although the BGP session is up; has a prefix list RCA-BLOCK applied outbound,bgpd#2.0
+F28,bgp_route_map_deny,id,+buang rincian,1,"berhenti mengiklankan prefix ke setelah route-map RCA-DENY dipasang, sesi tetap Established",frr-overview#2.0
+F28,bgp_route_map_deny,en,+buang rincian,,"stopped advertising prefixes to after route-map RCA-DENY was applied, the session stays Established",zebra-interface#2.0
+F29,bgp_route_map_deny,id,+buang rincian,,"Kebijakan masuk di untuk peer menolak semua rute, tabel BGP kosong dari",bgpd#2.0
+F29,bgp_route_map_deny,en,+buang rincian,,"Inbound policy on for peer rejects all routes, 's BGP table has nothing from",bgpd#4.0
+F30,bgp_route_map_deny,id,+buang rincian,3,"Pukul jumlah prefix yang diterima dari turun dari 3 ke 0, telemetry menunjukkan loopback hilang di tetapi sesi tidak putus",zebra-interface#0.0
+F30,bgp_route_map_deny,en,+buang rincian,,"At the number of prefixes receives from dropped from 3 to 0, telemetry shows loopbacks missing in but the session did not drop",troubleshooting-general#3.0
+F01,mtu_mismatch,id,chunk kecil + dok tambahan,3,"Tetangga OSPF r1-r2 di eth1 macet di status ExStart, ping kecil berhasil tapi ping 1472 byte gagal. Apa penyebabnya?",ospfd#5.0
+F01,mtu_mismatch,en,chunk kecil + dok tambahan,1,"OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospf-mtu#0.1
+F02,mtu_mismatch,id,chunk kecil + dok tambahan,1,"Log r3 jam 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 tidak pernah Full. Bagaimana memperbaikinya?",ospf-mtu#0.1
+F02,mtu_mismatch,en,chunk kecil + dok tambahan,1,"r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?",ospf-mtu#0.1
+F03,mtu_mismatch,id,chunk kecil + dok tambahan,3,Ukuran paket di interface eth2 r5 berbeda dengan r6 sehingga tetangga OSPF tertahan di Exchange,zebra-interface#3.0
+F03,mtu_mismatch,en,chunk kecil + dok tambahan,1,Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange,ospf-mtu#2.1
+F04,ospf_timer_mismatch,id,chunk kecil + dok tambahan,,"Adjacency OSPF antara r1 dan r2 lewat 10.0.12.0/30 hilang sekitar 40 detik setelah perubahan konfigurasi dan tidak kembali, show ip ospf neighbor kosong di eth1",ospfd#5.0
+F04,ospf_timer_mismatch,en,chunk kecil + dok tambahan,,"The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#2.1
+F05,ospf_timer_mismatch,id,chunk kecil + dok tambahan,3,"Interval hello dan dead di r4 eth2 tidak sama dengan r5, tetangga tidak terbentuk",ospf-timers#0.0
+F05,ospf_timer_mismatch,en,chunk kecil + dok tambahan,3,"Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form",ospf-timers#1.1
+F06,ospf_timer_mismatch,id,chunk kecil + dok tambahan,2,"r6 mencatat 'Hello:RECV HelloInterval mismatch' dari 10.0.56.1 pada 2026/11/21 09:12:33, kenapa OSPF r5-r6 putus?",ospf-mtu#2.0
+F06,ospf_timer_mismatch,en,chunk kecil + dok tambahan,1,"r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?",ospf-timers#1.0
+F07,ospf_area_mismatch,id,chunk kecil + dok tambahan,1,"r1 dan r3 tidak menjadi tetangga OSPF di link 10.0.13.0/30, log menyebut area tidak cocok",ospfd#2.0
+F07,ospf_area_mismatch,en,chunk kecil + dok tambahan,1,"r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,chunk kecil + dok tambahan,2,"Interface eth2 di r2 dipindah ke area 0.0.0.2 sementara r3 tetap di backbone, rute 10.255.0.3/32 hilang dari tabel OSPF r2",ospfd#0.1
+F08,ospf_area_mismatch,en,chunk kecil + dok tambahan,1,"Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,chunk kecil + dok tambahan,,Kenapa r4 dan r5 tidak bertukar Hello OSPF padahal ping 10.0.45.1 ke 10.0.45.2 lancar dan interface up?,zebra-interface#3.0
+F09,ospf_area_mismatch,en,chunk kecil + dok tambahan,,Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?,zebra-interface#1.1
+F10,ospf_auth_mismatch,id,chunk kecil + dok tambahan,1,r1 menolak paket OSPF dari r2 dengan pesan autentikasi MD5 gagal di eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,chunk kecil + dok tambahan,1,r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1,ospfd#4.1
+F11,ospf_auth_mismatch,id,chunk kecil + dok tambahan,,"Setelah kunci message-digest ditambahkan di r3 eth1 (10.0.13.2), tetangga 10.255.0.1 turun dari Full ke Down dan tidak naik lagi",zebra-interface#0.1
+F11,ospf_auth_mismatch,en,chunk kecil + dok tambahan,,"After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back",bgp-neighbor#3.0
+F12,ospf_auth_mismatch,id,chunk kecil + dok tambahan,2,Jenis autentikasi OSPF di r6 berbeda dengan r5,ospfd#5.0
+F12,ospf_auth_mismatch,en,chunk kecil + dok tambahan,1,OSPF authentication type on r6 differs from r5,ospfd#4.0
+F13,ospf_passive_interface,id,chunk kecil + dok tambahan,2,r2 masih mengiklankan subnet 10.0.23.0/30 ke OSPF tetapi tidak lagi mengirim Hello ke r3 di eth2,zebra-interface#1.1
+F13,ospf_passive_interface,en,chunk kecil + dok tambahan,4,r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2,zebra-interface#1.1
+F14,ospf_passive_interface,id,chunk kecil + dok tambahan,,Interface eth2 r4 diset pasif sehingga adjacency dengan r5 hilang,zebra-interface#3.0
+F14,ospf_passive_interface,en,chunk kecil + dok tambahan,1,Interface eth2 on r4 was set passive so the adjacency with r5 is gone,ospfd#3.1
+F15,ospf_passive_interface,id,chunk kecil + dok tambahan,,"Tidak ada paket Hello OSPF yang keluar dari r5 eth2 menuju 10.0.56.2 menurut tcpdump jam 14:02, padahal konfigurasi area benar",zebra-interface#3.0
+F15,ospf_passive_interface,en,chunk kecil + dok tambahan,,"No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,chunk kecil + dok tambahan,1,Sesi eBGP r1-r6 turun dan show interface brief di r1 menunjukkan eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,chunk kecil + dok tambahan,1,The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.1
+F17,interface_down,id,chunk kecil + dok tambahan,,"Link r1-r3 mati total, ping 10.0.13.1 dari r3 gagal dan semua adjacency di eth1 lenyap, bagaimana menyalakan lagi interface-nya?",zebra-interface#0.1
+F17,interface_down,en,chunk kecil + dok tambahan,3,"The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?",troubleshooting-general#1.1
+F18,interface_down,id,chunk kecil + dok tambahan,1,"Interface eth3 di r5 (10.0.25.2) status DOWN di kernel sejak 03:15, sesi BGP ke 10.0.25.1 Idle",zebra-interface#2.1
+F18,interface_down,en,chunk kecil + dok tambahan,1,"Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle",zebra-interface#2.1
+F19,ip_address_wrong,id,chunk kecil + dok tambahan,2,Alamat IP eth1 r2 berubah menjadi 10.0.12.6/30 sehingga tidak satu subnet dengan r1,troubleshooting-general#1.1
+F19,ip_address_wrong,en,chunk kecil + dok tambahan,2,The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1,troubleshooting-general#2.1
+F20,ip_address_wrong,id,chunk kecil + dok tambahan,1,"OSPF di r5 mencatat Hello dari 10.0.54.1 ditolak karena sumber tidak berada di jaringan interface eth1, rute ke 10.255.0.4 hilang",zebra-interface#1.1
+F20,ip_address_wrong,en,chunk kecil + dok tambahan,1,"OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing",zebra-interface#1.1
+F21,ip_address_wrong,id,chunk kecil + dok tambahan,3,"r6 tidak bisa ping r1 di 10.0.16.1, ARP gagal, dan sesi eBGP Active; alamat interface eth2 r6 terlihat aneh",zebra-interface#3.0
+F21,ip_address_wrong,en,chunk kecil + dok tambahan,,"r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd",troubleshooting-general#1.1
+F22,bgp_remote_as_wrong,id,chunk kecil + dok tambahan,1,"Sesi BGP r3 ke 10.0.34.2 bolak-balik Idle/Active dan log menulis 'bad OPEN, remote AS is 65002, expected 65020' jam 11:20:45",bgp-neighbor#0.1
+F22,bgp_remote_as_wrong,en,chunk kecil + dok tambahan,1,"The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45",bgp-neighbor#0.1
+F23,bgp_remote_as_wrong,id,chunk kecil + dok tambahan,3,Nomor AS tetangga BGP di r5 untuk peer 10.0.25.1 salah,bgp-neighbor#1.0
+F23,bgp_remote_as_wrong,en,chunk kecil + dok tambahan,2,The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong,bgp-neighbor#1.0
+F24,bgp_remote_as_wrong,id,chunk kecil + dok tambahan,1,"Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error",bgp-neighbor#0.1
+F24,bgp_remote_as_wrong,en,chunk kecil + dok tambahan,3,"The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,id,chunk kecil + dok tambahan,,"Sesi eBGP r4-r3 Established tetapi r4 menerima 0 prefix dari 10.0.34.1, loopback AS 65001 tidak terjangkau dari AS 65002",prefix-list#2.1
+F25,bgp_prefix_list_block,en,chunk kecil + dok tambahan,3,"The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002",bgp-neighbor#3.0
+F26,bgp_prefix_list_block,id,chunk kecil + dok tambahan,1,Filter prefix di r2 memblokir rute 10.255.0.0/24 dari r5,bgpd#3.0
+F26,bgp_prefix_list_block,en,chunk kecil + dok tambahan,1,A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5,prefix-list#2.0
+F27,bgp_prefix_list_block,id,chunk kecil + dok tambahan,2,r1 tidak lagi menerima rute apa pun dari r6 lewat 10.0.16.2 walaupun sesi BGP naik; di r6 ada daftar prefix RCA-BLOCK yang terpasang keluar,prefix-list#2.1
+F27,bgp_prefix_list_block,en,chunk kecil + dok tambahan,1,r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound,prefix-list#2.0
+F28,bgp_route_map_deny,id,chunk kecil + dok tambahan,1,"r3 berhenti mengiklankan prefix ke r4 setelah route-map RCA-DENY dipasang, sesi tetap Established",route-map#0.0
+F28,bgp_route_map_deny,en,chunk kecil + dok tambahan,1,"r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established",route-map#2.1
+F29,bgp_route_map_deny,id,chunk kecil + dok tambahan,,"Kebijakan masuk di r5 untuk peer 10.255.0.4 menolak semua rute, tabel BGP r5 kosong dari r4",bgp-neighbor#0.1
+F29,bgp_route_map_deny,en,chunk kecil + dok tambahan,1,"Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4",route-map#2.0
+F30,bgp_route_map_deny,id,chunk kecil + dok tambahan,,"Pukul 16:05 jumlah prefix yang diterima r6 dari r1 (10.0.16.1) turun dari 3 ke 0, telemetry menunjukkan loopback 10.255.0.1-3 hilang di AS 65002 tetapi sesi tidak putus",prefix-list#0.0
+F30,bgp_route_map_deny,en,chunk kecil + dok tambahan,,"At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop",bgp-neighbor#3.0
+F01,mtu_mismatch,id,chunk kecil + dok + terjemah,1,"neighbor OSPF r1-r2 on eth1 stuck on state ExStart, ping small works but ping 1472 byte fails. what cause?",ospf-mtu#0.1
+F01,mtu_mismatch,en,chunk kecil + dok + terjemah,1,"OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospf-mtu#0.1
+F02,mtu_mismatch,id,chunk kecil + dok + terjemah,1,"Log r3 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 never Full. how fix?",ospf-mtu#0.1
+F02,mtu_mismatch,en,chunk kecil + dok + terjemah,1,"r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?",ospf-mtu#0.1
+F03,mtu_mismatch,id,chunk kecil + dok + terjemah,1,packet size mtu on interface eth2 r5 differs from mismatch r6 so neighbor OSPF stuck on Exchange,ospf-mtu#0.1
+F03,mtu_mismatch,en,chunk kecil + dok + terjemah,1,Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange,ospf-mtu#2.1
+F04,ospf_timer_mismatch,id,chunk kecil + dok + terjemah,,"Adjacency OSPF between r1 and r2 via 10.0.12.0/30 missing about 40 seconds after change configuration and not kembali, show ip ospf neighbor empty on eth1",ospfd#2.1
+F04,ospf_timer_mismatch,en,chunk kecil + dok + terjemah,,"The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#2.1
+F05,ospf_timer_mismatch,id,chunk kecil + dok + terjemah,3,"Interval hello and dead on r4 eth2 mismatch with r5, neighbor does not form",ospf-timers#1.1
+F05,ospf_timer_mismatch,en,chunk kecil + dok + terjemah,3,"Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form",ospf-timers#1.1
+F06,ospf_timer_mismatch,id,chunk kecil + dok + terjemah,1,"r6 logs 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 on 2026/11/21 09:12:33, why OSPF r5-r6 down?",ospf-timers#1.0
+F06,ospf_timer_mismatch,en,chunk kecil + dok + terjemah,1,"r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?",ospf-timers#1.0
+F07,ospf_area_mismatch,id,chunk kecil + dok + terjemah,1,"r1 and r3 not become neighbor OSPF on link 10.0.13.0/30, log mentions area mismatch",ospfd#2.0
+F07,ospf_area_mismatch,en,chunk kecil + dok + terjemah,1,"r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,chunk kecil + dok + terjemah,1,"Interface eth2 on r2 moved to area 0.0.0.2 while r3 stays on backbone, route 10.255.0.3/32 missing from table OSPF r2",ospfd#2.0
+F08,ospf_area_mismatch,en,chunk kecil + dok + terjemah,1,"Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,chunk kecil + dok + terjemah,,why r4 and r5 not exchange Hello OSPF although ping 10.0.45.1 to 10.0.45.2 works and interface up?,zebra-interface#1.1
+F09,ospf_area_mismatch,en,chunk kecil + dok + terjemah,,Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?,zebra-interface#1.1
+F10,ospf_auth_mismatch,id,chunk kecil + dok + terjemah,1,r1 rejects packet OSPF from r2 with message authentication MD5 fails on eth1,ospfd#4.1
+F10,ospf_auth_mismatch,en,chunk kecil + dok + terjemah,1,r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1,ospfd#4.1
+F11,ospf_auth_mismatch,id,chunk kecil + dok + terjemah,,"after key message-digest added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and not up again",bgp-neighbor#3.0
+F11,ospf_auth_mismatch,en,chunk kecil + dok + terjemah,,"After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back",bgp-neighbor#3.0
+F12,ospf_auth_mismatch,id,chunk kecil + dok + terjemah,1,type authentication OSPF on r6 differs from mismatch r5,ospfd#4.1
+F12,ospf_auth_mismatch,en,chunk kecil + dok + terjemah,1,OSPF authentication type on r6 differs from r5,ospfd#4.0
+F13,ospf_passive_interface,id,chunk kecil + dok + terjemah,3,r2 still advertises subnet 10.0.23.0/30 to OSPF but no longer sends Hello to r3 on eth2,zebra-interface#1.1
+F13,ospf_passive_interface,en,chunk kecil + dok + terjemah,4,r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2,zebra-interface#1.1
+F14,ospf_passive_interface,id,chunk kecil + dok + terjemah,1,Interface eth2 r4 set passive so adjacency with r5 missing,ospfd#3.1
+F14,ospf_passive_interface,en,chunk kecil + dok + terjemah,1,Interface eth2 on r4 was set passive so the adjacency with r5 is gone,ospfd#3.1
+F15,ospf_passive_interface,id,chunk kecil + dok + terjemah,,"no packet Hello OSPF keluar from r5 eth2 towards 10.0.56.2 according to tcpdump 14:02, although configuration area correct",ospfd#2.1
+F15,ospf_passive_interface,en,chunk kecil + dok + terjemah,,"No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,chunk kecil + dok + terjemah,1,session eBGP r1-r6 down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.1
+F16,interface_down,en,chunk kecil + dok + terjemah,1,The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.1
+F17,interface_down,id,chunk kecil + dok + terjemah,1,"Link r1-r3 down, ping 10.0.13.1 from r3 fails and all adjacency on eth1 missing, how bring up no shutdown interface-nya?",zebra-interface#2.0
+F17,interface_down,en,chunk kecil + dok + terjemah,3,"The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?",troubleshooting-general#1.1
+F18,interface_down,id,chunk kecil + dok + terjemah,1,"Interface eth3 on r5 (10.0.25.2) state DOWN on kernel since 03:15, session BGP to 10.0.25.1 Idle",zebra-interface#2.1
+F18,interface_down,en,chunk kecil + dok + terjemah,1,"Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle",zebra-interface#2.1
+F19,ip_address_wrong,id,chunk kecil + dok + terjemah,2,ip address eth1 r2 changed to 10.0.12.6/30 so not same subnet with r1,troubleshooting-general#2.1
+F19,ip_address_wrong,en,chunk kecil + dok + terjemah,2,The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1,troubleshooting-general#2.1
+F20,ip_address_wrong,id,chunk kecil + dok + terjemah,3,"OSPF on r5 logs Hello from 10.0.54.1 rejected because source not berada on network interface eth1, route to 10.255.0.4 missing",ospfd#2.0
+F20,ip_address_wrong,en,chunk kecil + dok + terjemah,1,"OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing",zebra-interface#1.1
+F21,ip_address_wrong,id,chunk kecil + dok + terjemah,,"r6 cannot ping r1 on 10.0.16.1, ARP fails, and session eBGP Active; address interface eth2 r6 looks wrong",troubleshooting-general#1.1
+F21,ip_address_wrong,en,chunk kecil + dok + terjemah,,"r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd",troubleshooting-general#1.1
+F22,bgp_remote_as_wrong,id,chunk kecil + dok + terjemah,1,"session BGP r3 to 10.0.34.2 flapping Idle/Active and log says 'bad OPEN, remote AS is 65002, expected 65020' 11:20:45",bgp-neighbor#0.1
+F22,bgp_remote_as_wrong,en,chunk kecil + dok + terjemah,1,"The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45",bgp-neighbor#0.1
+F23,bgp_remote_as_wrong,id,chunk kecil + dok + terjemah,2,as number remote-as neighbor BGP on r5 for peer 10.0.25.1 wrong,bgp-neighbor#1.0
+F23,bgp_remote_as_wrong,en,chunk kecil + dok + terjemah,2,The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong,bgp-neighbor#1.0
+F24,bgp_remote_as_wrong,id,chunk kecil + dok + terjemah,1,"Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error",bgp-neighbor#0.1
+F24,bgp_remote_as_wrong,en,chunk kecil + dok + terjemah,3,"The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,id,chunk kecil + dok + terjemah,3,"session eBGP r4-r3 Established but r4 receives 0 prefix from 10.0.34.1, loopback AS 65001 unreachable from AS 65002",bgpd#2.1
+F25,bgp_prefix_list_block,en,chunk kecil + dok + terjemah,3,"The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002",bgp-neighbor#3.0
+F26,bgp_prefix_list_block,id,chunk kecil + dok + terjemah,2,prefix-list filter on r2 blocks route 10.255.0.0/24 from r5,prefix-list#2.1
+F26,bgp_prefix_list_block,en,chunk kecil + dok + terjemah,1,A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5,prefix-list#2.0
+F27,bgp_prefix_list_block,id,chunk kecil + dok + terjemah,1,r1 no longer receives route any from r6 via 10.0.16.2 although session BGP up; on r6 prefix-list RCA-BLOCK applied keluar,prefix-list#2.0
+F27,bgp_prefix_list_block,en,chunk kecil + dok + terjemah,1,r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound,prefix-list#2.0
+F28,bgp_route_map_deny,id,chunk kecil + dok + terjemah,1,"r3 stopped advertises prefix to r4 after route-map RCA-DENY applied, session stays Established",route-map#2.1
+F28,bgp_route_map_deny,en,chunk kecil + dok + terjemah,1,"r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established",route-map#2.1
+F29,bgp_route_map_deny,id,chunk kecil + dok + terjemah,1,"inbound policy route-map on r5 for peer 10.255.0.4 rejects all route, table BGP r5 empty from r4",route-map#2.0
+F29,bgp_route_map_deny,en,chunk kecil + dok + terjemah,1,"Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4",route-map#2.0
+F30,bgp_route_map_deny,id,chunk kecil + dok + terjemah,,"16:05 number prefix diterima r6 from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopback 10.255.0.1-3 missing on AS 65002 but session not down",bgp-neighbor#3.0
+F30,bgp_route_map_deny,en,chunk kecil + dok + terjemah,,"At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop",bgp-neighbor#3.0
+F01,mtu_mismatch,id,chunk kecil + semua,1,"neighbor OSPF - on eth1 stuck on state ExStart, ping small works but ping 1472 byte fails. what cause?",ospf-mtu#0.1
+F01,mtu_mismatch,en,chunk kecil + semua,1,"OSPF neighbor - on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospf-mtu#0.1
+F02,mtu_mismatch,id,chunk kecil + semua,1,"Log : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', adjacency - never Full. how fix?",ospf-mtu#0.1
+F02,mtu_mismatch,en,chunk kecil + semua,1,"log at : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', the - adjacency never reaches Full. How do I fix it?",ospf-mtu#0.1
+F03,mtu_mismatch,id,chunk kecil + semua,1,packet size mtu on interface eth2 differs from mismatch so neighbor OSPF stuck on Exchange,ospf-mtu#0.1
+F03,mtu_mismatch,en,chunk kecil + semua,1,Packet size on eth2 differs from so the OSPF neighbor stays in Exchange,ospf-mtu#0.1
+F04,ospf_timer_mismatch,id,chunk kecil + semua,,"Adjacency OSPF between and via missing about 40 seconds after change configuration and not kembali, show ip ospf neighbor empty on eth1",ospf-timers#2.1
+F04,ospf_timer_mismatch,en,chunk kecil + semua,,"The OSPF adjacency between and over disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospf-timers#2.1
+F05,ospf_timer_mismatch,id,chunk kecil + semua,3,"Interval hello and dead on eth2 mismatch with , neighbor does not form",ospf-timers#2.1
+F05,ospf_timer_mismatch,en,chunk kecil + semua,3,"Hello and dead intervals on eth2 are not the same as on , the neighbor does not form",ospf-timers#1.1
+F06,ospf_timer_mismatch,id,chunk kecil + semua,1,"logs 'Hello:RECV HelloInterval mismatch' from on , why OSPF - down?",ospf-timers#1.0
+F06,ospf_timer_mismatch,en,chunk kecil + semua,1,"logged 'Hello:RECV HelloInterval mismatch' from at , why did OSPF - go down?",ospf-timers#1.0
+F07,ospf_area_mismatch,id,chunk kecil + semua,1,"and not become neighbor OSPF on link , log mentions area mismatch",ospfd#2.0
+F07,ospf_area_mismatch,en,chunk kecil + semua,1,"and do not become OSPF neighbors on link , the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,chunk kecil + semua,2,"Interface eth2 on moved to area while stays on backbone, route missing from table OSPF",ospfd#3.1
+F08,ospf_area_mismatch,en,chunk kecil + semua,2,"Interface eth2 on was moved to area while stays in the backbone, route vanished from 's OSPF table",ospfd#3.1
+F09,ospf_area_mismatch,id,chunk kecil + semua,,why and not exchange Hello OSPF although ping to works and interface up?,ospf-mtu#1.0
+F09,ospf_area_mismatch,en,chunk kecil + semua,,Why do and not exchange OSPF Hellos although ping from to works and the interface is up?,zebra-interface#1.1
+F10,ospf_auth_mismatch,id,chunk kecil + semua,1,rejects packet OSPF from with message authentication MD5 fails on eth1,ospfd#4.1
+F10,ospf_auth_mismatch,en,chunk kecil + semua,1,rejects OSPF packets from with an MD5 authentication failure message on eth1,ospfd#4.1
+F11,ospf_auth_mismatch,id,chunk kecil + semua,,"after key message-digest added on eth1 , neighbor dropped from Full to Down and not up again",bgp-neighbor#3.0
+F11,ospf_auth_mismatch,en,chunk kecil + semua,,"After a message-digest key was added on eth1 , neighbor dropped from Full to Down and never came back",bgp-neighbor#3.0
+F12,ospf_auth_mismatch,id,chunk kecil + semua,1,type authentication OSPF on differs from mismatch,ospfd#4.1
+F12,ospf_auth_mismatch,en,chunk kecil + semua,1,OSPF authentication type on differs from,ospfd#4.1
+F13,ospf_passive_interface,id,chunk kecil + semua,2,still advertises subnet to OSPF but no longer sends Hello to on eth2,zebra-interface#1.1
+F13,ospf_passive_interface,en,chunk kecil + semua,2,still advertises subnet into OSPF but no longer sends Hellos to on eth2,zebra-interface#1.1
+F14,ospf_passive_interface,id,chunk kecil + semua,1,Interface eth2 set passive so adjacency with missing,ospfd#3.1
+F14,ospf_passive_interface,en,chunk kecil + semua,1,Interface eth2 on was set passive so the adjacency with is gone,ospfd#3.1
+F15,ospf_passive_interface,id,chunk kecil + semua,,"no packet Hello OSPF keluar from eth2 towards according to tcpdump , although configuration area correct",ospfd#2.1
+F15,ospf_passive_interface,en,chunk kecil + semua,,"No OSPF Hello packets leave eth2 towards according to tcpdump at , although the area configuration is correct",ospfd#2.1
+F16,interface_down,id,chunk kecil + semua,1,session eBGP - down and show interface brief on shows eth3 admin down,zebra-interface#2.1
+F16,interface_down,en,chunk kecil + semua,1,The - eBGP session went down and show interface brief on shows eth3 admin down,zebra-interface#2.1
+F17,interface_down,id,chunk kecil + semua,1,"Link - down, ping from fails and all adjacency on eth1 missing, how bring up no shutdown interface-nya?",zebra-interface#2.0
+F17,interface_down,en,chunk kecil + semua,2,"The - link is completely down, ping to from fails and every adjacency on eth1 vanished, how do I bring the interface back up?",troubleshooting-general#1.1
+F18,interface_down,id,chunk kecil + semua,1,"Interface eth3 on state DOWN on kernel since , session BGP to Idle",zebra-interface#2.1
+F18,interface_down,en,chunk kecil + semua,1,"Interface eth3 on has been DOWN in the kernel since , the BGP session to is Idle",zebra-interface#2.1
+F19,ip_address_wrong,id,chunk kecil + semua,3,ip address eth1 changed to so not same subnet with,zebra-interface#1.2
+F19,ip_address_wrong,en,chunk kecil + semua,1,The IP address of eth1 changed to so it is no longer in the same subnet as,zebra-interface#1.0
+F20,ip_address_wrong,id,chunk kecil + semua,3,"OSPF on logs Hello from rejected because source not berada on network interface eth1, route to missing",ospfd#4.1
+F20,ip_address_wrong,en,chunk kecil + semua,1,"OSPF on logs that Hellos from are rejected because the source is not on the eth1 interface network, the route to is missing",zebra-interface#1.1
+F21,ip_address_wrong,id,chunk kecil + semua,,"cannot ping on , ARP fails, and session eBGP Active; address interface eth2 looks wrong",troubleshooting-general#1.1
+F21,ip_address_wrong,en,chunk kecil + semua,,"cannot ping at , ARP fails and the eBGP session is Active; eth2 interface address looks odd",troubleshooting-general#1.1
+F22,bgp_remote_as_wrong,id,chunk kecil + semua,1,"session BGP to flapping Idle/Active and log says 'bad OPEN, remote AS is , expected '",bgp-neighbor#0.1
+F22,bgp_remote_as_wrong,en,chunk kecil + semua,1,"The BGP session from to keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is , expected ' at",bgp-neighbor#0.1
+F23,bgp_remote_as_wrong,id,chunk kecil + semua,2,as number remote-as neighbor BGP on for peer wrong,bgp-neighbor#1.0
+F23,bgp_remote_as_wrong,en,chunk kecil + semua,2,The BGP neighbor AS number on for peer is wrong,bgp-neighbor#1.0
+F24,bgp_remote_as_wrong,id,chunk kecil + semua,1,"Sesi iBGP - antar loopback tidak pernah Established, mengirim NOTIFICATION OPEN Message Error",bgp-neighbor#0.1
+F24,bgp_remote_as_wrong,en,chunk kecil + semua,5,"The - iBGP session between loopbacks never gets Established, sends a NOTIFICATION OPEN Message Error",bgpd#0.1
+F25,bgp_prefix_list_block,id,chunk kecil + semua,3,"session eBGP - Established but receives 0 prefix from , loopback unreachable from",bgpd#2.1
+F25,bgp_prefix_list_block,en,chunk kecil + semua,3,"The - eBGP session is Established but receives 0 prefixes from , loopbacks are unreachable from",bgpd#2.1
+F26,bgp_prefix_list_block,id,chunk kecil + semua,1,prefix-list filter on blocks route from,prefix-list#1.0
+F26,bgp_prefix_list_block,en,chunk kecil + semua,1,A prefix filter on blocks the routes from,prefix-list#2.0
+F27,bgp_prefix_list_block,id,chunk kecil + semua,1,no longer receives route any from via although session BGP up; on prefix-list RCA-BLOCK applied keluar,prefix-list#2.0
+F27,bgp_prefix_list_block,en,chunk kecil + semua,1,no longer receives any route from over although the BGP session is up; has a prefix list RCA-BLOCK applied outbound,prefix-list#2.0
+F28,bgp_route_map_deny,id,chunk kecil + semua,1,"stopped advertises prefix to after route-map RCA-DENY applied, session stays Established",route-map#2.1
+F28,bgp_route_map_deny,en,chunk kecil + semua,1,"stopped advertising prefixes to after route-map RCA-DENY was applied, the session stays Established",route-map#2.1
+F29,bgp_route_map_deny,id,chunk kecil + semua,1,"inbound policy route-map on for peer rejects all route, table BGP empty from",route-map#2.0
+F29,bgp_route_map_deny,en,chunk kecil + semua,1,"Inbound policy on for peer rejects all routes, 's BGP table has nothing from",route-map#2.0
+F30,bgp_route_map_deny,id,chunk kecil + semua,,"number prefix diterima from dropped from 3 to 0, telemetry shows loopback missing on but session not down",troubleshooting-general#3.0
+F30,bgp_route_map_deny,en,chunk kecil + semua,,"At the number of prefixes receives from dropped from 3 to 0, telemetry shows loopbacks missing in but the session did not drop",bgpd#2.1
+F01,mtu_mismatch,id,dok + terjemah,1,"neighbor OSPF r1-r2 on eth1 stuck on state ExStart, ping small works but ping 1472 byte fails. what cause?",ospf-mtu#0.0
+F01,mtu_mismatch,en,dok + terjemah,2,"OSPF neighbor r1-r2 on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospfd#5.0
+F02,mtu_mismatch,id,dok + terjemah,1,"Log r3 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', adjacency r2-r3 never Full. how fix?",ospf-mtu#0.0
+F02,mtu_mismatch,en,dok + terjemah,1,"r3 log at 10:41:07: 'Packet[DD]: Neighbor 10.255.0.2 ... is larger than [eth2:10.0.23.2]'s 1400', the r2-r3 adjacency never reaches Full. How do I fix it?",ospf-mtu#0.0
+F03,mtu_mismatch,id,dok + terjemah,1,packet size mtu on interface eth2 r5 differs from mismatch r6 so neighbor OSPF stuck on Exchange,ospf-mtu#0.0
+F03,mtu_mismatch,en,dok + terjemah,2,Packet size on r5 eth2 differs from r6 so the OSPF neighbor stays in Exchange,ospfd#2.0
+F04,ospf_timer_mismatch,id,dok + terjemah,3,"Adjacency OSPF between r1 and r2 via 10.0.12.0/30 missing about 40 seconds after change configuration and not kembali, show ip ospf neighbor empty on eth1",ospfd#2.0
+F04,ospf_timer_mismatch,en,dok + terjemah,4,"The OSPF adjacency between r1 and r2 over 10.0.12.0/30 disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#5.0
+F05,ospf_timer_mismatch,id,dok + terjemah,1,"Interval hello and dead on r4 eth2 mismatch with r5, neighbor does not form",ospf-timers#2.0
+F05,ospf_timer_mismatch,en,dok + terjemah,1,"Hello and dead intervals on r4 eth2 are not the same as on r5, the neighbor does not form",ospf-timers#1.0
+F06,ospf_timer_mismatch,id,dok + terjemah,1,"r6 logs 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 on 2026/11/21 09:12:33, why OSPF r5-r6 down?",ospf-timers#1.0
+F06,ospf_timer_mismatch,en,dok + terjemah,1,"r6 logged 'Hello:RECV HelloInterval mismatch' from 10.0.56.1 at 2026/11/21 09:12:33, why did OSPF r5-r6 go down?",ospf-timers#1.0
+F07,ospf_area_mismatch,id,dok + terjemah,1,"r1 and r3 not become neighbor OSPF on link 10.0.13.0/30, log mentions area mismatch",ospfd#2.0
+F07,ospf_area_mismatch,en,dok + terjemah,1,"r1 and r3 do not become OSPF neighbors on link 10.0.13.0/30, the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,dok + terjemah,1,"Interface eth2 on r2 moved to area 0.0.0.2 while r3 stays on backbone, route 10.255.0.3/32 missing from table OSPF r2",ospfd#2.0
+F08,ospf_area_mismatch,en,dok + terjemah,1,"Interface eth2 on r2 was moved to area 0.0.0.2 while r3 stays in the backbone, route 10.255.0.3/32 vanished from r2's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,dok + terjemah,,why r4 and r5 not exchange Hello OSPF although ping 10.0.45.1 to 10.0.45.2 works and interface up?,zebra-interface#1.0
+F09,ospf_area_mismatch,en,dok + terjemah,5,Why do r4 and r5 not exchange OSPF Hellos although ping from 10.0.45.1 to 10.0.45.2 works and the interface is up?,troubleshooting-general#3.0
+F10,ospf_auth_mismatch,id,dok + terjemah,1,r1 rejects packet OSPF from r2 with message authentication MD5 fails on eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,dok + terjemah,1,r1 rejects OSPF packets from r2 with an MD5 authentication failure message on eth1,ospfd#4.0
+F11,ospf_auth_mismatch,id,dok + terjemah,,"after key message-digest added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and not up again",bgp-neighbor#3.0
+F11,ospf_auth_mismatch,en,dok + terjemah,,"After a message-digest key was added on r3 eth1 (10.0.13.2), neighbor 10.255.0.1 dropped from Full to Down and never came back",bgp-neighbor#3.0
+F12,ospf_auth_mismatch,id,dok + terjemah,1,type authentication OSPF on r6 differs from mismatch r5,ospfd#4.0
+F12,ospf_auth_mismatch,en,dok + terjemah,1,OSPF authentication type on r6 differs from r5,ospfd#4.0
+F13,ospf_passive_interface,id,dok + terjemah,2,r2 still advertises subnet 10.0.23.0/30 to OSPF but no longer sends Hello to r3 on eth2,zebra-interface#1.0
+F13,ospf_passive_interface,en,dok + terjemah,2,r2 still advertises subnet 10.0.23.0/30 into OSPF but no longer sends Hellos to r3 on eth2,zebra-interface#1.0
+F14,ospf_passive_interface,id,dok + terjemah,1,Interface eth2 r4 set passive so adjacency with r5 missing,ospfd#3.0
+F14,ospf_passive_interface,en,dok + terjemah,1,Interface eth2 on r4 was set passive so the adjacency with r5 is gone,ospfd#3.0
+F15,ospf_passive_interface,id,dok + terjemah,,"no packet Hello OSPF keluar from r5 eth2 towards 10.0.56.2 according to tcpdump 14:02, although configuration area correct",ospfd#2.0
+F15,ospf_passive_interface,en,dok + terjemah,,"No OSPF Hello packets leave r5 eth2 towards 10.0.56.2 according to tcpdump at 14:02, although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,dok + terjemah,1,session eBGP r1-r6 down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,dok + terjemah,1,The r1-r6 eBGP session went down and show interface brief on r1 shows eth3 admin down,zebra-interface#2.0
+F17,interface_down,id,dok + terjemah,1,"Link r1-r3 down, ping 10.0.13.1 from r3 fails and all adjacency on eth1 missing, how bring up no shutdown interface-nya?",zebra-interface#2.0
+F17,interface_down,en,dok + terjemah,1,"The r1-r3 link is completely down, ping to 10.0.13.1 from r3 fails and every adjacency on eth1 vanished, how do I bring the interface back up?",zebra-interface#2.0
+F18,interface_down,id,dok + terjemah,1,"Interface eth3 on r5 (10.0.25.2) state DOWN on kernel since 03:15, session BGP to 10.0.25.1 Idle",zebra-interface#2.0
+F18,interface_down,en,dok + terjemah,1,"Interface eth3 on r5 (10.0.25.2) has been DOWN in the kernel since 03:15, the BGP session to 10.0.25.1 is Idle",zebra-interface#2.0
+F19,ip_address_wrong,id,dok + terjemah,1,ip address eth1 r2 changed to 10.0.12.6/30 so not same subnet with r1,zebra-interface#1.0
+F19,ip_address_wrong,en,dok + terjemah,1,The IP address of r2 eth1 changed to 10.0.12.6/30 so it is no longer in the same subnet as r1,zebra-interface#1.0
+F20,ip_address_wrong,id,dok + terjemah,3,"OSPF on r5 logs Hello from 10.0.54.1 rejected because source not berada on network interface eth1, route to 10.255.0.4 missing",ospfd#2.0
+F20,ip_address_wrong,en,dok + terjemah,2,"OSPF on r5 logs that Hellos from 10.0.54.1 are rejected because the source is not on the eth1 interface network, the route to 10.255.0.4 is missing",ospfd#2.0
+F21,ip_address_wrong,id,dok + terjemah,3,"r6 cannot ping r1 on 10.0.16.1, ARP fails, and session eBGP Active; address interface eth2 r6 looks wrong",ospf-mtu#1.0
+F21,ip_address_wrong,en,dok + terjemah,2,"r6 cannot ping r1 at 10.0.16.1, ARP fails and the eBGP session is Active; r6 eth2 interface address looks odd",ospf-mtu#1.0
+F22,bgp_remote_as_wrong,id,dok + terjemah,1,"session BGP r3 to 10.0.34.2 flapping Idle/Active and log says 'bad OPEN, remote AS is 65002, expected 65020' 11:20:45",bgp-neighbor#0.0
+F22,bgp_remote_as_wrong,en,dok + terjemah,1,"The BGP session from r3 to 10.0.34.2 keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is 65002, expected 65020' at 11:20:45",bgp-neighbor#0.0
+F23,bgp_remote_as_wrong,id,dok + terjemah,2,as number remote-as neighbor BGP on r5 for peer 10.0.25.1 wrong,bgp-neighbor#1.0
+F23,bgp_remote_as_wrong,en,dok + terjemah,2,The BGP neighbor AS number on r5 for peer 10.0.25.1 is wrong,bgp-neighbor#1.0
+F24,bgp_remote_as_wrong,id,dok + terjemah,1,"Sesi iBGP r1-r2 antar loopback tidak pernah Established, r2 mengirim NOTIFICATION OPEN Message Error",bgp-neighbor#0.0
+F24,bgp_remote_as_wrong,en,dok + terjemah,2,"The r1-r2 iBGP session between loopbacks never gets Established, r2 sends a NOTIFICATION OPEN Message Error",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,id,dok + terjemah,4,"session eBGP r4-r3 Established but r4 receives 0 prefix from 10.0.34.1, loopback AS 65001 unreachable from AS 65002",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,en,dok + terjemah,4,"The r4-r3 eBGP session is Established but r4 receives 0 prefixes from 10.0.34.1, AS 65001 loopbacks are unreachable from AS 65002",bgp-neighbor#3.0
+F26,bgp_prefix_list_block,id,dok + terjemah,1,prefix-list filter on r2 blocks route 10.255.0.0/24 from r5,prefix-list#2.0
+F26,bgp_prefix_list_block,en,dok + terjemah,1,A prefix filter on r2 blocks the 10.255.0.0/24 routes from r5,prefix-list#2.0
+F27,bgp_prefix_list_block,id,dok + terjemah,1,r1 no longer receives route any from r6 via 10.0.16.2 although session BGP up; on r6 prefix-list RCA-BLOCK applied keluar,prefix-list#2.0
+F27,bgp_prefix_list_block,en,dok + terjemah,1,r1 no longer receives any route from r6 over 10.0.16.2 although the BGP session is up; r6 has a prefix list RCA-BLOCK applied outbound,prefix-list#2.0
+F28,bgp_route_map_deny,id,dok + terjemah,1,"r3 stopped advertises prefix to r4 after route-map RCA-DENY applied, session stays Established",route-map#2.0
+F28,bgp_route_map_deny,en,dok + terjemah,1,"r3 stopped advertising prefixes to r4 after route-map RCA-DENY was applied, the session stays Established",route-map#2.0
+F29,bgp_route_map_deny,id,dok + terjemah,1,"inbound policy route-map on r5 for peer 10.255.0.4 rejects all route, table BGP r5 empty from r4",route-map#2.0
+F29,bgp_route_map_deny,en,dok + terjemah,1,"Inbound policy on r5 for peer 10.255.0.4 rejects all routes, r5's BGP table has nothing from r4",route-map#2.0
+F30,bgp_route_map_deny,id,dok + terjemah,,"16:05 number prefix diterima r6 from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopback 10.255.0.1-3 missing on AS 65002 but session not down",bgp-neighbor#3.0
+F30,bgp_route_map_deny,en,dok + terjemah,,"At 16:05 the number of prefixes r6 receives from r1 (10.0.16.1) dropped from 3 to 0, telemetry shows loopbacks 10.255.0.1-3 missing in AS 65002 but the session did not drop",bgp-neighbor#3.0
+F01,mtu_mismatch,id,dok + terjemah + buang rincian,1,"neighbor OSPF - on eth1 stuck on state ExStart, ping small works but ping 1472 byte fails. what cause?",ospf-mtu#0.0
+F01,mtu_mismatch,en,dok + terjemah + buang rincian,1,"OSPF neighbor - on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospf-mtu#0.0
+F02,mtu_mismatch,id,dok + terjemah + buang rincian,1,"Log : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', adjacency - never Full. how fix?",ospf-mtu#0.0
+F02,mtu_mismatch,en,dok + terjemah + buang rincian,1,"log at : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', the - adjacency never reaches Full. How do I fix it?",ospf-mtu#0.0
+F03,mtu_mismatch,id,dok + terjemah + buang rincian,1,packet size mtu on interface eth2 differs from mismatch so neighbor OSPF stuck on Exchange,ospf-mtu#0.0
+F03,mtu_mismatch,en,dok + terjemah + buang rincian,1,Packet size on eth2 differs from so the OSPF neighbor stays in Exchange,ospf-mtu#0.0
+F04,ospf_timer_mismatch,id,dok + terjemah + buang rincian,2,"Adjacency OSPF between and via missing about 40 seconds after change configuration and not kembali, show ip ospf neighbor empty on eth1",ospf-mtu#0.0
+F04,ospf_timer_mismatch,en,dok + terjemah + buang rincian,4,"The OSPF adjacency between and over disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#5.0
+F05,ospf_timer_mismatch,id,dok + terjemah + buang rincian,1,"Interval hello and dead on eth2 mismatch with , neighbor does not form",ospf-timers#2.0
+F05,ospf_timer_mismatch,en,dok + terjemah + buang rincian,1,"Hello and dead intervals on eth2 are not the same as on , the neighbor does not form",ospf-timers#1.0
+F06,ospf_timer_mismatch,id,dok + terjemah + buang rincian,1,"logs 'Hello:RECV HelloInterval mismatch' from on , why OSPF - down?",ospf-timers#1.0
+F06,ospf_timer_mismatch,en,dok + terjemah + buang rincian,1,"logged 'Hello:RECV HelloInterval mismatch' from at , why did OSPF - go down?",ospf-timers#1.0
+F07,ospf_area_mismatch,id,dok + terjemah + buang rincian,1,"and not become neighbor OSPF on link , log mentions area mismatch",ospfd#2.0
+F07,ospf_area_mismatch,en,dok + terjemah + buang rincian,1,"and do not become OSPF neighbors on link , the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,dok + terjemah + buang rincian,1,"Interface eth2 on moved to area while stays on backbone, route missing from table OSPF",ospfd#2.0
+F08,ospf_area_mismatch,en,dok + terjemah + buang rincian,1,"Interface eth2 on was moved to area while stays in the backbone, route vanished from 's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,dok + terjemah + buang rincian,,why and not exchange Hello OSPF although ping to works and interface up?,ospf-mtu#1.0
+F09,ospf_area_mismatch,en,dok + terjemah + buang rincian,,Why do and not exchange OSPF Hellos although ping from to works and the interface is up?,zebra-interface#1.0
+F10,ospf_auth_mismatch,id,dok + terjemah + buang rincian,1,rejects packet OSPF from with message authentication MD5 fails on eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,dok + terjemah + buang rincian,1,rejects OSPF packets from with an MD5 authentication failure message on eth1,ospfd#4.0
+F11,ospf_auth_mismatch,id,dok + terjemah + buang rincian,,"after key message-digest added on eth1 , neighbor dropped from Full to Down and not up again",bgp-neighbor#3.0
+F11,ospf_auth_mismatch,en,dok + terjemah + buang rincian,,"After a message-digest key was added on eth1 , neighbor dropped from Full to Down and never came back",bgp-neighbor#3.0
+F12,ospf_auth_mismatch,id,dok + terjemah + buang rincian,1,type authentication OSPF on differs from mismatch,ospfd#4.0
+F12,ospf_auth_mismatch,en,dok + terjemah + buang rincian,1,OSPF authentication type on differs from,ospfd#4.0
+F13,ospf_passive_interface,id,dok + terjemah + buang rincian,1,still advertises subnet to OSPF but no longer sends Hello to on eth2,ospfd#3.0
+F13,ospf_passive_interface,en,dok + terjemah + buang rincian,1,still advertises subnet into OSPF but no longer sends Hellos to on eth2,ospfd#3.0
+F14,ospf_passive_interface,id,dok + terjemah + buang rincian,1,Interface eth2 set passive so adjacency with missing,ospfd#3.0
+F14,ospf_passive_interface,en,dok + terjemah + buang rincian,1,Interface eth2 on was set passive so the adjacency with is gone,ospfd#3.0
+F15,ospf_passive_interface,id,dok + terjemah + buang rincian,,"no packet Hello OSPF keluar from eth2 towards according to tcpdump , although configuration area correct",ospfd#2.0
+F15,ospf_passive_interface,en,dok + terjemah + buang rincian,5,"No OSPF Hello packets leave eth2 towards according to tcpdump at , although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,dok + terjemah + buang rincian,1,session eBGP - down and show interface brief on shows eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,dok + terjemah + buang rincian,1,The - eBGP session went down and show interface brief on shows eth3 admin down,zebra-interface#2.0
+F17,interface_down,id,dok + terjemah + buang rincian,1,"Link - down, ping from fails and all adjacency on eth1 missing, how bring up no shutdown interface-nya?",zebra-interface#2.0
+F17,interface_down,en,dok + terjemah + buang rincian,1,"The - link is completely down, ping to from fails and every adjacency on eth1 vanished, how do I bring the interface back up?",zebra-interface#2.0
+F18,interface_down,id,dok + terjemah + buang rincian,1,"Interface eth3 on state DOWN on kernel since , session BGP to Idle",zebra-interface#2.0
+F18,interface_down,en,dok + terjemah + buang rincian,1,"Interface eth3 on has been DOWN in the kernel since , the BGP session to is Idle",zebra-interface#2.0
+F19,ip_address_wrong,id,dok + terjemah + buang rincian,1,ip address eth1 changed to so not same subnet with,zebra-interface#1.0
+F19,ip_address_wrong,en,dok + terjemah + buang rincian,1,The IP address of eth1 changed to so it is no longer in the same subnet as,zebra-interface#1.0
+F20,ip_address_wrong,id,dok + terjemah + buang rincian,2,"OSPF on logs Hello from rejected because source not berada on network interface eth1, route to missing",ospfd#2.0
+F20,ip_address_wrong,en,dok + terjemah + buang rincian,1,"OSPF on logs that Hellos from are rejected because the source is not on the eth1 interface network, the route to is missing",zebra-interface#1.0
+F21,ip_address_wrong,id,dok + terjemah + buang rincian,4,"cannot ping on , ARP fails, and session eBGP Active; address interface eth2 looks wrong",ospf-mtu#1.0
+F21,ip_address_wrong,en,dok + terjemah + buang rincian,3,"cannot ping at , ARP fails and the eBGP session is Active; eth2 interface address looks odd",ospf-mtu#1.0
+F22,bgp_remote_as_wrong,id,dok + terjemah + buang rincian,1,"session BGP to flapping Idle/Active and log says 'bad OPEN, remote AS is , expected '",bgp-neighbor#0.0
+F22,bgp_remote_as_wrong,en,dok + terjemah + buang rincian,1,"The BGP session from to keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is , expected ' at",bgp-neighbor#0.0
+F23,bgp_remote_as_wrong,id,dok + terjemah + buang rincian,2,as number remote-as neighbor BGP on for peer wrong,bgp-neighbor#1.0
+F23,bgp_remote_as_wrong,en,dok + terjemah + buang rincian,2,The BGP neighbor AS number on for peer is wrong,bgp-neighbor#1.0
+F24,bgp_remote_as_wrong,id,dok + terjemah + buang rincian,1,"Sesi iBGP - antar loopback tidak pernah Established, mengirim NOTIFICATION OPEN Message Error",bgp-neighbor#0.0
+F24,bgp_remote_as_wrong,en,dok + terjemah + buang rincian,4,"The - iBGP session between loopbacks never gets Established, sends a NOTIFICATION OPEN Message Error",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,id,dok + terjemah + buang rincian,3,"session eBGP - Established but receives 0 prefix from , loopback unreachable from",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,en,dok + terjemah + buang rincian,3,"The - eBGP session is Established but receives 0 prefixes from , loopbacks are unreachable from",bgp-neighbor#3.0
+F26,bgp_prefix_list_block,id,dok + terjemah + buang rincian,1,prefix-list filter on blocks route from,prefix-list#2.0
+F26,bgp_prefix_list_block,en,dok + terjemah + buang rincian,1,A prefix filter on blocks the routes from,bgpd#3.0
+F27,bgp_prefix_list_block,id,dok + terjemah + buang rincian,1,no longer receives route any from via although session BGP up; on prefix-list RCA-BLOCK applied keluar,prefix-list#2.0
+F27,bgp_prefix_list_block,en,dok + terjemah + buang rincian,1,no longer receives any route from over although the BGP session is up; has a prefix list RCA-BLOCK applied outbound,prefix-list#2.0
+F28,bgp_route_map_deny,id,dok + terjemah + buang rincian,1,"stopped advertises prefix to after route-map RCA-DENY applied, session stays Established",route-map#2.0
+F28,bgp_route_map_deny,en,dok + terjemah + buang rincian,1,"stopped advertising prefixes to after route-map RCA-DENY was applied, the session stays Established",route-map#2.0
+F29,bgp_route_map_deny,id,dok + terjemah + buang rincian,1,"inbound policy route-map on for peer rejects all route, table BGP empty from",route-map#2.0
+F29,bgp_route_map_deny,en,dok + terjemah + buang rincian,1,"Inbound policy on for peer rejects all routes, 's BGP table has nothing from",route-map#2.0
+F30,bgp_route_map_deny,id,dok + terjemah + buang rincian,,"number prefix diterima from dropped from 3 to 0, telemetry shows loopback missing on but session not down",troubleshooting-general#3.0
+F30,bgp_route_map_deny,en,dok + terjemah + buang rincian,,"At the number of prefixes receives from dropped from 3 to 0, telemetry shows loopbacks missing in but the session did not drop",troubleshooting-general#3.0
+F01,mtu_mismatch,id,chunk 800 + dok + terjemah + buang,1,"neighbor OSPF - on eth1 stuck on state ExStart, ping small works but ping 1472 byte fails. what cause?",ospf-mtu#0.0
+F01,mtu_mismatch,en,chunk 800 + dok + terjemah + buang,1,"OSPF neighbor - on eth1 is stuck in ExStart, small pings work but a 1472 byte ping fails. What is the cause?",ospf-mtu#0.0
+F02,mtu_mismatch,id,chunk 800 + dok + terjemah + buang,1,"Log : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', adjacency - never Full. how fix?",ospf-mtu#0.0
+F02,mtu_mismatch,en,chunk 800 + dok + terjemah + buang,1,"log at : 'Packet[DD]: Neighbor ... is larger than [eth2: ]'s 1400', the - adjacency never reaches Full. How do I fix it?",ospf-mtu#0.0
+F03,mtu_mismatch,id,chunk 800 + dok + terjemah + buang,1,packet size mtu on interface eth2 differs from mismatch so neighbor OSPF stuck on Exchange,ospf-mtu#0.0
+F03,mtu_mismatch,en,chunk 800 + dok + terjemah + buang,1,Packet size on eth2 differs from so the OSPF neighbor stays in Exchange,ospf-mtu#0.0
+F04,ospf_timer_mismatch,id,chunk 800 + dok + terjemah + buang,2,"Adjacency OSPF between and via missing about 40 seconds after change configuration and not kembali, show ip ospf neighbor empty on eth1",ospf-mtu#0.0
+F04,ospf_timer_mismatch,en,chunk 800 + dok + terjemah + buang,4,"The OSPF adjacency between and over disappeared about 40 seconds after a configuration change and did not come back, show ip ospf neighbor is empty on eth1",ospfd#5.0
+F05,ospf_timer_mismatch,id,chunk 800 + dok + terjemah + buang,1,"Interval hello and dead on eth2 mismatch with , neighbor does not form",ospf-timers#2.0
+F05,ospf_timer_mismatch,en,chunk 800 + dok + terjemah + buang,1,"Hello and dead intervals on eth2 are not the same as on , the neighbor does not form",ospf-timers#1.0
+F06,ospf_timer_mismatch,id,chunk 800 + dok + terjemah + buang,1,"logs 'Hello:RECV HelloInterval mismatch' from on , why OSPF - down?",ospf-timers#1.0
+F06,ospf_timer_mismatch,en,chunk 800 + dok + terjemah + buang,1,"logged 'Hello:RECV HelloInterval mismatch' from at , why did OSPF - go down?",ospf-timers#1.0
+F07,ospf_area_mismatch,id,chunk 800 + dok + terjemah + buang,1,"and not become neighbor OSPF on link , log mentions area mismatch",ospfd#2.0
+F07,ospf_area_mismatch,en,chunk 800 + dok + terjemah + buang,1,"and do not become OSPF neighbors on link , the log mentions an area mismatch",ospfd#2.0
+F08,ospf_area_mismatch,id,chunk 800 + dok + terjemah + buang,1,"Interface eth2 on moved to area while stays on backbone, route missing from table OSPF",ospfd#2.0
+F08,ospf_area_mismatch,en,chunk 800 + dok + terjemah + buang,1,"Interface eth2 on was moved to area while stays in the backbone, route vanished from 's OSPF table",ospfd#2.0
+F09,ospf_area_mismatch,id,chunk 800 + dok + terjemah + buang,,why and not exchange Hello OSPF although ping to works and interface up?,ospf-mtu#1.0
+F09,ospf_area_mismatch,en,chunk 800 + dok + terjemah + buang,,Why do and not exchange OSPF Hellos although ping from to works and the interface is up?,zebra-interface#1.0
+F10,ospf_auth_mismatch,id,chunk 800 + dok + terjemah + buang,1,rejects packet OSPF from with message authentication MD5 fails on eth1,ospfd#4.0
+F10,ospf_auth_mismatch,en,chunk 800 + dok + terjemah + buang,1,rejects OSPF packets from with an MD5 authentication failure message on eth1,ospfd#4.0
+F11,ospf_auth_mismatch,id,chunk 800 + dok + terjemah + buang,,"after key message-digest added on eth1 , neighbor dropped from Full to Down and not up again",bgp-neighbor#3.0
+F11,ospf_auth_mismatch,en,chunk 800 + dok + terjemah + buang,,"After a message-digest key was added on eth1 , neighbor dropped from Full to Down and never came back",bgp-neighbor#3.0
+F12,ospf_auth_mismatch,id,chunk 800 + dok + terjemah + buang,1,type authentication OSPF on differs from mismatch,ospfd#4.0
+F12,ospf_auth_mismatch,en,chunk 800 + dok + terjemah + buang,1,OSPF authentication type on differs from,ospfd#4.0
+F13,ospf_passive_interface,id,chunk 800 + dok + terjemah + buang,1,still advertises subnet to OSPF but no longer sends Hello to on eth2,ospfd#3.0
+F13,ospf_passive_interface,en,chunk 800 + dok + terjemah + buang,1,still advertises subnet into OSPF but no longer sends Hellos to on eth2,ospfd#3.0
+F14,ospf_passive_interface,id,chunk 800 + dok + terjemah + buang,1,Interface eth2 set passive so adjacency with missing,ospfd#3.0
+F14,ospf_passive_interface,en,chunk 800 + dok + terjemah + buang,1,Interface eth2 on was set passive so the adjacency with is gone,ospfd#3.0
+F15,ospf_passive_interface,id,chunk 800 + dok + terjemah + buang,,"no packet Hello OSPF keluar from eth2 towards according to tcpdump , although configuration area correct",ospfd#2.0
+F15,ospf_passive_interface,en,chunk 800 + dok + terjemah + buang,5,"No OSPF Hello packets leave eth2 towards according to tcpdump at , although the area configuration is correct",ospfd#2.0
+F16,interface_down,id,chunk 800 + dok + terjemah + buang,1,session eBGP - down and show interface brief on shows eth3 admin down,zebra-interface#2.0
+F16,interface_down,en,chunk 800 + dok + terjemah + buang,1,The - eBGP session went down and show interface brief on shows eth3 admin down,zebra-interface#2.0
+F17,interface_down,id,chunk 800 + dok + terjemah + buang,1,"Link - down, ping from fails and all adjacency on eth1 missing, how bring up no shutdown interface-nya?",zebra-interface#2.0
+F17,interface_down,en,chunk 800 + dok + terjemah + buang,1,"The - link is completely down, ping to from fails and every adjacency on eth1 vanished, how do I bring the interface back up?",zebra-interface#2.0
+F18,interface_down,id,chunk 800 + dok + terjemah + buang,1,"Interface eth3 on state DOWN on kernel since , session BGP to Idle",zebra-interface#2.0
+F18,interface_down,en,chunk 800 + dok + terjemah + buang,1,"Interface eth3 on has been DOWN in the kernel since , the BGP session to is Idle",zebra-interface#2.0
+F19,ip_address_wrong,id,chunk 800 + dok + terjemah + buang,1,ip address eth1 changed to so not same subnet with,zebra-interface#1.0
+F19,ip_address_wrong,en,chunk 800 + dok + terjemah + buang,1,The IP address of eth1 changed to so it is no longer in the same subnet as,zebra-interface#1.0
+F20,ip_address_wrong,id,chunk 800 + dok + terjemah + buang,2,"OSPF on logs Hello from rejected because source not berada on network interface eth1, route to missing",ospfd#2.0
+F20,ip_address_wrong,en,chunk 800 + dok + terjemah + buang,1,"OSPF on logs that Hellos from are rejected because the source is not on the eth1 interface network, the route to is missing",zebra-interface#1.0
+F21,ip_address_wrong,id,chunk 800 + dok + terjemah + buang,4,"cannot ping on , ARP fails, and session eBGP Active; address interface eth2 looks wrong",ospf-mtu#1.0
+F21,ip_address_wrong,en,chunk 800 + dok + terjemah + buang,3,"cannot ping at , ARP fails and the eBGP session is Active; eth2 interface address looks odd",ospf-mtu#1.0
+F22,bgp_remote_as_wrong,id,chunk 800 + dok + terjemah + buang,1,"session BGP to flapping Idle/Active and log says 'bad OPEN, remote AS is , expected '",bgp-neighbor#0.0
+F22,bgp_remote_as_wrong,en,chunk 800 + dok + terjemah + buang,1,"The BGP session from to keeps flapping Idle/Active and the log says 'bad OPEN, remote AS is , expected ' at",bgp-neighbor#0.0
+F23,bgp_remote_as_wrong,id,chunk 800 + dok + terjemah + buang,2,as number remote-as neighbor BGP on for peer wrong,bgp-neighbor#1.0
+F23,bgp_remote_as_wrong,en,chunk 800 + dok + terjemah + buang,2,The BGP neighbor AS number on for peer is wrong,bgp-neighbor#1.0
+F24,bgp_remote_as_wrong,id,chunk 800 + dok + terjemah + buang,1,"Sesi iBGP - antar loopback tidak pernah Established, mengirim NOTIFICATION OPEN Message Error",bgp-neighbor#0.0
+F24,bgp_remote_as_wrong,en,chunk 800 + dok + terjemah + buang,4,"The - iBGP session between loopbacks never gets Established, sends a NOTIFICATION OPEN Message Error",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,id,chunk 800 + dok + terjemah + buang,3,"session eBGP - Established but receives 0 prefix from , loopback unreachable from",bgp-neighbor#3.0
+F25,bgp_prefix_list_block,en,chunk 800 + dok + terjemah + buang,3,"The - eBGP session is Established but receives 0 prefixes from , loopbacks are unreachable from",bgp-neighbor#3.0
+F26,bgp_prefix_list_block,id,chunk 800 + dok + terjemah + buang,1,prefix-list filter on blocks route from,prefix-list#2.0
+F26,bgp_prefix_list_block,en,chunk 800 + dok + terjemah + buang,1,A prefix filter on blocks the routes from,bgpd#3.0
+F27,bgp_prefix_list_block,id,chunk 800 + dok + terjemah + buang,1,no longer receives route any from via although session BGP up; on prefix-list RCA-BLOCK applied keluar,prefix-list#2.0
+F27,bgp_prefix_list_block,en,chunk 800 + dok + terjemah + buang,1,no longer receives any route from over although the BGP session is up; has a prefix list RCA-BLOCK applied outbound,prefix-list#2.0
+F28,bgp_route_map_deny,id,chunk 800 + dok + terjemah + buang,1,"stopped advertises prefix to after route-map RCA-DENY applied, session stays Established",route-map#2.0
+F28,bgp_route_map_deny,en,chunk 800 + dok + terjemah + buang,1,"stopped advertising prefixes to after route-map RCA-DENY was applied, the session stays Established",route-map#2.0
+F29,bgp_route_map_deny,id,chunk 800 + dok + terjemah + buang,1,"inbound policy route-map on for peer rejects all route, table BGP empty from",route-map#2.0
+F29,bgp_route_map_deny,en,chunk 800 + dok + terjemah + buang,1,"Inbound policy on for peer rejects all routes, 's BGP table has nothing from",route-map#2.0
+F30,bgp_route_map_deny,id,chunk 800 + dok + terjemah + buang,,"number prefix diterima from dropped from 3 to 0, telemetry shows loopback missing on but session not down",troubleshooting-general#3.0
+F30,bgp_route_map_deny,en,chunk 800 + dok + terjemah + buang,,"At the number of prefixes receives from dropped from 3 to 0, telemetry shows loopbacks missing in but the session did not drop",troubleshooting-general#3.0

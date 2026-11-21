@@ -1,0 +1,209 @@
+# Katalog fault CONTOH (10 kelas x 3 lokasi) di atas data/topology.sample.yaml.
+# Dipakai untuk unit test linter dan uji evaluator sebelum katalog final dari
+# Fayyaz dibekukan. Saat katalog final ada, jalankan test dengan
+#   RCA_CATALOG=faults/catalog.yaml RCA_TOPOLOGY=<topologi Host 1> pytest
+# Field minimal yang dibaca rca/catalog.py: id, class, router, fix.
+# Perintah vtysh ditulis per baris (konteks interface/router dibuka di baris
+# sebelumnya). Perintah shell yang diizinkan hanya `ip link set dev <if> ...`.
+version: sample-0
+
+faults:
+  # ---------------------------------------------------------------- MTU
+  - id: F01
+    class: mtu_mismatch
+    router: r1
+    interface: eth1
+    inject: [{router: r1, commands: ["ip link set dev eth1 mtu 1400"]}]
+    fix:    [{router: r1, commands: ["ip link set dev eth1 mtu 1500"]}]
+  - id: F02
+    class: mtu_mismatch
+    router: r3
+    interface: eth2
+    inject: [{router: r3, commands: ["ip link set dev eth2 mtu 1400"]}]
+    fix:    [{router: r3, commands: ["ip link set dev eth2 mtu 1500"]}]
+  - id: F03
+    class: mtu_mismatch
+    router: r5
+    interface: eth2
+    inject: [{router: r5, commands: ["ip link set dev eth2 mtu 9000"]}]
+    fix:    [{router: r5, commands: ["ip link set dev eth2 mtu 1500"]}]
+
+  # ---------------------------------------------------------------- OSPF timer
+  - id: F04
+    class: ospf_timer_mismatch
+    router: r2
+    interface: eth1
+    inject: [{router: r2, commands: ["configure terminal", "interface eth1", "ip ospf hello-interval 20"]}]
+    fix:    [{router: r2, commands: ["configure terminal", "interface eth1", "ip ospf hello-interval 10"]}]
+  - id: F05
+    class: ospf_timer_mismatch
+    router: r4
+    interface: eth2
+    inject: [{router: r4, commands: ["configure terminal", "interface eth2", "ip ospf dead-interval 80"]}]
+    fix:    [{router: r4, commands: ["configure terminal", "interface eth2", "ip ospf dead-interval 40"]}]
+  - id: F06
+    class: ospf_timer_mismatch
+    router: r6
+    interface: eth1
+    inject: [{router: r6, commands: ["configure terminal", "interface eth1", "ip ospf hello-interval 5"]}]
+    fix:    [{router: r6, commands: ["configure terminal", "interface eth1", "no ip ospf hello-interval"]}]
+
+  # ---------------------------------------------------------------- OSPF area
+  - id: F07
+    class: ospf_area_mismatch
+    router: r1
+    interface: eth2
+    inject: [{router: r1, commands: ["configure terminal", "interface eth2", "no ip ospf area", "ip ospf area 0.0.0.1"]}]
+    fix:    [{router: r1, commands: ["configure terminal", "interface eth2", "no ip ospf area", "ip ospf area 0.0.0.0"]}]
+  - id: F08
+    class: ospf_area_mismatch
+    router: r2
+    interface: eth2
+    inject: [{router: r2, commands: ["configure terminal", "interface eth2", "no ip ospf area", "ip ospf area 0.0.0.2"]}]
+    fix:    [{router: r2, commands: ["configure terminal", "interface eth2", "no ip ospf area", "ip ospf area 0.0.0.0"]}]
+  - id: F09
+    class: ospf_area_mismatch
+    router: r5
+    interface: eth1
+    inject: [{router: r5, commands: ["configure terminal", "interface eth1", "no ip ospf area", "ip ospf area 0.0.0.1"]}]
+    fix:    [{router: r5, commands: ["configure terminal", "interface eth1", "no ip ospf area", "ip ospf area 0"]}]
+
+  # ---------------------------------------------------------------- OSPF auth
+  - id: F10
+    class: ospf_auth_mismatch
+    router: r1
+    interface: eth1
+    inject: [{router: r1, commands: ["configure terminal", "interface eth1", "ip ospf authentication message-digest", "ip ospf message-digest-key 1 md5 SALAH123"]}]
+    fix:    [{router: r1, commands: ["configure terminal", "interface eth1", "no ip ospf message-digest-key 1", "no ip ospf authentication"]}]
+  - id: F11
+    class: ospf_auth_mismatch
+    router: r3
+    interface: eth1
+    inject: [{router: r3, commands: ["configure terminal", "interface eth1", "ip ospf authentication message-digest", "ip ospf message-digest-key 1 md5 SALAH123"]}]
+    fix:    [{router: r3, commands: ["configure terminal", "interface eth1", "no ip ospf message-digest-key 1", "no ip ospf authentication"]}]
+  - id: F12
+    class: ospf_auth_mismatch
+    router: r6
+    interface: eth1
+    inject: [{router: r6, commands: ["configure terminal", "interface eth1", "ip ospf authentication", "ip ospf authentication-key SALAH"]}]
+    fix:    [{router: r6, commands: ["configure terminal", "interface eth1", "no ip ospf authentication-key", "no ip ospf authentication"]}]
+
+  # ---------------------------------------------------------------- OSPF passive
+  - id: F13
+    class: ospf_passive_interface
+    router: r2
+    interface: eth2
+    inject: [{router: r2, commands: ["configure terminal", "router ospf", "passive-interface eth2"]}]
+    fix:    [{router: r2, commands: ["configure terminal", "router ospf", "no passive-interface eth2"]}]
+  - id: F14
+    class: ospf_passive_interface
+    router: r4
+    interface: eth2
+    inject: [{router: r4, commands: ["configure terminal", "router ospf", "passive-interface eth2"]}]
+    fix:    [{router: r4, commands: ["configure terminal", "router ospf", "no passive-interface eth2"]}]
+  - id: F15
+    class: ospf_passive_interface
+    router: r5
+    interface: eth2
+    inject: [{router: r5, commands: ["configure terminal", "interface eth2", "ip ospf passive"]}]
+    fix:    [{router: r5, commands: ["configure terminal", "interface eth2", "no ip ospf passive"]}]
+
+  # ---------------------------------------------------------------- interface down
+  - id: F16
+    class: interface_down
+    router: r1
+    interface: eth3
+    inject: [{router: r1, commands: ["configure terminal", "interface eth3", "shutdown"]}]
+    fix:    [{router: r1, commands: ["configure terminal", "interface eth3", "no shutdown"]}]
+  - id: F17
+    class: interface_down
+    router: r3
+    interface: eth1
+    inject: [{router: r3, commands: ["configure terminal", "interface eth1", "shutdown"]}]
+    fix:    [{router: r3, commands: ["configure terminal", "interface eth1", "no shutdown"]}]
+  - id: F18
+    class: interface_down
+    router: r5
+    interface: eth3
+    inject: [{router: r5, commands: ["ip link set dev eth3 down"]}]
+    fix:    [{router: r5, commands: ["ip link set dev eth3 up"]}]
+
+  # ---------------------------------------------------------------- alamat IP salah
+  - id: F19
+    class: ip_address_wrong
+    router: r2
+    interface: eth1
+    inject: [{router: r2, commands: ["configure terminal", "interface eth1", "no ip address 10.0.12.2/30", "ip address 10.0.12.6/30"]}]
+    fix:    [{router: r2, commands: ["configure terminal", "interface eth1", "no ip address 10.0.12.6/30", "ip address 10.0.12.2/30"]}]
+  - id: F20
+    class: ip_address_wrong
+    router: r4
+    interface: eth2
+    inject: [{router: r4, commands: ["configure terminal", "interface eth2", "no ip address 10.0.45.1/30", "ip address 10.0.54.1/30"]}]
+    fix:    [{router: r4, commands: ["configure terminal", "interface eth2", "no ip address 10.0.54.1/30", "ip address 10.0.45.1/30"]}]
+  - id: F21
+    class: ip_address_wrong
+    router: r6
+    interface: eth2
+    inject: [{router: r6, commands: ["configure terminal", "interface eth2", "no ip address 10.0.16.2/30", "ip address 10.0.61.2/30"]}]
+    fix:    [{router: r6, commands: ["configure terminal", "interface eth2", "no ip address 10.0.61.2/30", "ip address 10.0.16.2/30"]}]
+
+  # ---------------------------------------------------------------- BGP remote-as
+  - id: F22
+    class: bgp_remote_as_wrong
+    router: r3
+    neighbor: 10.0.34.2
+    inject: [{router: r3, commands: ["configure terminal", "router bgp 65001", "neighbor 10.0.34.2 remote-as 65020"]}]
+    fix:    [{router: r3, commands: ["configure terminal", "router bgp 65001", "neighbor 10.0.34.2 remote-as 65002"]}]
+  - id: F23
+    class: bgp_remote_as_wrong
+    router: r5
+    neighbor: 10.0.25.1
+    inject: [{router: r5, commands: ["configure terminal", "router bgp 65002", "neighbor 10.0.25.1 remote-as 65010"]}]
+    fix:    [{router: r5, commands: ["configure terminal", "router bgp 65002", "neighbor 10.0.25.1 remote-as 65001"]}]
+  - id: F24
+    class: bgp_remote_as_wrong
+    router: r1
+    neighbor: 10.255.0.2
+    inject: [{router: r1, commands: ["configure terminal", "router bgp 65001", "neighbor 10.255.0.2 remote-as 65002"]}]
+    fix:    [{router: r1, commands: ["configure terminal", "router bgp 65001", "neighbor 10.255.0.2 remote-as 65001"]}]
+
+  # ---------------------------------------------------------------- BGP prefix-list
+  - id: F25
+    class: bgp_prefix_list_block
+    router: r4
+    neighbor: 10.0.34.1
+    inject: [{router: r4, commands: ["configure terminal", "ip prefix-list RCA-BLOCK seq 5 deny 0.0.0.0/0 le 32", "router bgp 65002", "address-family ipv4 unicast", "neighbor 10.0.34.1 prefix-list RCA-BLOCK in"]}]
+    fix:    [{router: r4, commands: ["configure terminal", "router bgp 65002", "address-family ipv4 unicast", "no neighbor 10.0.34.1 prefix-list RCA-BLOCK in", "end", "clear ip bgp 10.0.34.1 soft in"]}]
+  - id: F26
+    class: bgp_prefix_list_block
+    router: r2
+    neighbor: 10.0.25.2
+    inject: [{router: r2, commands: ["configure terminal", "ip prefix-list RCA-BLOCK seq 5 deny 10.255.0.0/24 le 32", "ip prefix-list RCA-BLOCK seq 10 permit 0.0.0.0/0 le 32", "router bgp 65001", "address-family ipv4 unicast", "neighbor 10.0.25.2 prefix-list RCA-BLOCK in"]}]
+    fix:    [{router: r2, commands: ["configure terminal", "router bgp 65001", "address-family ipv4 unicast", "no neighbor 10.0.25.2 prefix-list RCA-BLOCK in", "end", "clear ip bgp 10.0.25.2 soft in"]}]
+  - id: F27
+    class: bgp_prefix_list_block
+    router: r6
+    neighbor: 10.0.16.1
+    inject: [{router: r6, commands: ["configure terminal", "ip prefix-list RCA-BLOCK seq 5 deny 0.0.0.0/0 le 32", "router bgp 65002", "address-family ipv4 unicast", "neighbor 10.0.16.1 prefix-list RCA-BLOCK out"]}]
+    fix:    [{router: r6, commands: ["configure terminal", "router bgp 65002", "address-family ipv4 unicast", "no neighbor 10.0.16.1 prefix-list RCA-BLOCK out", "end", "clear ip bgp 10.0.16.1 soft out"]}]
+
+  # ---------------------------------------------------------------- BGP route-map
+  - id: F28
+    class: bgp_route_map_deny
+    router: r3
+    neighbor: 10.0.34.2
+    inject: [{router: r3, commands: ["configure terminal", "route-map RCA-DENY deny 10", "exit", "router bgp 65001", "address-family ipv4 unicast", "neighbor 10.0.34.2 route-map RCA-DENY out"]}]
+    fix:    [{router: r3, commands: ["configure terminal", "router bgp 65001", "address-family ipv4 unicast", "no neighbor 10.0.34.2 route-map RCA-DENY out", "end", "clear ip bgp 10.0.34.2 soft out"]}]
+  - id: F29
+    class: bgp_route_map_deny
+    router: r5
+    neighbor: 10.255.0.4
+    inject: [{router: r5, commands: ["configure terminal", "route-map RCA-DENY deny 10", "exit", "router bgp 65002", "address-family ipv4 unicast", "neighbor 10.255.0.4 route-map RCA-DENY in"]}]
+    fix:    [{router: r5, commands: ["configure terminal", "router bgp 65002", "address-family ipv4 unicast", "no neighbor 10.255.0.4 route-map RCA-DENY in", "end", "clear ip bgp 10.255.0.4 soft in"]}]
+  - id: F30
+    class: bgp_route_map_deny
+    router: r1
+    neighbor: 10.0.16.2
+    inject: [{router: r1, commands: ["configure terminal", "ip prefix-list RCA-LO seq 5 permit 10.255.0.0/24 le 32", "route-map RCA-DENY deny 10", "match ip address prefix-list RCA-LO", "exit", "route-map RCA-DENY permit 20", "exit", "router bgp 65001", "address-family ipv4 unicast", "neighbor 10.0.16.2 route-map RCA-DENY out"]}]
+    fix:    [{router: r1, commands: ["configure terminal", "no route-map RCA-DENY deny 10", "end", "clear ip bgp 10.0.16.2 soft out"]}]
