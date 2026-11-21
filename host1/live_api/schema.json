@@ -1,0 +1,1377 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Live API draft 2 payload definitions",
+  "$defs": {
+    "Assessment": {
+      "additionalProperties": false,
+      "properties": {
+        "router": {
+          "anyOf": [
+            {
+              "enum": [
+                "r1",
+                "r2",
+                "r3",
+                "r4",
+                "r5",
+                "r6"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Router"
+        },
+        "root_cause": {
+          "enum": [
+            "mtu_mismatch",
+            "link_down",
+            "ospf_hello_mismatch",
+            "ospf_area_mismatch",
+            "ospf_auth_mismatch",
+            "bgp_neighbor_shutdown",
+            "bgp_wrong_remote_as",
+            "bgp_inbound_filter",
+            "bgp_missing_network",
+            "wrong_ip_address",
+            "unknown"
+          ],
+          "title": "Root Cause",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Confidence"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "commands": {
+          "items": {
+            "$ref": "#/$defs/Command"
+          },
+          "title": "Commands",
+          "type": "array"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "router",
+        "root_cause",
+        "confidence",
+        "evidence_ids",
+        "commands",
+        "explanation"
+      ],
+      "title": "Assessment",
+      "type": "object"
+    },
+    "Capabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "mode": {
+          "const": "mock_live",
+          "title": "Mode",
+          "type": "string"
+        },
+        "simulation": {
+          "const": true,
+          "title": "Simulation",
+          "type": "boolean"
+        },
+        "lab": {
+          "const": "rca",
+          "title": "Lab",
+          "type": "string"
+        },
+        "variants": {
+          "items": {
+            "enum": [
+              "zero_shot",
+              "text_rag",
+              "graph_rag"
+            ],
+            "type": "string"
+          },
+          "title": "Variants",
+          "type": "array"
+        },
+        "real_variants_available": {
+          "items": {
+            "enum": [
+              "zero_shot",
+              "text_rag",
+              "graph_rag"
+            ],
+            "type": "string"
+          },
+          "maxItems": 0,
+          "title": "Real Variants Available",
+          "type": "array"
+        },
+        "model_profile": {
+          "const": "not_used",
+          "title": "Model Profile",
+          "type": "string"
+        },
+        "model_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Model Digest",
+          "type": "string"
+        },
+        "inventory_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Inventory Sha256",
+          "type": "string"
+        },
+        "max_body_bytes": {
+          "const": 4096,
+          "title": "Max Body Bytes",
+          "type": "integer"
+        },
+        "client_timeout_seconds": {
+          "const": 180,
+          "title": "Client Timeout Seconds",
+          "type": "integer"
+        },
+        "poll_seconds": {
+          "const": 1,
+          "title": "Poll Seconds",
+          "type": "integer"
+        },
+        "server_deadline_seconds": {
+          "minimum": 0,
+          "title": "Server Deadline Seconds",
+          "type": "number"
+        },
+        "retention_seconds": {
+          "const": 604800,
+          "title": "Retention Seconds",
+          "type": "integer"
+        },
+        "freshness_policy": {
+          "$ref": "#/$defs/FreshnessPolicy"
+        },
+        "readiness": {
+          "$ref": "#/$defs/Readiness"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract_version",
+        "mode",
+        "simulation",
+        "lab",
+        "variants",
+        "real_variants_available",
+        "model_profile",
+        "model_digest",
+        "inventory_sha256",
+        "max_body_bytes",
+        "client_timeout_seconds",
+        "poll_seconds",
+        "server_deadline_seconds",
+        "retention_seconds",
+        "freshness_policy",
+        "readiness",
+        "note"
+      ],
+      "title": "Capabilities",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "statement",
+        "evidence_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Command": {
+      "additionalProperties": false,
+      "properties": {
+        "router": {
+          "enum": [
+            "r1",
+            "r2",
+            "r3",
+            "r4",
+            "r5",
+            "r6"
+          ],
+          "title": "Router",
+          "type": "string"
+        },
+        "interpreter": {
+          "enum": [
+            "ip",
+            "vtysh"
+          ],
+          "title": "Interpreter",
+          "type": "string"
+        },
+        "args": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Args",
+          "type": "array"
+        }
+      },
+      "required": [
+        "router",
+        "interpreter",
+        "args"
+      ],
+      "title": "Command",
+      "type": "object"
+    },
+    "Completed": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "job_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "mode": {
+          "const": "live",
+          "title": "Mode",
+          "type": "string"
+        },
+        "lab": {
+          "const": "rca",
+          "title": "Lab",
+          "type": "string"
+        },
+        "variant": {
+          "enum": [
+            "zero_shot",
+            "text_rag",
+            "graph_rag"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "received_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Received At",
+          "type": "string"
+        },
+        "updated_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "execution_allowed": {
+          "const": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        },
+        "simulation": {
+          "title": "Simulation",
+          "type": "boolean"
+        },
+        "state": {
+          "const": "completed",
+          "title": "State",
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/$defs/WireResponse"
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/EvidenceManifest"
+          },
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "timing": {
+          "$ref": "#/$defs/Timing"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "job_id",
+        "mode",
+        "lab",
+        "variant",
+        "received_at",
+        "updated_at",
+        "execution_allowed",
+        "simulation",
+        "state",
+        "result",
+        "assessment",
+        "evidence",
+        "timing",
+        "provenance"
+      ],
+      "title": "Completed",
+      "type": "object"
+    },
+    "DiagnosisRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "lab": {
+          "const": "rca",
+          "title": "Lab",
+          "type": "string"
+        },
+        "variant": {
+          "enum": [
+            "zero_shot",
+            "text_rag",
+            "graph_rag"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "symptom_detected_at_utc": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Symptom Detected At Utc",
+          "type": "string"
+        },
+        "execution_allowed": {
+          "const": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "lab",
+        "variant",
+        "symptom_detected_at_utc",
+        "execution_allowed"
+      ],
+      "title": "DiagnosisRequest",
+      "type": "object"
+    },
+    "Error": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "title": "Retryable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "title": "Error",
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Request Id"
+        },
+        "error": {
+          "$ref": "#/$defs/Error"
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "error"
+      ],
+      "title": "ErrorResponse",
+      "type": "object"
+    },
+    "EvidenceManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^e[0-9]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "telemetry",
+            "log",
+            "graph",
+            "documentation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "url": {
+          "pattern": "^/v1/diagnoses/[0-9a-f-]{36}/evidence/e[0-9]+$",
+          "title": "Url",
+          "type": "string"
+        },
+        "capture_started_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Capture Started At",
+          "type": "string"
+        },
+        "capture_completed_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Capture Completed At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "source_id",
+        "source_sha256",
+        "locator",
+        "url",
+        "capture_started_at",
+        "capture_completed_at"
+      ],
+      "title": "EvidenceManifest",
+      "type": "object"
+    },
+    "EvidencePayload": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^e[0-9]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "telemetry",
+            "log",
+            "graph",
+            "documentation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "content": {
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "source_id",
+        "source_sha256",
+        "locator",
+        "content"
+      ],
+      "title": "EvidencePayload",
+      "type": "object"
+    },
+    "Failed": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "job_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "mode": {
+          "const": "live",
+          "title": "Mode",
+          "type": "string"
+        },
+        "lab": {
+          "const": "rca",
+          "title": "Lab",
+          "type": "string"
+        },
+        "variant": {
+          "enum": [
+            "zero_shot",
+            "text_rag",
+            "graph_rag"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "received_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Received At",
+          "type": "string"
+        },
+        "updated_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "execution_allowed": {
+          "const": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        },
+        "simulation": {
+          "title": "Simulation",
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "failed",
+            "interrupted"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/$defs/Error"
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "job_id",
+        "mode",
+        "lab",
+        "variant",
+        "received_at",
+        "updated_at",
+        "execution_allowed",
+        "simulation",
+        "state",
+        "error"
+      ],
+      "title": "Failed",
+      "type": "object"
+    },
+    "FreshnessPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "max_age_seconds": {
+          "const": 15,
+          "title": "Max Age Seconds",
+          "type": "integer"
+        },
+        "max_skew_seconds": {
+          "const": 5,
+          "title": "Max Skew Seconds",
+          "type": "integer"
+        },
+        "clock": {
+          "const": "host1",
+          "title": "Clock",
+          "type": "string"
+        }
+      },
+      "required": [
+        "max_age_seconds",
+        "max_skew_seconds",
+        "clock"
+      ],
+      "title": "FreshnessPolicy",
+      "type": "object"
+    },
+    "Health": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "ok",
+          "title": "Status",
+          "type": "string"
+        },
+        "mode": {
+          "const": "mock_live",
+          "title": "Mode",
+          "type": "string"
+        },
+        "simulation": {
+          "const": true,
+          "title": "Simulation",
+          "type": "boolean"
+        },
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "ready": {
+          "title": "Ready",
+          "type": "boolean"
+        },
+        "execution_allowed": {
+          "const": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "mode",
+        "simulation",
+        "active",
+        "ready",
+        "execution_allowed"
+      ],
+      "title": "Health",
+      "type": "object"
+    },
+    "Job": {
+      "discriminator": {
+        "mapping": {
+          "accepted": "#/$defs/Pending",
+          "collecting": "#/$defs/Pending",
+          "completed": "#/$defs/Completed",
+          "failed": "#/$defs/Failed",
+          "interrupted": "#/$defs/Failed",
+          "reasoning": "#/$defs/Pending"
+        },
+        "propertyName": "state"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Pending"
+        },
+        {
+          "$ref": "#/$defs/Completed"
+        },
+        {
+          "$ref": "#/$defs/Failed"
+        }
+      ],
+      "title": "Job"
+    },
+    "LintInput": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "job_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "inventory_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Inventory Sha256",
+          "type": "string"
+        },
+        "commands": {
+          "items": {
+            "$ref": "#/$defs/Command"
+          },
+          "minItems": 1,
+          "title": "Commands",
+          "type": "array"
+        },
+        "commands_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Commands Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract_version",
+        "job_id",
+        "inventory_sha256",
+        "commands",
+        "commands_sha256"
+      ],
+      "title": "LintInput",
+      "type": "object"
+    },
+    "LintOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "job_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "commands_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Commands Sha256",
+          "type": "string"
+        },
+        "inventory_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Inventory Sha256",
+          "type": "string"
+        },
+        "linter_version": {
+          "title": "Linter Version",
+          "type": "string"
+        },
+        "policy_version": {
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "policy_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Policy Sha256",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "rejected",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "violations": {
+          "items": {
+            "$ref": "#/$defs/Violation"
+          },
+          "title": "Violations",
+          "type": "array"
+        },
+        "checked_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Checked At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "commands_sha256",
+        "inventory_sha256",
+        "linter_version",
+        "policy_version",
+        "policy_sha256",
+        "status",
+        "violations",
+        "checked_at"
+      ],
+      "title": "LintOutput",
+      "type": "object"
+    },
+    "Pending": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "job_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "mode": {
+          "const": "live",
+          "title": "Mode",
+          "type": "string"
+        },
+        "lab": {
+          "const": "rca",
+          "title": "Lab",
+          "type": "string"
+        },
+        "variant": {
+          "enum": [
+            "zero_shot",
+            "text_rag",
+            "graph_rag"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "received_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Received At",
+          "type": "string"
+        },
+        "updated_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?(?:Z|\\+00:00)$",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "execution_allowed": {
+          "const": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        },
+        "simulation": {
+          "title": "Simulation",
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "accepted",
+            "collecting",
+            "reasoning"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "job_id",
+        "mode",
+        "lab",
+        "variant",
+        "received_at",
+        "updated_at",
+        "execution_allowed",
+        "simulation",
+        "state"
+      ],
+      "title": "Pending",
+      "type": "object"
+    },
+    "ProposedCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "router": {
+          "enum": [
+            "r1",
+            "r2",
+            "r3",
+            "r4",
+            "r5",
+            "r6"
+          ],
+          "title": "Router",
+          "type": "string"
+        },
+        "interface": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interface"
+        },
+        "interpreter": {
+          "enum": [
+            "linux_argv",
+            "vtysh_commands"
+          ],
+          "title": "Interpreter",
+          "type": "string"
+        },
+        "arguments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Arguments",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "validation_status": {
+          "const": "unvalidated",
+          "default": "unvalidated",
+          "title": "Validation Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "router",
+        "interpreter",
+        "arguments",
+        "evidence_ids",
+        "rationale"
+      ],
+      "title": "ProposedCommand",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "synthetic": {
+          "title": "Synthetic",
+          "type": "boolean"
+        },
+        "inventory_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Inventory Sha256",
+          "type": "string"
+        },
+        "capture_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Capture Sha256",
+          "type": "string"
+        },
+        "agent_version": {
+          "title": "Agent Version",
+          "type": "string"
+        },
+        "gate_version": {
+          "title": "Gate Version",
+          "type": "string"
+        },
+        "prompt_version": {
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "retriever_version": {
+          "title": "Retriever Version",
+          "type": "string"
+        },
+        "model_profile": {
+          "title": "Model Profile",
+          "type": "string"
+        },
+        "model_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Model Digest",
+          "type": "string"
+        },
+        "model_options": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Model Options",
+          "type": "object"
+        },
+        "actual_variant": {
+          "enum": [
+            "zero_shot",
+            "text_rag",
+            "graph_rag"
+          ],
+          "title": "Actual Variant",
+          "type": "string"
+        },
+        "model_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Model Evidence Ids",
+          "type": "array"
+        },
+        "selection_notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Selection Notes",
+          "type": "array"
+        },
+        "evidence_age_at_reasoning_seconds": {
+          "minimum": 0,
+          "title": "Evidence Age At Reasoning Seconds",
+          "type": "number"
+        },
+        "evidence_age_at_completion_seconds": {
+          "minimum": 0,
+          "title": "Evidence Age At Completion Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "synthetic",
+        "inventory_sha256",
+        "capture_sha256",
+        "agent_version",
+        "gate_version",
+        "prompt_version",
+        "retriever_version",
+        "model_profile",
+        "model_digest",
+        "model_options",
+        "actual_variant",
+        "model_evidence_ids",
+        "selection_notes",
+        "evidence_age_at_reasoning_seconds",
+        "evidence_age_at_completion_seconds"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Readiness": {
+      "additionalProperties": false,
+      "properties": {
+        "mock": {
+          "title": "Mock",
+          "type": "boolean"
+        },
+        "collector": {
+          "const": false,
+          "title": "Collector",
+          "type": "boolean"
+        },
+        "model": {
+          "const": false,
+          "title": "Model",
+          "type": "boolean"
+        },
+        "linter": {
+          "const": false,
+          "title": "Linter",
+          "type": "boolean"
+        },
+        "executor": {
+          "const": false,
+          "title": "Executor",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mock",
+        "collector",
+        "model",
+        "linter",
+        "executor"
+      ],
+      "title": "Readiness",
+      "type": "object"
+    },
+    "Timing": {
+      "additionalProperties": false,
+      "properties": {
+        "collection_seconds": {
+          "minimum": 0,
+          "title": "Collection Seconds",
+          "type": "number"
+        },
+        "retrieval_seconds": {
+          "minimum": 0,
+          "title": "Retrieval Seconds",
+          "type": "number"
+        },
+        "reasoning_seconds": {
+          "minimum": 0,
+          "title": "Reasoning Seconds",
+          "type": "number"
+        },
+        "validation_seconds": {
+          "minimum": 0,
+          "title": "Validation Seconds",
+          "type": "number"
+        },
+        "total_seconds": {
+          "minimum": 0,
+          "title": "Total Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "collection_seconds",
+        "retrieval_seconds",
+        "reasoning_seconds",
+        "validation_seconds",
+        "total_seconds"
+      ],
+      "title": "Timing",
+      "type": "object"
+    },
+    "Violation": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Command Index"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_index",
+        "code",
+        "message"
+      ],
+      "title": "Violation",
+      "type": "object"
+    },
+    "WireResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "request_id": {
+          "title": "Request Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "hypothesis",
+            "abstain"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "root_cause_hypothesis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Root Cause Hypothesis"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "missing_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Evidence",
+          "type": "array"
+        },
+        "proposed_patch": {
+          "items": {
+            "$ref": "#/$defs/ProposedCommand"
+          },
+          "title": "Proposed Patch",
+          "type": "array"
+        },
+        "execution_allowed": {
+          "const": false,
+          "default": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "request_id",
+        "status",
+        "root_cause_hypothesis",
+        "claims",
+        "missing_evidence",
+        "proposed_patch"
+      ],
+      "title": "WireResponse",
+      "type": "object"
+    }
+  },
+  "x-payload-schemas": {
+    "DiagnosisRequest": {
+      "$ref": "#/$defs/DiagnosisRequest"
+    },
+    "Job": {
+      "$ref": "#/$defs/Job"
+    },
+    "EvidencePayload": {
+      "$ref": "#/$defs/EvidencePayload"
+    },
+    "LintInput": {
+      "$ref": "#/$defs/LintInput"
+    },
+    "LintOutput": {
+      "$ref": "#/$defs/LintOutput"
+    },
+    "ErrorResponse": {
+      "$ref": "#/$defs/ErrorResponse"
+    },
+    "Health": {
+      "$ref": "#/$defs/Health"
+    },
+    "Capabilities": {
+      "$ref": "#/$defs/Capabilities"
+    }
+  }
+}

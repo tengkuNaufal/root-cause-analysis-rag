@@ -224,6 +224,7 @@ Panduan endpoint, negatif/history parsial dan penjelasan sudah digabung ke `host
 | `docs/host2-replay.md` | Panduan client HTTP Host 2: 16 skenario berurutan, format JSONL, timing dan penanganan kegagalan. |
 | `docs/fault-harness.md` | Cara menjalankan lab replika, katalog dan fault runner serta batas adaptasi ke Host 1. |
 | `docs/host1/OPERATIONS.md` | Lokasi file, environment, menjalankan modul dan pemeriksaan mount setelah migrasi. |
+| `docs/host1/LIVE-API-DRAFT.md` | Usulan kontrak live untuk dibahas kelompok: endpoint diagnosis, evidence, varian, linter, timing dan JSONL; belum layanan aktif. |
 | `docs/host1/README.md` | Indeks dokumentasi Host 1 dan tautan ke panduan masing-masing modul. |
 | `docs/host1/REPOSITORY.md` | Katalog fungsi folder dan seluruh file kandidat Git; termasuk penjelasan file lokal yang di-ignore. |
 | `docs/host1/STATUS.md` | Kemampuan saat ini, pekerjaan tersisa, pembagian jalur dan urutan integrasi. |
@@ -235,6 +236,20 @@ Panduan endpoint, negatif/history parsial dan penjelasan sudah digabung ke `host
 | File | Fungsi |
 |---|---|
 | `faults/catalog.yaml` | Katalog 30 fault replika: langkah inject/revert, gejala dan ground truth untuk runner/evaluator. |
+
+### host1/live_api/
+
+| File | Fungsi |
+|---|---|
+| `host1/live_api/__init__.py` | Package schema dan simulator kontrak live, terpisah dari API replay. |
+| `host1/live_api/README.md` | Panduan mock lokal, autentikasi, pemilihan schema, skenario client dan batas simulasi. |
+| `host1/live_api/requirements.txt` | Dependency minimum runtime Pydantic dan tes JSON Schema. |
+| `host1/live_api/models.py` | Model request/job/evidence/lint/health/capabilities dan validator binding/proyeksi/hash. |
+| `host1/live_api/schema.json` | Definisi JSON Schema Draft 2020-12 yang dihasilkan dari model wire baru. |
+| `host1/live_api/examples.json` | Bundle contoh payload sintetis untuk integrasi client, tanpa data mesin lokal. |
+| `host1/live_api/examples.py` | Generator deterministik schema dan contoh; sumber fixture mock. |
+| `host1/live_api/mock.py` | Simulator HTTP loopback, job async, SQLite, idempotensi dan outcome sintetis tanpa model/router. |
+| `host1/live_api/test_mock.py` | Tes schema, HTTP, concurrency, evidence dan restart pada output/port sementara. |
 
 ### host1/agent_contract/
 
