@@ -1,0 +1,66 @@
+# Topologi CONTOH untuk pengembangan linter/evaluator di laptop.
+# Bentuknya mengikuti deskripsi Host 1 (6 router, 8 link, 5 adjacency OSPF,
+# 9 sesi BGP). GANTI dengan topologi Host 1 yang asli begitu repositori
+# bersama tersedia (nama router, interface, IP, ASN). Linter dan evaluator
+# hanya membaca file ini lewat rca/topology.py, jadi cukup ganti path-nya.
+lab: ojsdn-topik8
+
+routers:
+  r1:
+    asn: 65001
+    router_id: 10.255.0.1
+    interfaces:
+      lo:   {ip: 10.255.0.1/32}
+      eth1: {ip: 10.0.12.1/30, peer: r2, ospf_area: 0.0.0.0}
+      eth2: {ip: 10.0.13.1/30, peer: r3, ospf_area: 0.0.0.0}
+      eth3: {ip: 10.0.16.1/30, peer: r6}
+  r2:
+    asn: 65001
+    router_id: 10.255.0.2
+    interfaces:
+      lo:   {ip: 10.255.0.2/32}
+      eth1: {ip: 10.0.12.2/30, peer: r1, ospf_area: 0.0.0.0}
+      eth2: {ip: 10.0.23.1/30, peer: r3, ospf_area: 0.0.0.0}
+      eth3: {ip: 10.0.25.1/30, peer: r5}
+  r3:
+    asn: 65001
+    router_id: 10.255.0.3
+    interfaces:
+      lo:   {ip: 10.255.0.3/32}
+      eth1: {ip: 10.0.13.2/30, peer: r1, ospf_area: 0.0.0.0}
+      eth2: {ip: 10.0.23.2/30, peer: r2, ospf_area: 0.0.0.0}
+      eth3: {ip: 10.0.34.1/30, peer: r4}
+  r4:
+    asn: 65002
+    router_id: 10.255.0.4
+    interfaces:
+      lo:   {ip: 10.255.0.4/32}
+      eth1: {ip: 10.0.34.2/30, peer: r3}
+      eth2: {ip: 10.0.45.1/30, peer: r5, ospf_area: 0.0.0.0}
+  r5:
+    asn: 65002
+    router_id: 10.255.0.5
+    interfaces:
+      lo:   {ip: 10.255.0.5/32}
+      eth1: {ip: 10.0.45.2/30, peer: r4, ospf_area: 0.0.0.0}
+      eth2: {ip: 10.0.56.1/30, peer: r6, ospf_area: 0.0.0.0}
+      eth3: {ip: 10.0.25.2/30, peer: r2}
+  r6:
+    asn: 65002
+    router_id: 10.255.0.6
+    interfaces:
+      lo:   {ip: 10.255.0.6/32}
+      eth1: {ip: 10.0.56.2/30, peer: r5, ospf_area: 0.0.0.0}
+      eth2: {ip: 10.0.16.2/30, peer: r1}
+
+# 9 sesi BGP: iBGP full-mesh di tiap AS (lewat loopback) + 3 eBGP (lewat link).
+bgp_sessions:
+  - {a: r1, a_addr: 10.255.0.1, b: r2, b_addr: 10.255.0.2, type: ibgp}
+  - {a: r1, a_addr: 10.255.0.1, b: r3, b_addr: 10.255.0.3, type: ibgp}
+  - {a: r2, a_addr: 10.255.0.2, b: r3, b_addr: 10.255.0.3, type: ibgp}
+  - {a: r4, a_addr: 10.255.0.4, b: r5, b_addr: 10.255.0.5, type: ibgp}
+  - {a: r4, a_addr: 10.255.0.4, b: r6, b_addr: 10.255.0.6, type: ibgp}
+  - {a: r5, a_addr: 10.255.0.5, b: r6, b_addr: 10.255.0.6, type: ibgp}
+  - {a: r3, a_addr: 10.0.34.1,  b: r4, b_addr: 10.0.34.2,  type: ebgp}
+  - {a: r2, a_addr: 10.0.25.1,  b: r5, b_addr: 10.0.25.2,  type: ebgp}
+  - {a: r1, a_addr: 10.0.16.1,  b: r6, b_addr: 10.0.16.2,  type: ebgp}

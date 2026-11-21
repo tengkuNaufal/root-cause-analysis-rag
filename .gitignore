@@ -41,3 +41,7 @@ htmlcov/
 .DS_Store
 Thumbs.db
 *.log
+# Data run sintetis (uji evaluator) dan lembar penilaian explainability berisi kunci varian.
+results/runs/*.synthetic.jsonl
+results/eval/*synthetic*/
+results/explain/

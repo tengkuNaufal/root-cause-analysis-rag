@@ -1,0 +1,12 @@
+config,chunks,hit@5_id,n_id,mrr_id,hit@5_en,n_en,mrr_en,hit@5_all,n_all,mrr_all
+baseline,23,15,30,0.301,15,30,0.415,30,60,0.358
++chunk kecil,46,14,30,0.324,14,30,0.354,28,60,0.339
++dok FRR tambahan,39,22,30,0.468,27,30,0.707,49,60,0.587
++terjemah ID->EN,23,15,30,0.393,15,30,0.415,30,60,0.404
++buang rincian,23,14,30,0.297,16,30,0.455,30,60,0.376
+chunk kecil + dok tambahan,73,21,30,0.489,24,30,0.653,45,60,0.571
+chunk kecil + dok + terjemah,73,24,30,0.661,24,30,0.653,48,60,0.657
+chunk kecil + semua,73,24,30,0.661,24,30,0.662,48,60,0.662
+dok + terjemah,39,26,30,0.742,27,30,0.707,53,60,0.724
+dok + terjemah + buang rincian,39,26,30,0.769,27,30,0.762,53,60,0.766
+chunk 800 + dok + terjemah + buang,40,26,30,0.769,27,30,0.762,53,60,0.766
