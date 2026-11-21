@@ -67,7 +67,9 @@
           "validation_status": "unvalidated"
         }
       ],
-      "execution_allowed": false
+      "execution_allowed": false,
+      "root_cause_class": "mtu_mismatch",
+      "root_cause_router": "r1"
     },
     "assessment": {
       "router": "r1",
@@ -153,7 +155,9 @@
         "Mock intentionally abstains."
       ],
       "proposed_patch": [],
-      "execution_allowed": false
+      "execution_allowed": false,
+      "root_cause_class": null,
+      "root_cause_router": null
     },
     "assessment": {
       "router": null,

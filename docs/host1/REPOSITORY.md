@@ -250,6 +250,7 @@ Panduan endpoint, negatif/history parsial dan penjelasan sudah digabung ke `host
 | `host1/live_api/examples.py` | Generator deterministik schema dan contoh; sumber fixture mock. |
 | `host1/live_api/mock.py` | Simulator HTTP loopback, job async, SQLite, idempotensi dan outcome sintetis tanpa model/router. |
 | `host1/live_api/test_mock.py` | Tes schema, HTTP, concurrency, evidence dan restart pada output/port sementara. |
+| `host1/live_api/test_diagnosis.py` | Tes label kelas/router live, binding assessment, diagnosis tanpa patch dan kompatibilitas replay/linter. |
 
 ### host1/agent_contract/
 

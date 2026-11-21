@@ -12,11 +12,16 @@ Modul ini menyiapkan integrasi client Host 2 dengan **data sintetis saja**. Tida
 | `examples.py` | Generator deterministik kedua artefak, sekaligus pembuat fixture mock. |
 | `mock.py` | Server HTTP loopback dengan job async, autentikasi, admission dan SQLite lokal. |
 | `test_mock.py` | Tes kontrak, schema, konkurensi, persistence dan HTTP pada port sementara. |
+| `test_diagnosis.py` | Tes label diagnosis eksplisit, pemetaan assessment, patch kosong/target berbeda, guard live dan kompatibilitas linter. |
 | `requirements.txt` | Dependency minimum modul dan tes schema. |
 
 Untuk validator selain Python, gunakan `$ref` ke definisi yang sesuai, misalnya `schema.json#/$defs/DiagnosisRequest`, `Job`, `EvidencePayload`, `LintInput`, `LintOutput`, `ErrorResponse`, `Health` atau `Capabilities`. `x-payload-schemas` mencatat entry point. **Root bundle saja bukan schema satu payload**; pilih `$ref` tersebut. JSON Schema memeriksa bentuk; aturan lint digest, citation, proyeksi patch, waktu kalender dan keterikatan antarfield tetap membutuhkan validator aplikasi pada `models.py`. Ini bukan command linter/allowlist.
 
 `Job` berupa union berdasarkan `state`; pending tidak memuat hasil terminal. Semua job mock memiliki `mode: live` untuk menguji envelope rencana, tetapi selalu **`simulation: true`**. Health/capabilities memakai `mode: mock_live`. Capabilities menyatakan `real_variants_available: []` serta collector/model/linter/executor tidak siap; `variants` hanya pilihan varian yang disimulasikan. Semua varian mengembalikan fixture, bukan perbandingan kemampuan model.
+
+`result` memakai `WireResponse`, dengan dua field wajib `root_cause_class` dan `root_cause_router`. Hypothesis memakai kelas katalog/unknown dan router r1…r6 atau null bila belum diketahui; abstain mewajibkan keduanya null. `assessment.router` harus sama dengan router diagnosis, dan `assessment.root_cause` sama dengan kelas diagnosis (null abstain dipetakan ke unknown). Validator menolak mismatch. Lokasi diagnosis tetap ada saat patch kosong dan boleh berbeda dari router target patch. Gunakan `validate_live_pair` untuk memvalidasi pasangan input/output live; kontrak replay lama tetap strict tanpa kedua field tambahan.
+
+Entry schema output eksplisit: `schema.json#/$defs/WireResponse`. Request tetap `live.v1-draft2`; client harus mengambil schema output terbaru. Gunakan output directory mock baru untuk revisi ini: arsip job mock lama tanpa kedua field tidak dimigrasikan otomatis agar label tidak diisi dengan dugaan dari command.
 
 ## Menjalankan di Host 1 atau laptop Host 2
 
@@ -79,7 +84,7 @@ Hash evidence adalah hash canonical JSON sumber sintetis (UTF-8, sort keys, sepa
 
 ```bash
 private/.venv-retriever-wsl/bin/python scripts/host1.py -m live_api.examples
-private/.venv-retriever-wsl/bin/python scripts/host1.py -m unittest live_api.test_mock -v
+private/.venv-retriever-wsl/bin/python scripts/host1.py -m unittest live_api.test_mock live_api.test_diagnosis -v
 ```
 
 Tes memakai TemporaryDirectory, server 127.0.0.1 pada port OS sementara dan token sintetis. Tidak ada port replay yang di-bind atau request inferensi nyata. Tes regresi replay terpisah dapat memakai `-m unittest live_api.test_mock reasoning_agent.test_api -v`; transport model pada suite replay juga simulasi. Hasil ini tidak membuktikan TTL/skew collector, tiga varian agen nyata, linter, repair atau benchmark live.

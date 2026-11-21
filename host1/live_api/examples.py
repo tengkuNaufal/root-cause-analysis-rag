@@ -2,9 +2,9 @@
 import json
 from pathlib import Path
 from pydantic.json_schema import models_json_schema
-from agent_contract.models import validate_pair
 from .models import (VERSION, DiagnosisRequest, Job, EvidencePayload, LintInput,
-                     LintOutput, ErrorResponse, Health, Capabilities, digest, project)
+                     LintOutput, ErrorResponse, Health, Capabilities, WireResponse,
+                     validate_live_pair, digest, project)
 
 STAMP = '2026-11-21T00:00:00Z'
 RID = '00000000-0000-4000-8000-000000000001'
@@ -39,6 +39,8 @@ def terminal(base, outcome='hypothesis', elapsed=0.0):
     result = dict(schema_version=1, request_id=base['request_id'],
                   status='abstain' if abstain else 'hypothesis',
                   root_cause_hypothesis=None if abstain else 'Synthetic fixture: unequal MTU values.',
+                  root_cause_class=None if abstain else 'mtu_mismatch',
+                  root_cause_router=None if abstain else 'r1',
                   confidence=None if abstain else 0.5,
                   claims=[] if abstain else [dict(statement='Synthetic MTU values differ.', evidence_ids=['e1'])],
                   missing_evidence=['Mock intentionally abstains.'] if abstain else [],
@@ -49,12 +51,12 @@ def terminal(base, outcome='hypothesis', elapsed=0.0):
                    answer_supported=not abstain, reasons=['Synthetic fixture']),
          evidence=[dict(id='e1',kind='telemetry',source_path='mock-source',sha256=ev['source_sha256'],
                         locator='/',content=ev['content'])], execution_allowed=False)
-    validated = validate_pair(agent_req, result)
+    validated = validate_live_pair(agent_req, result)
     manifest = {k:v for k,v in ev.items() if k!='content'}
     manifest.update(url=f"/v1/diagnoses/{base['job_id']}/evidence/e1",
                     capture_started_at=base['updated_at'], capture_completed_at=base['updated_at'])
     value.update(state='completed', result=validated.model_dump(),
-        assessment=dict(router=None if abstain else 'r1', root_cause='unknown' if abstain else 'mtu_mismatch',
+        assessment=dict(router=validated.root_cause_router, root_cause=validated.root_cause_class or 'unknown',
               confidence=result['confidence'], evidence_ids=[] if abstain else ['e1'],
               commands=[c.model_dump() for c in project(validated.proposed_patch)],
               explanation='Synthetic mock abstention.' if abstain else 'Synthetic fixture only; no real diagnosis.'),
@@ -83,7 +85,7 @@ def examples():
                            error=dict(code='invalid_request',message='Synthetic example.',retryable=False)))
 
 def schema():
-    types=[DiagnosisRequest,Job,EvidencePayload,LintInput,LintOutput,ErrorResponse,Health,Capabilities]
+    types=[DiagnosisRequest,WireResponse,Job,EvidencePayload,LintInput,LintOutput,ErrorResponse,Health,Capabilities]
     refs, shared=models_json_schema([(t,'validation') for t in types])
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             'title':'Live API draft 2 payload definitions', **shared,
