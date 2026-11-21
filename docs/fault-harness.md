@@ -66,14 +66,19 @@ Alur satu baris jadwal:
 1. Cek API `ready` dan tidak `active`, lalu cek lab dan tabel rute sama dengan baseline sesi. Kalau gagal, fault tidak di-inject.
 2. Inject, tunggu gejala, lalu kirim request diagnosis. Request hanya berisi versi kontrak, `request_id` acak, lab, varian, waktu gejala, dan `execution_allowed: false`. ID fault dan ground truth tidak dikirim.
 3. Polling tiap 1 detik dengan batas 180 detik sejak sebelum POST. Kalau respons POST hilang, job dicari lewat `request_id`.
-4. Kalau job selesai: cek setiap evidence di manifest, lalu jalankan linter Naufal (`rca.linter`) ke `assessment.commands` dan simpan hash perintahnya. Patch kosong dicatat `not_requested`.
-5. Revert katalog dan pastikan lab pulih. Selama tahap read-only perintah usulan agen tidak pernah diterapkan, jadi `applied` selalu `false` dan `agent_recovery_s` selalu `null`.
+4. Kalau job selesai, cek dulu jawabannya terikat ke request yang dikirim (`request_id`, `job_id`, varian, lab), `execution_allowed` tetap false, dan label `result.root_cause_class`/`root_cause_router` sama dengan `assessment`. Kalau model pydantic Host 1 bisa di-import, job juga divalidasi ke schema. Gagal di sini dicatat `invalid_response`.
+5. Cek setiap evidence di manifest. Kalau ada yang tidak cocok, baris dicatat `evidence_error` dan perintah agen tidak di-lint. Kalau cocok, jalankan linter Naufal (`rca.linter`) ke `assessment.commands` dan simpan hash perintahnya. Patch kosong dicatat `not_requested`.
+6. Revert katalog dan pastikan lab pulih. Selama tahap read-only perintah usulan agen tidak pernah diterapkan, jadi `applied` selalu `false` dan `agent_recovery_s` selalu `null`.
+
+Sejak POST dikirim sampai job jelas terminal, runner tidak menyentuh lab. Kalau POST atau polling error di tengah jalan, job dicari lewat `request_id` sampai batas `--reconcile`. Kalau statusnya tetap tidak jelas, barisnya dicatat `completion_unknown`, fault sengaja dibiarkan terpasang, dan runner berhenti dengan exit code 4. Penolakan admission yang jelas (4xx, `agent_busy`, `live_not_ready`) berarti job tidak pernah dibuat, jadi fault langsung di-revert.
 
 Kalau batas 180 detik habis, barisnya dicatat `timeout` dengan `completion_unknown: true`, lalu runner tetap menunggu job sampai `--reconcile` (default 600 detik) tanpa POST ulang. Hasil yang telat masuk `journal.jsonl`. Kalau job masih belum selesai juga, fault sengaja dibiarkan terpasang dan runner berhenti dengan exit code 4, supaya revert tidak bentrok dengan pengambilan evidence.
 
 Hasil ada di `<out>/results.jsonl`, satu baris per baris jadwal per attempt, dengan field sesuai bagian "Catatan JSONL milik Host 2" di draf kontrak. Kejadian perantara ada di `<out>/journal.jsonl`. Menjalankan ulang perintah yang sama akan melewati baris yang sudah punya hasil. Baris yang terputus karena runner mati ditandai `interrupted_runner` dan tidak diulang otomatis, ulangi secara eksplisit dengan `--retry <order>`.
 
-`--no-lab` hanya untuk menguji client ke mock: tidak ada inject, revert, atau cek lab. Mock Ashkar memperingatkan agar fault nyata tidak di-inject berdasarkan readiness mock, jadi pilot ke lab asli tunggu API live yang sungguhan.
+Setiap titik waktu di `timing` (`t_inject`, `t_symptom`, `t_request`, `t_diagnosis_done`, `t_lint_done`, `t_apply_done`, `t_revert`, `t_verified`) berbentuk `{"utc": ..., "elapsed_s": ...}`. `elapsed_s` diukur monotonic dari awal baris, UTC hanya untuk korelasi. Durasi turunannya ikut ditulis: `detection_s`, `diagnosis_s`, `job_wait_s`, `fallback_recovery_s`, dan `agent_recovery_s` (selalu null selama read-only).
+
+Kalau API melapor `simulation` atau mode selain `live`, runner menolak jalan sebelum menyentuh lab, kecuali dengan `--no-lab`. Mode itu hanya untuk menguji client ke mock: tidak ada inject, revert, atau cek lab.
 
 ## Katalog Host 1
 
