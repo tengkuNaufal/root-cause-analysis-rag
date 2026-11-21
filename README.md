@@ -21,4 +21,5 @@ Tugas besar Otomasi Jaringan dan SDN, topik 08: Explainable Agentic RAG for Root
 
 - [Katalog fault dan runner](docs/fault-harness.md)
 - [Akses lab dari laptop](docs/akses-dari-laptop.md)
+- [Client replay Host 2 dan hasil JSONL](docs/host2-replay.md)
 - [Dokumentasi dan panduan Host 1](docs/host1/README.md)

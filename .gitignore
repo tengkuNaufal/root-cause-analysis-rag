@@ -12,6 +12,8 @@ laptop/config.ps1
 id_ed25519*
 id_rsa*
 data/snapshots/
+# Host 2 client measurements contain local connection details and run output.
+/data/host2/
 # Host 1 local archives, keys, environments, model weights and databases.
 /private/
 **/clab-*/

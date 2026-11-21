@@ -1,5 +1,7 @@
 # Akses lab dari laptop (host kedua)
 
+Untuk menjalankan 16 skenario replay melalui API HTTP dan menyimpan JSONL, gunakan [client replay Host 2](host2-replay.md). Panduan SSH di bawah digunakan untuk akses perintah lab dan runner live.
+
 Tujuannya: laptop bisa menjalankan perintah di Ubuntu host utama lewat SSH (Secure Shell, koneksi terminal terenkripsi ke komputer lain). Nanti skrip injeksi fault dan monitoring dari laptop memakai jalur ini.
 
 Cara yang dipakai di sini tidak mengubah jaringan WSL di host utama, jadi lab yang sudah jalan tidak ikut terganggu: laptop SSH ke **Windows** host utama, lalu Windows meneruskan perintah ke distro `NetworkLab` lewat `wsl`.

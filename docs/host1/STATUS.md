@@ -13,8 +13,9 @@ Pembaruan 21 November 2026. Hasil berikut berasal dari pengujian tersimpan pada 
 | Ollama | Instalasi lokal dan profil llama3.1:8b sudah diuji; belum ada perbandingan model yang memenuhi rencana kelompok |
 | Reasoning | Adapter dokumentasi, replay administratif DOWN, temporal bound dan observasi MTU tersedia; bukan diagnosis umum |
 | API | Enam belas skenario replay terdaftar, loopback, satu inferensi aktif, tanpa collector live atau executor |
+| Client Host 2 | Client PowerShell 5.1/7 menjalankan 16 skenario berurutan dan menyimpan JSONL; delapan tes pada tiap runtime lulus, serta smoke API nyata 16/16 dari Host 1; belum runner benchmark live |
 | Migrasi | Kode dan data dipindahkan ke repo kelompok; path, import dan storage privat disesuaikan; 179 eksekusi tes lulus |
-| Kerapian repositori | 310 file konten terlihat Git; tiga panduan temporal digabung, dua skrip satu eksperimen dan latihan Alpine awal di-ignore; peta fungsi file tersedia; 179 tes dan 16 replay simulasi tetap lulus |
+| Kerapian repositori | Fixture dibatasi ke manifest; panduan temporal digabung dan artefak historis di-ignore; peta fungsi file tersedia; hasil client Host 2 di data/host2/ juga di-ignore |
 | Privasi sebelum commit | Path mesin dan login pribadi dibersihkan; fixture memakai MAC/IPv6 link-local sintetis dengan rantai hash baru; evidence asli tetap privat; 179 tes dan 16 replay simulasi lulus |
 
 Semua jalur replay mempertahankan patch kosong dan eksekusi dinonaktifkan. Perbedaan MTU sintetis belum membuktikan dampak routing, penyebab awal gangguan atau keberhasilan repair. Angka validasi dan keterbatasannya ada di [VALIDATION.md](VALIDATION.md).

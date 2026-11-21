@@ -23,4 +23,6 @@ Panduan penggunaan dan opsi CLI berada bersama modulnya:
 
 Lab replika, katalog fault dan runner kelompok dijelaskan di [fault harness](../fault-harness.md). Akses laptop dijelaskan di [panduan SSH](../akses-dari-laptop.md). Konfigurasi replika berbeda dari Host 1.
 
+Client HTTP untuk menjalankan 16 replay dari Host 2 tersedia pada [panduan replay dan JSONL](../host2-replay.md); client ini tidak memerlukan SSH atau instalasi model di Host 2.
+
 Laporan per tahap, catatan progres berulang dan panduan migrasi lama digabung menjadi dokumen di atas. Salinan lengkapnya tetap disimpan lokal di `private/docs-history/host1/`, yang diabaikan Git. Data yang dibagikan mengikuti [kebijakan fixture](../../data/host1/README.md).
