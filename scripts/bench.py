@@ -7,6 +7,7 @@
 #   python3 scripts/bench.py --api http://127.0.0.1:8766 --out data/host2/pilot --faults F01,F16,F22 --trials 1
 #   python3 scripts/bench.py --api ... --out data/host2/pilot --retry 12     # ulang baris jadwal 12 secara eksplisit
 #   python3 scripts/bench.py --api ... --out data/host2/mock-test --no-lab --limit 5   # uji client ke mock saja
+#   python3 scripts/bench.py --api ... --out data/host2/pilot --release 12   # lepas baris 12 setelah dipastikan job-nya gak ada
 #
 # Hasil final ada di <out>/results.jsonl (satu baris per baris jadwal per attempt), kejadian
 # perantara (request tersimpan, hasil telat, run terputus) di <out>/journal.jsonl.
@@ -75,12 +76,18 @@ def run_lint(commands):
     return out
 
 
+# Dipakai saat job mungkin udah diterima server tapi belum jelas terminal: lab ditahan apa adanya.
+class Held(Exception):
+    pass
+
+
 class Bench:
     def __init__(self, args, client, faults, catalog_sha):
         self.args, self.client, self.faults, self.catalog_sha = args, client, faults, catalog_sha
         self.out = Path(args.out)
         self.results = self.out / "results.jsonl"
         self.journal = self.out / "journal.jsonl"
+        self.baseline_file = self.out / "baseline_routes.json"
         self.base_routes = None
 
     def baseline_ok(self):
@@ -99,10 +106,14 @@ class Bench:
             time.sleep(1)
         raise Stop(2, "API masih active setelah 30 detik, ada job lain yang jalan")
 
-    # Membereskan baris yang terputus di sesi sebelumnya: cari job-nya lewat request_id, catat, lalu
-    # tandai interrupted. Gak diulang otomatis, harus lewat --retry biar attempt ulangnya tercatat.
+    def log(self, event, order, attempt, **fields):
+        append_jsonl(self.journal, {"event": event, "plan_order": order, "attempt": attempt, **fields})
+
+    # Membereskan baris yang belum punya hasil final dari sesi sebelumnya (runner mati, Ctrl+C, atau
+    # job yang ditahan). Job dicari lewat request_id dan harus terminal dulu, baru fault-nya di-revert.
+    # Kalau job gak ketemu, runner gak menganggapnya ditolak: operator harus memastikan ke Host 1 lalu
+    # memakai --release ORDER. Baris ini gak diulang otomatis, ulangi lewat --retry.
     def reconcile(self):
-        interrupted = []
         finals = {(r["plan_order"], r["attempt"]) for r in read_jsonl(self.results)}
         pending = {}
         for ev in read_jsonl(self.journal):
@@ -111,37 +122,52 @@ class Bench:
                 pending.setdefault(key, {}).update({k: v for k, v in ev.items() if v is not None})
         for (order, attempt), ev in sorted(pending.items()):
             job = None
-            if ev.get("request"):
-                job = self.client.job_by_request(ev["request"]["request_id"])
+            request = ev.get("request")
+            if request:
+                try:
+                    job = self.client.job_by_request(request["request_id"])
+                except (lc.ApiError, *lc.TRANSPORT_ERRORS) as e:
+                    raise Stop(4, f"Gagal mengecek job baris {order} ({e}), lab dibiarkan") from None
+                if job is None and order not in self.args.release:
+                    raise Stop(4, f"Job baris {order} (request {request['request_id']}) belum terlihat di server. "
+                                  f"Lab dibiarkan. Pastikan ke Host 1 job ini gak ada, lalu jalankan ulang dengan "
+                                  f"--release {order}")
                 if job is not None:
                     job, done = lc.wait_terminal(self.client, job, time.monotonic() + self.args.reconcile)
                     if not done:
-                        raise Stop(4, f"Job baris {order} masih {job.get('state')}, tunggu sampai selesai dulu")
+                        raise Stop(4, f"Job baris {order} masih {job.get('state')}, lab dibiarkan. Coba lagi nanti")
             rec = new_record(order, attempt, ev.get("fault_id"), ev.get("variant"), ev.get("trial"),
                              ev.get("catalog_sha256"))
-            rec.update(request_id=(ev.get("request") or {}).get("request_id"), job_id=job and job.get("job_id"),
-                       status="interrupted_runner", diagnosis=job, recovered=None,
-                       error="runner berhenti di tengah baris ini, kondisi lab saat itu gak tercatat")
+            rec.update(request_id=(request or {}).get("request_id"), job_id=job and job.get("job_id"),
+                       status=ev.get("held_status", "interrupted_runner"), diagnosis=job,
+                       completion_unknown=job is None and bool(request),
+                       error=ev.get("reason", "runner berhenti di tengah baris ini"))
+            fault = self.faults.get(ev.get("fault_id"))
+            if fault and not self.args.no_lab:
+                res = fr.revert_and_verify(fault, self.base_routes or {}, self.args.recover_timeout)
+                rec["fallback_revert"] = {"performed": True, "reason": "reconcile", "error": res["revert_error"]}
+                rec["recovered"] = res["recovered"]
+                rec["verification"] = {"source": "catalog_revert", "checks_passed": res["recovered"]}
+            else:
+                rec["recovered"] = None
             append_jsonl(self.results, rec)
-            print(f"[{order}] ditandai interrupted_runner dari sesi sebelumnya")
-            interrupted.append(ev.get("fault_id"))
-        return interrupted
+            print(f"[{order}] dibereskan dari sesi sebelumnya: {rec['status']}, pulih={rec['recovered']}")
 
     def run_row(self, row, attempt):
         fault = self.faults[row["fault_id"]]
-        rec = new_record(row["order"], attempt, row["fault_id"], row["variant"], row["trial"], self.catalog_sha)
+        order = row["order"]
+        rec = new_record(order, attempt, row["fault_id"], row["variant"], row["trial"], self.catalog_sha)
         points = {}
         origin = time.monotonic()
 
         def mark(name):
             points[name] = {"utc": lc.utc_now(), "elapsed_s": round(time.monotonic() - origin, 3)}
 
-        append_jsonl(self.journal, {"event": "start", "plan_order": row["order"], "attempt": attempt,
-                                    "fault_id": row["fault_id"], "variant": row["variant"], "trial": row["trial"],
-                                    "catalog_sha256": self.catalog_sha})
+        self.log("start", order, attempt, fault_id=row["fault_id"], variant=row["variant"], trial=row["trial"],
+                 catalog_sha256=self.catalog_sha)
         # post_sent: request mungkin udah sampai server. Sejak itu, selama job belum jelas terminal,
         # lab gak boleh disentuh (revert/inject) karena server bisa lagi ngambil evidence.
-        post_sent, terminal, hold_fault = False, False, False
+        post_sent, terminal = False, False
         try:
             mark("t_inject")
             if self.args.no_lab:
@@ -156,29 +182,26 @@ class Bench:
             mark("t_symptom")
             request = lc.new_request(row["variant"], points["t_symptom"]["utc"], fr.LAB)
             rec["request_id"] = request["request_id"]
-            append_jsonl(self.journal, {"event": "request", "plan_order": row["order"], "attempt": attempt,
-                                        "request": request})
+            self.log("request", order, attempt, request=request)
             mark("t_request")
             deadline = time.monotonic() + self.args.budget
             post_sent = True
             job = self.submit(request)
             if job is None:
                 post_sent = False
-                rec["status"] = "admission_error"
-                rec["error"] = "request ditolak server, job gak pernah dibuat"
+                rec["status"], rec["error"] = "admission_error", "request ditolak server, job gak pernah dibuat"
                 return rec
             rec["job_id"] = job.get("job_id")
+            self.log("job", order, attempt, job_id=rec["job_id"])
             job, done = lc.wait_terminal(self.client, job, deadline)
             rec["diagnosis"] = job
             if not done:
-                rec["status"], rec["completion_unknown"] = "timeout", True
                 late, done = lc.wait_terminal(self.client, job, time.monotonic() + self.args.reconcile)
-                if done:
-                    terminal = True
-                    append_jsonl(self.journal, {"event": "late_result", "plan_order": row["order"],
-                                                "attempt": attempt, "job": late})
-                else:
-                    hold_fault = True
+                if not done:
+                    raise Held("timeout", "job belum terminal setelah batas tunggu dan reconcile")
+                terminal = True
+                rec["status"], rec["completion_unknown"] = "timeout", True
+                self.log("late_result", order, attempt, job=late)
                 return rec
             terminal = True
             mark("t_diagnosis_done")
@@ -201,37 +224,44 @@ class Bench:
             rec["lint"] = run_lint(job["assessment"]["commands"])
             mark("t_lint_done")
             return rec
-        except Exception as e:
-            rec["error"] = f"{type(e).__name__}: {e}"
+        except BaseException as e:
             if post_sent and not terminal:
-                rec["status"], rec["completion_unknown"] = "completion_unknown", True
-                hold_fault = True
-            else:
-                rec["status"] = "error"
+                # Menyimpan checkpoint lalu menahan lab. Hasil final baru ditulis saat resume.
+                status, reason = e.args if isinstance(e, Held) else ("completion_unknown", f"{type(e).__name__}: {e}")
+                self.log("held", order, attempt, request_id=rec["request_id"], job_id=rec["job_id"],
+                         held_status=status, reason=reason)
+                raise Held(status, reason) if not isinstance(e, Held) else e
+            rec["status"] = "interrupted_operator" if isinstance(e, KeyboardInterrupt) else "error"
+            rec["error"] = f"{type(e).__name__}: {e}"
+            if isinstance(e, KeyboardInterrupt):
+                self.finish(rec, fault, mark, points)
+                append_jsonl(self.results, rec)
+                raise
             return rec
         finally:
-            if self.args.no_lab:
-                rec["fallback_revert"] = {"performed": False, "reason": "no_lab"}
-                rec["recovered"] = None
-            elif hold_fault:
-                # Menahan fault karena job belum jelas selesai, revert sekarang bisa bentrok sama capture evidence.
-                rec["fallback_revert"] = {"performed": False, "reason": "job_unresolved"}
-            else:
-                mark("t_revert")
-                res = fr.revert_and_verify(fault, self.base_routes, self.args.recover_timeout)
-                rec["fallback_revert"] = {"performed": True, "reason": "read_only_phase",
-                                          "error": res["revert_error"]}
-                rec["recovered"] = res["recovered"]
-                if res["recovered"]:
-                    mark("t_verified")
-                rec["verification"] = {"source": "catalog_revert", "checks_passed": res["recovered"]}
-            rec["timing"] = timing(points)
+            if rec["status"] not in (None, "interrupted_operator") and rec["timing"] is None:
+                self.finish(rec, fault, mark, points)
 
-    # Mengirim request. Hasilnya job, atau None kalau server jelas nolak (admission) dan job gak tersimpan.
-    # Error lain setelah POST dicek ulang lewat request_id sampai batas --reconcile.
+    def finish(self, rec, fault, mark, points):
+        if self.args.no_lab:
+            rec["fallback_revert"] = {"performed": False, "reason": "no_lab"}
+            rec["recovered"] = None
+        else:
+            mark("t_revert")
+            res = fr.revert_and_verify(fault, self.base_routes, self.args.recover_timeout)
+            rec["fallback_revert"] = {"performed": True, "reason": "read_only_phase", "error": res["revert_error"]}
+            rec["recovered"] = res["recovered"]
+            if res["recovered"]:
+                mark("t_verified")
+            rec["verification"] = {"source": "catalog_revert", "checks_passed": res["recovered"]}
+        rec["timing"] = timing(points)
+
+    # Mengirim request. Hasilnya job, atau None hanya kalau POST pertama dapat penolakan yang pasti dari
+    # server (4xx atau kode admission). Selain itu request mungkin udah diterima, jadi job dicari lewat
+    # request_id sampai batas --reconcile tanpa POST ulang. 404 di sini belum berarti ditolak.
     def submit(self, request):
         try:
-            return lc.submit_once(self.client, request)
+            return self.client.submit(request)
         except lc.ApiError as e:
             if e.status < 500 or e.code in lc.ADMISSION_CODES:
                 return None
@@ -242,20 +272,26 @@ class Bench:
             try:
                 job = self.client.job_by_request(request["request_id"])
             except (lc.ApiError, *lc.TRANSPORT_ERRORS):
-                time.sleep(2)
-                continue
-            return job
-        raise RuntimeError("status request gak bisa dipastikan sampai batas reconcile")
+                job = None
+            if job is not None:
+                return job
+            time.sleep(self.args.lookup_interval)
+        raise Held("completion_unknown", "request mungkin terkirim tapi job gak terlihat sampai batas reconcile")
 
     def run(self, rows):
         self.out.mkdir(parents=True, exist_ok=True)
-        interrupted = self.reconcile()
-        problems = [] if self.args.no_lab else self.baseline_ok()
-        if problems:
-            hint = "".join(f"\nFault {f} mungkin masih kepasang: python3 scripts/fault_runner.py revert {f}"
-                           for f in interrupted if f)
-            raise Stop(2, "Baseline tidak sehat:\n  " + "\n  ".join(problems) + hint)
-        self.base_routes = None if self.args.no_lab else fr.loopback_routes()
+        # Memakai tabel rute baseline yang disimpan di sesi pertama, biar pengecekan setelah resume
+        # gak membandingkan dengan kondisi lab yang mungkin masih rusak.
+        if self.baseline_file.exists():
+            self.base_routes = json.loads(self.baseline_file.read_text())
+        self.reconcile()
+        if not self.args.no_lab:
+            problems = self.baseline_ok()
+            if problems:
+                raise Stop(2, "Baseline tidak sehat:\n  " + "\n  ".join(problems))
+            if self.base_routes is None:
+                self.base_routes = fr.loopback_routes()
+                self.baseline_file.write_text(json.dumps(self.base_routes))
 
         attempts = {}
         for r in read_jsonl(self.results):
@@ -269,19 +305,20 @@ class Bench:
             problems = [] if self.args.no_lab else self.baseline_ok()
             if problems:
                 raise Stop(2, f"Baseline berubah sebelum baris {row['order']}:\n  " + "\n  ".join(problems))
-            rec = self.run_row(row, attempt)
+            try:
+                rec = self.run_row(row, attempt)
+            except Held as e:
+                raise Stop(4, f"Baris {row['order']}: {e.args[1]}. Fault {row['fault_id']} sengaja dibiarkan dan "
+                              f"belum ada hasil final. Jalankan ulang perintah yang sama untuk merekonsiliasi job "
+                              f"ini sebelum lanjut.") from None
             append_jsonl(self.results, rec)
             result = ((rec["diagnosis"] or {}).get("result") or {}).get("status")
             lint = (rec["lint"] or {}).get("status")
-            t = rec["timing"]
             print(f"[{row['order']}] {row['fault_id']} {row['variant']:<9} {rec['status']:<16} "
-                  f"hasil={result or '-'} lint={lint or '-'} diagnosis={fmt(t.get('diagnosis_s'))} "
+                  f"hasil={result or '-'} lint={lint or '-'} diagnosis={fmt(rec['timing'].get('diagnosis_s'))} "
                   f"pulih={rec['recovered']}", flush=True)
             if rec["error"]:
                 print(f"    error: {rec['error']}")
-            if rec["fallback_revert"]["reason"] == "job_unresolved":
-                raise Stop(4, f"Job baris {row['order']} belum selesai, fault {row['fault_id']} sengaja dibiarkan. "
-                              f"Setelah job selesai jalankan: python3 scripts/fault_runner.py revert {row['fault_id']}")
             if rec["status"] in STOP_STATUS or rec["recovered"] is False:
                 raise Stop(2, f"Baris {row['order']} berhenti dengan status {rec['status']}, cek lab sebelum lanjut")
         print(f"Hasil: {self.results}")
@@ -335,8 +372,11 @@ def main():
     ap.add_argument("--trials", type=int, default=None)
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--retry", type=int, nargs="*", default=[])
+    ap.add_argument("--release", type=int, nargs="*", default=[],
+                    help="baris yang job-nya sudah dipastikan gak ada di Host 1, boleh direkonsiliasi tanpa job")
     ap.add_argument("--budget", type=float, default=180, help="batas tunggu diagnosis per job, detik")
     ap.add_argument("--reconcile", type=float, default=600, help="batas tunggu tambahan untuk job yang telat")
+    ap.add_argument("--lookup-interval", type=float, default=2, help=argparse.SUPPRESS)
     ap.add_argument("--no-lab", action="store_true",
                     help="uji client ke mock tanpa inject/revert dan tanpa menyentuh lab")
     ap.add_argument("--symptom-timeout", type=float, default=70)
@@ -370,6 +410,10 @@ def main():
     except Stop as e:
         print(str(e))
         sys.exit(e.code)
+    except KeyboardInterrupt:
+        print("Dihentikan operator. Kalau ada baris yang ditahan, jalankan ulang perintah yang sama untuk "
+              "merekonsiliasinya dulu.")
+        sys.exit(130)
 
 
 if __name__ == "__main__":

@@ -101,22 +101,6 @@ class LiveClient:
 TRANSPORT_ERRORS = (urllib.error.URLError, socket.timeout, ConnectionError, TimeoutError)
 
 
-# Mengirim request; kalau respons POST hilang, job dicari lewat request_id dulu sebelum kirim ulang.
-def submit_once(client, request):
-    try:
-        return client.submit(request)
-    except TRANSPORT_ERRORS:
-        pass
-    except ApiError as e:
-        if e.status < 500 or e.code in ADMISSION_CODES:
-            raise
-    job = client.job_by_request(request["request_id"])
-    if job is not None:
-        return job
-    # Mengulang POST dengan request_id dan payload yang sama, server menjamin gak bikin job ganda.
-    return client.submit(request)
-
-
 # Polling sampai job terminal atau deadline monotonic habis, error transport sesaat dilewati aja.
 def wait_terminal(client, job, deadline, poll=1.0, clock=time.monotonic):
     while job.get("state") not in TERMINAL:
