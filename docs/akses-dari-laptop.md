@@ -42,15 +42,17 @@ ssh <user-windows-host-utama>@192.168.1.20
 Masukkan password akun Windows host utama. Setelah masuk:
 
 ```text
-wsl -d NetworkLab -u scar -- docker ps
+wsl -d NetworkLab -u USER_LINUX -- docker ps
 ```
 
-Harus tampil daftar container `clab-topik8-r1` sampai `r6` kalau lab sedang jalan.
+Harus tampil daftar container `clab-rca-r1` sampai `clab-rca-r6` kalau lab sedang jalan.
 
 Menjalankan cek lab langsung dari laptop dalam satu perintah:
 
+Ganti `USER_LINUX`, nama user Windows, alamat contoh, dan `/path/to/root-cause-analysis-rag` dengan konfigurasi lokal masing-masing. Jangan menyimpan nilai koneksi pribadi di template yang dibagikan.
+
 ```powershell
-ssh <user-windows-host-utama>@192.168.1.20 wsl -d NetworkLab -u scar --cd /home/scar/root-cause-analysis-rag -- python3 scripts/check_lab.py
+ssh <user-windows-host-utama>@192.168.1.20 'wsl -d NetworkLab -u USER_LINUX --cd "/path/to/root-cause-analysis-rag" -- python3 scripts/check_lab.py'
 ```
 
 Setelah ini berhasil, pakai skrip `laptop\lab.ps1` supaya tidak perlu mengetik ulang:
@@ -71,7 +73,7 @@ Add-Content -Path C:\ProgramData\ssh\administrators_authorized_keys -Value '<isi
 icacls C:\ProgramData\ssh\administrators_authorized_keys /inheritance:r /grant "Administrators:F" /grant "SYSTEM:F"
 ```
 
-Perintah `icacls` wajib, karena OpenSSH mengabaikan file ini kalau izinnya terlalu longgar. Untuk akun biasa, isi key ditaruh di `C:\Users\<user>\.ssh\authorized_keys`.
+Perintah `icacls` wajib, karena OpenSSH mengabaikan file ini kalau izinnya terlalu longgar. Untuk akun biasa, isi key ditaruh di `$env:USERPROFILE\.ssh\authorized_keys`.
 
 ## Kalau tidak bisa tersambung
 
@@ -79,8 +81,8 @@ Perintah `icacls` wajib, karena OpenSSH mengabaikan file ini kalau izinnya terla
 |---|---|
 | `Connection timed out` | beda jaringan, client isolation, atau firewall/profil Public |
 | `Connection refused` | service `sshd` belum jalan di host utama |
-| `Permission denied` | user/password salah; pakai nama user Windows, bukan `scar` |
+| `Permission denied` | user/password salah; pakai nama user Windows, bukan nama user Linux |
 | `There is no distribution with the supplied name` | nama distro beda; cek di host utama dengan `wsl -l -v` |
-| `permission denied ... docker.sock` | user `scar` belum masuk grup docker |
+| `permission denied ... docker.sock` | user Linux belum masuk grup docker |
 
 Kalau jaringan memang tidak memungkinkan (misalnya hanya ada WiFi kampus), alternatifnya VPN mesh seperti Tailscale di kedua Windows. Ini belum diputuskan kelompok.

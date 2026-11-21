@@ -58,7 +58,7 @@ if ($Action -eq 'reach') {
 }
 
 $remoteArgs = @{
-    'check'  = 'python3 scripts/check_lab.py --lab topik8'
+    'check'  = 'python3 scripts/check_lab.py --lab rca'
     'faults' = 'python3 scripts/fault_runner.py run'
 }
 if ($Action -eq 'faults' -and -not $Rest) {
@@ -72,7 +72,7 @@ foreach ($arg in $Rest) {
         exit 2
     }
 }
-$remote = "wsl -d $Distro -u $LinuxUser --cd $RepoPath -- " + $remoteArgs[$Action]
+$remote = "wsl -d $Distro -u $LinuxUser --cd `"$RepoPath`" -- " + $remoteArgs[$Action]
 if ($Rest) { $remote += ' ' + ($Rest -join ' ') }
 
 $sw = [Diagnostics.Stopwatch]::StartNew()

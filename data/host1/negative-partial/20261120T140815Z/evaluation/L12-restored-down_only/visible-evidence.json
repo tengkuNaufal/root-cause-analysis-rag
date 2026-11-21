@@ -1,0 +1,44 @@
+{
+  "history": {
+    "complete": false,
+    "events": [
+      {
+        "ref": "N314",
+        "time": "2026-11-19T10:06:20.832830Z",
+        "event": "DOWN"
+      }
+    ]
+  },
+  "current": {
+    "interfaces": [
+      {
+        "ref": "N312",
+        "node": "r2:eth1",
+        "admin_up": true,
+        "carrier_up": true,
+        "peer_state": "Full/-"
+      },
+      {
+        "ref": "N311",
+        "node": "r1:eth1",
+        "admin_up": true,
+        "carrier_up": true,
+        "peer_state": "Full/-"
+      }
+    ],
+    "graph": {
+      "ref": "N313",
+      "physical": "up"
+    },
+    "protocol": "ospf"
+  },
+  "required_current_refs": [
+    "N312",
+    "N311",
+    "N313"
+  ],
+  "documentation": {
+    "ref": "N310",
+    "text": "Event: InterfaceDown New state: Down Action: All interface variables are reset, and interface timers disabled. Also, all neighbor connections associated with the interface are destroyed. This is done by generating the event KillNbr on all associated neighbors (see Section 10.2)."
+  }
+}

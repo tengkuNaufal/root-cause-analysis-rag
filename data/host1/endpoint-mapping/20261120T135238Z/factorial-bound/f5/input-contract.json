@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "request_id": "t-3bdda1fe",
+  "lab": "rca",
+  "question": "Classify current state and phase within the supplied observation window.",
+  "mode": "replay",
+  "snapshot_completed_at": "2026-11-19T10:06:34.457815+00:00",
+  "gate": {
+    "version": "temporal-1.0/link-rca-1.0",
+    "decision": "context_ready",
+    "answer_supported": true,
+    "reasons": []
+  },
+  "evidence": [
+    {
+      "id": "D1",
+      "kind": "documentation",
+      "source_path": "knowledge/sources/frr-bgp.rst",
+      "sha256": "1135a724810b42e31ba0915e09b9d3cafabe5b6e1fb64833fe935697387fa08a",
+      "locator": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/bgp.rst#L2244-L2249",
+      "content": ".. clicmd:: bgp fast-external-failover\n\n   This command causes bgp to take down ebgp peers immediately\n   when a link flaps.  `bgp fast-external-failover` is the default\n   and will not be displayed as part of a `show run`.  The no form\n   of the command turns off this ability."
+    },
+    {
+      "id": "T1",
+      "kind": "telemetry",
+      "source_path": "results/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json",
+      "sha256": "0c3706b17ddc5f657726e371d80b0c513f3590b5f1d48c8640dc2fd66490421a",
+      "locator": "/routers/r3/sources/interfaces/data/5",
+      "content": "{\"router\":\"r3\",\"name\":\"eth4\",\"admin_up\":false,\"lower_up\":false,\"mtu\":1500}"
+    },
+    {
+      "id": "T2",
+      "kind": "telemetry",
+      "source_path": "results/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json",
+      "sha256": "0c3706b17ddc5f657726e371d80b0c513f3590b5f1d48c8640dc2fd66490421a",
+      "locator": "/routers/r5/sources/interfaces/data/3",
+      "content": "{\"router\":\"r5\",\"name\":\"eth1\",\"admin_up\":true,\"lower_up\":false,\"mtu\":1500}"
+    },
+    {
+      "id": "G1",
+      "kind": "graph",
+      "source_path": "results/integration-faults/20261119T100613Z/graphs/L35/down/graph.json",
+      "sha256": "c82325808457c29bce412b8edb11d9b6d4b2b514aadb22a53eab736ac52d5b9a",
+      "locator": "/edges",
+      "content": "{\"physical\":[{\"kind\":\"physical\",\"link_id\":\"L35\",\"state\":\"down\",\"expected\":{\"id\":\"L35\",\"endpoints\":[{\"router\":\"r3\",\"interface\":\"eth4\",\"ipv4\":\"10.0.35.1/30\"},{\"router\":\"r5\",\"interface\":\"eth1\",\"ipv4\":\"10.0.35.2/30\"}],\"protocol\":\"ebgp\",\"ospf_area\":null,\"ospf_cost\":null,\"mtu\":1500},\"observed_mtu\":[1500,1500],\"mtu_matches_expected\":true,\"evidence\":[{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json\",\"pointer\":\"/routers/r3/sources/interfaces\",\"raw_file\":\"raw/r3-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:33.662163+00:00\",\"completed_at\":\"2026-11-19T10:06:33.787303+00:00\"},{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json\",\"pointer\":\"/routers/r5/sources/interfaces\",\"raw_file\":\"raw/r5-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:33.663013+00:00\",\"completed_at\":\"2026-11-19T10:06:33.787960+00:00\"}],\"source\":\"interface:r3:eth4\",\"target\":\"interface:r5:eth1\",\"key\":\"L35\"},{\"kind\":\"physical\",\"link_id\":\"L35\",\"state\":\"down\",\"expected\":{\"id\":\"L35\",\"endpoints\":[{\"router\":\"r3\",\"interface\":\"eth4\",\"ipv4\":\"10.0.35.1/30\"},{\"router\":\"r5\",\"interface\":\"eth1\",\"ipv4\":\"10.0.35.2/30\"}],\"protocol\":\"ebgp\",\"ospf_area\":null,\"ospf_cost\":null,\"mtu\":1500},\"observed_mtu\":[1500,1500],\"mtu_matches_expected\":true,\"evidence\":[{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json\",\"pointer\":\"/routers/r3/sources/interfaces\",\"raw_file\":\"raw/r3-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:33.662163+00:00\",\"completed_at\":\"2026-11-19T10:06:33.787303+00:00\"},{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json\",\"pointer\":\"/routers/r5/sources/interfaces\",\"raw_file\":\"raw/r5-interfaces.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:33.663013+00:00\",\"completed_at\":\"2026-11-19T10:06:33.787960+00:00\"}],\"source\":\"interface:r5:eth1\",\"target\":\"interface:r3:eth4\",\"key\":\"L35\"}],\"sessions\":[{\"kind\":\"bgp\",\"state\":\"Active\",\"healthy\":false,\"peer_address\":\"10.0.35.2\",\"link_id\":\"L35\",\"observed\":[{\"address\":\"10.0.35.2\",\"remote_as\":65002,\"state\":\"Active\",\"peer_state\":\"OK\",\"uptime_ms\":2000,\"prefixes_received\":0,\"prefixes_sent\":0,\"messages_received\":546,\"messages_sent\":550,\"connections_established\":1,\"connections_dropped\":1}],\"expected\":true,\"evidence\":{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json\",\"pointer\":\"/routers/r3/sources/bgp\",\"raw_file\":\"raw/r3-bgp.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:33.972517+00:00\",\"completed_at\":\"2026-11-19T10:06:34.131402+00:00\"},\"source\":\"router:r3\",\"target\":\"router:r5\",\"key\":\"bgp:L35\"},{\"kind\":\"bgp\",\"state\":\"Active\",\"healthy\":false,\"peer_address\":\"10.0.35.1\",\"link_id\":\"L35\",\"observed\":[{\"address\":\"10.0.35.1\",\"remote_as\":65001,\"state\":\"Active\",\"peer_state\":\"OK\",\"uptime_ms\":2000,\"prefixes_received\":0,\"prefixes_sent\":0,\"messages_received\":549,\"messages_sent\":546,\"connections_established\":1,\"connections_dropped\":1}],\"expected\":true,\"evidence\":{\"snapshot\":\"data/host1/integration-faults/20261119T100613Z/L35/down/0002/snapshot.json\",\"pointer\":\"/routers/r5/sources/bgp\",\"raw_file\":\"raw/r5-bgp.json\",\"status\":\"ok\",\"started_at\":\"2026-11-19T10:06:33.795044+00:00\",\"completed_at\":\"2026-11-19T10:06:33.915334+00:00\"},\"source\":\"router:r5\",\"target\":\"router:r3\",\"key\":\"bgp:L35\"}]}"
+    },
+    {
+      "id": "L1",
+      "kind": "log",
+      "source_path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r5.jsonl",
+      "sha256": "c1c51c5f56e51a5d9449605619d47708044a54a885c2810924c35cdfd12847c6",
+      "locator": "line:22",
+      "content": "{\"daemon\":\"BGP\",\"event_timestamp\":\"2026-11-19T10:06:32.347765Z\",\"ingested_at\":\"2026-11-19T10:06:39.529698149Z\",\"lab\":\"rca\",\"message\":\"[PXVXG-TFNNT] %ADJCHANGE: neighbor 10.0.35.1(r3) in vrf default Down Interface down\",\"parse_status\":\"parsed\",\"raw_message\":\"2026/11/19 10:06:32.347765 informational: BGP: [PXVXG-TFNNT] %ADJCHANGE: neighbor 10.0.35.1(r3) in vrf default Down Interface down\",\"router\":\"r5\",\"schema_version\":1,\"severity\":\"informational\",\"source_file\":\"/frr/r5/events.log\",\"source_type\":\"frr_file\"}"
+    }
+  ],
+  "execution_allowed": false
+}

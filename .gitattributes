@@ -1,1 +1,13 @@
 * text=auto eol=lf
+# Preserve immutable evidence/corpus bytes: replay validation checks SHA-256.
+data/host1/** -text -whitespace
+data/host1/.gitignore text eol=lf
+data/host1/README.md text eol=lf
+host1/**/*.json -text whitespace=cr-at-eol
+lab/host1/**/*.json -text whitespace=cr-at-eol
+host1/knowledge/chunks.jsonl -text -whitespace
+host1/knowledge/sources/** -text -whitespace
+host1/knowledge/supplemental-mtu/** -text -whitespace
+host1/knowledge/supplemental-mtu/README.md text eol=lf
+# Baseline FRR configs retain their original terminal blank line.
+lab/host1/frr/configs/** whitespace=-blank-at-eof

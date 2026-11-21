@@ -1,0 +1,250 @@
+{
+  "status": "design_only_not_deployable",
+  "version": 1,
+  "date": "2026-11-19",
+  "design_document": "../../docs/TOPOLOGY-DESIGN.md",
+  "lab_name": "rca",
+  "management": {
+    "network": "rca-mgmt",
+    "subnet": "172.30.80.0/24",
+    "gateway": "172.30.80.1",
+    "conflict_check_required": true
+  },
+  "nodes": [
+    {
+      "name": "r1",
+      "asn": 65001,
+      "router_id": "10.255.0.1",
+      "loopback": "10.255.0.1/32",
+      "service": "10.100.1.1/32",
+      "management": "172.30.80.11/24"
+    },
+    {
+      "name": "r2",
+      "asn": 65001,
+      "router_id": "10.255.0.2",
+      "loopback": "10.255.0.2/32",
+      "service": "10.100.2.1/32",
+      "management": "172.30.80.12/24"
+    },
+    {
+      "name": "r3",
+      "asn": 65001,
+      "router_id": "10.255.0.3",
+      "loopback": "10.255.0.3/32",
+      "service": "10.100.3.1/32",
+      "management": "172.30.80.13/24"
+    },
+    {
+      "name": "r4",
+      "asn": 65001,
+      "router_id": "10.255.0.4",
+      "loopback": "10.255.0.4/32",
+      "service": "10.100.4.1/32",
+      "management": "172.30.80.14/24"
+    },
+    {
+      "name": "r5",
+      "asn": 65002,
+      "router_id": "10.255.0.5",
+      "loopback": "10.255.0.5/32",
+      "service": "10.100.5.1/32",
+      "management": "172.30.80.15/24"
+    },
+    {
+      "name": "r6",
+      "asn": 65003,
+      "router_id": "10.255.0.6",
+      "loopback": "10.255.0.6/32",
+      "service": "10.100.6.1/32",
+      "management": "172.30.80.16/24"
+    }
+  ],
+  "links": [
+    {
+      "id": "L12",
+      "endpoints": [
+        {
+          "router": "r1",
+          "interface": "eth1",
+          "ipv4": "10.0.12.1/30"
+        },
+        {
+          "router": "r2",
+          "interface": "eth1",
+          "ipv4": "10.0.12.2/30"
+        }
+      ],
+      "protocol": "ospf",
+      "ospf_area": "0.0.0.0",
+      "ospf_cost": 10,
+      "mtu": 1500
+    },
+    {
+      "id": "L13",
+      "endpoints": [
+        {
+          "router": "r1",
+          "interface": "eth2",
+          "ipv4": "10.0.13.1/30"
+        },
+        {
+          "router": "r3",
+          "interface": "eth1",
+          "ipv4": "10.0.13.2/30"
+        }
+      ],
+      "protocol": "ospf",
+      "ospf_area": "0.0.0.0",
+      "ospf_cost": 20,
+      "mtu": 1500
+    },
+    {
+      "id": "L24",
+      "endpoints": [
+        {
+          "router": "r2",
+          "interface": "eth2",
+          "ipv4": "10.0.24.1/30"
+        },
+        {
+          "router": "r4",
+          "interface": "eth1",
+          "ipv4": "10.0.24.2/30"
+        }
+      ],
+      "protocol": "ospf",
+      "ospf_area": "0.0.0.0",
+      "ospf_cost": 10,
+      "mtu": 1500
+    },
+    {
+      "id": "L34",
+      "endpoints": [
+        {
+          "router": "r3",
+          "interface": "eth2",
+          "ipv4": "10.0.34.1/30"
+        },
+        {
+          "router": "r4",
+          "interface": "eth2",
+          "ipv4": "10.0.34.2/30"
+        }
+      ],
+      "protocol": "ospf",
+      "ospf_area": "0.0.0.0",
+      "ospf_cost": 10,
+      "mtu": 1500
+    },
+    {
+      "id": "L23",
+      "endpoints": [
+        {
+          "router": "r2",
+          "interface": "eth3",
+          "ipv4": "10.0.23.1/30"
+        },
+        {
+          "router": "r3",
+          "interface": "eth3",
+          "ipv4": "10.0.23.2/30"
+        }
+      ],
+      "protocol": "ospf",
+      "ospf_area": "0.0.0.0",
+      "ospf_cost": 30,
+      "mtu": 1500
+    },
+    {
+      "id": "L35",
+      "endpoints": [
+        {
+          "router": "r3",
+          "interface": "eth4",
+          "ipv4": "10.0.35.1/30"
+        },
+        {
+          "router": "r5",
+          "interface": "eth1",
+          "ipv4": "10.0.35.2/30"
+        }
+      ],
+      "protocol": "ebgp",
+      "ospf_area": null,
+      "ospf_cost": null,
+      "mtu": 1500
+    },
+    {
+      "id": "L46",
+      "endpoints": [
+        {
+          "router": "r4",
+          "interface": "eth3",
+          "ipv4": "10.0.46.1/30"
+        },
+        {
+          "router": "r6",
+          "interface": "eth1",
+          "ipv4": "10.0.46.2/30"
+        }
+      ],
+      "protocol": "ebgp",
+      "ospf_area": null,
+      "ospf_cost": null,
+      "mtu": 1500
+    },
+    {
+      "id": "L56",
+      "endpoints": [
+        {
+          "router": "r5",
+          "interface": "eth2",
+          "ipv4": "10.0.56.1/30"
+        },
+        {
+          "router": "r6",
+          "interface": "eth2",
+          "ipv4": "10.0.56.2/30"
+        }
+      ],
+      "protocol": "ebgp",
+      "ospf_area": null,
+      "ospf_cost": null,
+      "mtu": 1500
+    }
+  ],
+  "ibgp_pairs": [
+    [
+      "r1",
+      "r2"
+    ],
+    [
+      "r1",
+      "r3"
+    ],
+    [
+      "r1",
+      "r4"
+    ],
+    [
+      "r2",
+      "r3"
+    ],
+    [
+      "r2",
+      "r4"
+    ],
+    [
+      "r3",
+      "r4"
+    ]
+  ],
+  "timers": {
+    "ospf_hello_seconds": 1,
+    "ospf_dead_seconds": 4,
+    "bgp_keepalive_seconds": 3,
+    "bgp_hold_seconds": 9
+  },
+  "frr_image": "quay.io/frrouting/frr:containerlab-10.7.1@sha256:f7d98e4faa24333c1fdb638f72678111de07a7aef90566132655dbadceca86c7"
+}

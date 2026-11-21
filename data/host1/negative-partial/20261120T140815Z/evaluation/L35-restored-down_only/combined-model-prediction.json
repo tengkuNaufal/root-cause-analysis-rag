@@ -1,0 +1,11 @@
+{
+  "current": "healthy",
+  "phase": "undetermined",
+  "target": null,
+  "explanation": "Healthy at this snapshot; supplied history cannot establish baseline versus recovery.",
+  "citations": [
+    "N412",
+    "N411",
+    "N413"
+  ]
+}

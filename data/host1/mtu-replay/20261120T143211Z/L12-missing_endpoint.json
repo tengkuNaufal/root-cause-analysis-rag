@@ -1,0 +1,11 @@
+{
+  "schema_version": "mtu-sequence-1.0",
+  "synthetic": true,
+  "history_complete": true,
+  "snapshots": [
+    {
+      "path": "results/mtu-replay/20261120T143211Z/fixtures/L12/missing_endpoint/bundle.json",
+      "sha256": "ef4009e129e1075ea2fbef7cb980730bd3e8c275af24f338d34a240cc507ac42"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "statement",
+        "evidence_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "ProposedCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "router": {
+          "enum": [
+            "r1",
+            "r2",
+            "r3",
+            "r4",
+            "r5",
+            "r6"
+          ],
+          "title": "Router",
+          "type": "string"
+        },
+        "interface": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interface"
+        },
+        "interpreter": {
+          "enum": [
+            "linux_argv",
+            "vtysh_commands"
+          ],
+          "title": "Interpreter",
+          "type": "string"
+        },
+        "arguments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Arguments",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "validation_status": {
+          "const": "unvalidated",
+          "default": "unvalidated",
+          "title": "Validation Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "router",
+        "interpreter",
+        "arguments",
+        "evidence_ids",
+        "rationale"
+      ],
+      "title": "ProposedCommand",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "hypothesis",
+        "abstain"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "root_cause_hypothesis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Root Cause Hypothesis"
+    },
+    "confidence": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/Claim"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "missing_evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Evidence",
+      "type": "array"
+    },
+    "proposed_patch": {
+      "items": {
+        "$ref": "#/$defs/ProposedCommand"
+      },
+      "title": "Proposed Patch",
+      "type": "array"
+    },
+    "execution_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Execution Allowed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "request_id",
+    "status",
+    "root_cause_hypothesis",
+    "claims",
+    "missing_evidence",
+    "proposed_patch"
+  ],
+  "title": "Response",
+  "type": "object"
+}

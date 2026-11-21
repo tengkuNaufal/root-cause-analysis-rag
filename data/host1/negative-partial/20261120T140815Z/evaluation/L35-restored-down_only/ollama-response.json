@@ -1,0 +1,14 @@
+{
+  "model": "llama3.1:8b",
+  "created_at": "2026-11-20T14:10:47.385881893Z",
+  "response": "{\n  \"phase\": \"undetermined\"\n}",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 858186673,
+  "load_duration": 16503481,
+  "prompt_eval_count": 250,
+  "prompt_eval_cached_count": 241,
+  "prompt_eval_duration": 186730000,
+  "eval_count": 11,
+  "eval_duration": 641698000
+}

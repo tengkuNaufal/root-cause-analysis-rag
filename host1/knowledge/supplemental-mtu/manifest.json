@@ -1,0 +1,34 @@
+[
+  {
+    "filename": "frr-ospf-vty.c",
+    "url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/ospfd/ospf_vty.c",
+    "content_kind": "frr_source_code",
+    "version": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+    "fetched_at": "2026-11-19T15:26:38.544350+00:00",
+    "sha256": "fb7a401a8015a3722d0ba7b4e42042e743c2022a82eed589750cd47c6dcfcfd6"
+  },
+  {
+    "filename": "frr-ospf-packet.c",
+    "url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/ospfd/ospf_packet.c",
+    "content_kind": "frr_source_code",
+    "version": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+    "fetched_at": "2026-11-19T15:26:40.212084+00:00",
+    "sha256": "15bd2d6a0cf77a8b6961cc725adabd244157633f14869781c80ce12db57fb39f"
+  },
+  {
+    "filename": "rfc2328.txt",
+    "url": "https://www.rfc-editor.org/rfc/rfc2328.txt",
+    "content_kind": "protocol_standard",
+    "version": "RFC2328",
+    "fetched_at": "2026-11-19T15:26:40.772621+00:00",
+    "sha256": "981690e297fbba9e8ef655802552b5529cb17f1ffe790ad2d55706cc522ff50c"
+  },
+  {
+    "filename": "linux-netdevices.rst",
+    "url": "https://raw.githubusercontent.com/torvalds/linux/v6.3/Documentation/networking/netdevices.rst",
+    "content_kind": "linux_kernel_documentation",
+    "version": "v6.3",
+    "fetched_at": "2026-11-19T15:26:41.353183+00:00",
+    "sha256": "9670149755199223a0e1f45bacf8d77f33e2deda5619594a677f1ef6f0cf1c93"
+  }
+]

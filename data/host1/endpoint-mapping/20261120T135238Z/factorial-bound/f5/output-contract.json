@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "request_id": "t-3bdda1fe",
+  "status": "hypothesis",
+  "root_cause_hypothesis": "An administrative-down condition with carrier/protocol loss is observed.",
+  "confidence": null,
+  "claims": [
+    {
+      "statement": "An administrative-down condition with carrier/protocol loss is observed.",
+      "evidence_ids": [
+        "T1",
+        "T2",
+        "G1",
+        "L1"
+      ]
+    }
+  ],
+  "missing_evidence": [],
+  "proposed_patch": [],
+  "execution_allowed": false
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "mtu-sequence-1.0",
+  "synthetic": true,
+  "history_complete": true,
+  "snapshots": [
+    {
+      "path": "results/mtu-replay/20261120T143211Z/fixtures/L12/boolean_mtu/bundle.json",
+      "sha256": "f104063ba407622934d13231a48717f851be79a3ab4b8d3262fdbe64353a146a"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 version: 1
-lab: replika (lab/replica/six-node)
-status: belum disesuaikan dengan topologi Host 1
+lab: topik8
+topology: lab/replica/six-node/topik8.clab.yml
+status: dipakai untuk lab replika, sudah diuji 30/30
 faults:
 - id: F01
   class: mtu_mismatch

@@ -1,0 +1,3416 @@
+{
+  "schema_version": 1,
+  "evidence": {
+    "schema_version": 1,
+    "focus": {
+      "link": "L12",
+      "routers": [
+        "r1",
+        "r2"
+      ],
+      "protocol": "ospf"
+    },
+    "inputs": {
+      "graph": {
+        "path": "results/integration-faults/20261119T100613Z/graphs/L12/down/graph.json",
+        "sha256": "704031eee7b8e9dcfa7acc8ef591e1c392f4e7764ed8100f401cd2ce34fe11dc"
+      },
+      "snapshot": {
+        "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+        "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23"
+      },
+      "inventory": {
+        "path": "results/integration-faults/20261119T100613Z/inventory.json",
+        "sha256": "cc7ff723ad087d0b38dde66c0824df4d12aaf25aeccd1add4c14e295e65644bc"
+      },
+      "logs": [
+        {
+          "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r1.jsonl",
+          "sha256": "0ac5b07a8503154c61c7289dba6e112f0e5b94412190beb8e2af5fc94685b90d"
+        },
+        {
+          "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r2.jsonl",
+          "sha256": "d560aed2fbf480e9937d81f14b4dc3d363c7d28d9b48c5be20ba231098e9cc2b"
+        },
+        {
+          "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r3.jsonl",
+          "sha256": "951c0be5b3a9e5738784d80723aa0a439204ed94aa05e994044093583ddd4786"
+        },
+        {
+          "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r4.jsonl",
+          "sha256": "7380c7ed15b7bfa9821e2766932e950af45ac331556ba78a598aa290d761799c"
+        },
+        {
+          "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r5.jsonl",
+          "sha256": "c1c51c5f56e51a5d9449605619d47708044a54a885c2810924c35cdfd12847c6"
+        },
+        {
+          "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r6.jsonl",
+          "sha256": "93757fc8f005317e7e3fd7855b21f6fb1e5a7381186c9c244f3c51e6c79c5511"
+        }
+      ]
+    },
+    "window": {
+      "start": "2026-11-19T10:05:22.277623+00:00",
+      "end": "2026-11-19T10:06:23.037134+00:00"
+    },
+    "collection_status": "complete",
+    "physical": [
+      {
+        "kind": "physical",
+        "link_id": "L12",
+        "state": "down",
+        "expected": {
+          "id": "L12",
+          "endpoints": [
+            {
+              "router": "r1",
+              "interface": "eth1",
+              "ipv4": "10.0.12.1/30"
+            },
+            {
+              "router": "r2",
+              "interface": "eth1",
+              "ipv4": "10.0.12.2/30"
+            }
+          ],
+          "protocol": "ospf",
+          "ospf_area": "0.0.0.0",
+          "ospf_cost": 10,
+          "mtu": 1500
+        },
+        "observed_mtu": [
+          1500,
+          1500
+        ],
+        "mtu_matches_expected": true,
+        "evidence": [
+          {
+            "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+            "pointer": "/routers/r1/sources/interfaces",
+            "raw_file": "raw/r1-interfaces.json",
+            "status": "ok",
+            "started_at": "2026-11-19T10:06:22.277836+00:00",
+            "completed_at": "2026-11-19T10:06:22.409530+00:00"
+          },
+          {
+            "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+            "pointer": "/routers/r2/sources/interfaces",
+            "raw_file": "raw/r2-interfaces.json",
+            "status": "ok",
+            "started_at": "2026-11-19T10:06:22.278002+00:00",
+            "completed_at": "2026-11-19T10:06:22.409357+00:00"
+          }
+        ],
+        "source": "interface:r1:eth1",
+        "target": "interface:r2:eth1",
+        "key": "L12"
+      },
+      {
+        "kind": "physical",
+        "link_id": "L12",
+        "state": "down",
+        "expected": {
+          "id": "L12",
+          "endpoints": [
+            {
+              "router": "r1",
+              "interface": "eth1",
+              "ipv4": "10.0.12.1/30"
+            },
+            {
+              "router": "r2",
+              "interface": "eth1",
+              "ipv4": "10.0.12.2/30"
+            }
+          ],
+          "protocol": "ospf",
+          "ospf_area": "0.0.0.0",
+          "ospf_cost": 10,
+          "mtu": 1500
+        },
+        "observed_mtu": [
+          1500,
+          1500
+        ],
+        "mtu_matches_expected": true,
+        "evidence": [
+          {
+            "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+            "pointer": "/routers/r1/sources/interfaces",
+            "raw_file": "raw/r1-interfaces.json",
+            "status": "ok",
+            "started_at": "2026-11-19T10:06:22.277836+00:00",
+            "completed_at": "2026-11-19T10:06:22.409530+00:00"
+          },
+          {
+            "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+            "pointer": "/routers/r2/sources/interfaces",
+            "raw_file": "raw/r2-interfaces.json",
+            "status": "ok",
+            "started_at": "2026-11-19T10:06:22.278002+00:00",
+            "completed_at": "2026-11-19T10:06:22.409357+00:00"
+          }
+        ],
+        "source": "interface:r2:eth1",
+        "target": "interface:r1:eth1",
+        "key": "L12"
+      }
+    ],
+    "interfaces": [
+      {
+        "kind": "interface",
+        "router": "r1",
+        "name": "eth1",
+        "observed": {
+          "name": "eth1",
+          "ifindex": 54,
+          "peer_ifindex": 53,
+          "role": "data",
+          "admin_up": false,
+          "lower_up": false,
+          "operstate": "DOWN",
+          "mtu": 1500,
+          "mac": "02:00:00:11:f4:e6",
+          "addresses": [
+            {
+              "family": "inet",
+              "local": "10.0.12.1",
+              "prefixlen": 30,
+              "broadcast": "10.0.12.3",
+              "scope": "global",
+              "label": "eth1",
+              "valid_life_time": 4294967295,
+              "preferred_life_time": 4294967295
+            }
+          ],
+          "counters": {
+            "rx": {
+              "bytes": 294516,
+              "packets": 3712,
+              "errors": 0,
+              "dropped": 0,
+              "over_errors": 0,
+              "multicast": 0
+            },
+            "tx": {
+              "bytes": 300914,
+              "packets": 3801,
+              "errors": 0,
+              "dropped": 0,
+              "carrier_errors": 0,
+              "collisions": 0
+            }
+          }
+        },
+        "expected": {
+          "router": "r1",
+          "interface": "eth1",
+          "ipv4": "10.0.12.1/30"
+        },
+        "evidence": {
+          "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "pointer": "/routers/r1/sources/interfaces",
+          "raw_file": "raw/r1-interfaces.json",
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.277836+00:00",
+          "completed_at": "2026-11-19T10:06:22.409530+00:00"
+        },
+        "id": "interface:r1:eth1"
+      },
+      {
+        "kind": "interface",
+        "router": "r2",
+        "name": "eth1",
+        "observed": {
+          "name": "eth1",
+          "ifindex": 53,
+          "peer_ifindex": 54,
+          "role": "data",
+          "admin_up": true,
+          "lower_up": false,
+          "operstate": "DOWN",
+          "mtu": 1500,
+          "mac": "02:00:00:ad:8f:69",
+          "addresses": [
+            {
+              "family": "inet",
+              "local": "10.0.12.2",
+              "prefixlen": 30,
+              "broadcast": "10.0.12.3",
+              "scope": "global",
+              "label": "eth1",
+              "valid_life_time": 4294967295,
+              "preferred_life_time": 4294967295
+            },
+            {
+              "family": "inet6",
+              "local": "fe80::5ef5:b198:8706:6efd",
+              "prefixlen": 64,
+              "scope": "link",
+              "protocol": "kernel_ll",
+              "valid_life_time": 4294967295,
+              "preferred_life_time": 4294967295
+            }
+          ],
+          "counters": {
+            "rx": {
+              "bytes": 300914,
+              "packets": 3801,
+              "errors": 0,
+              "dropped": 0,
+              "over_errors": 0,
+              "multicast": 0
+            },
+            "tx": {
+              "bytes": 294516,
+              "packets": 3712,
+              "errors": 0,
+              "dropped": 0,
+              "carrier_errors": 0,
+              "collisions": 0
+            }
+          }
+        },
+        "expected": {
+          "router": "r2",
+          "interface": "eth1",
+          "ipv4": "10.0.12.2/30"
+        },
+        "evidence": {
+          "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "pointer": "/routers/r2/sources/interfaces",
+          "raw_file": "raw/r2-interfaces.json",
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.278002+00:00",
+          "completed_at": "2026-11-19T10:06:22.409357+00:00"
+        },
+        "id": "interface:r2:eth1"
+      }
+    ],
+    "sessions": [
+      {
+        "kind": "ospf",
+        "state": "absent",
+        "healthy": false,
+        "peer_address": "10.0.12.2",
+        "link_id": "L12",
+        "observed": [],
+        "expected": true,
+        "evidence": {
+          "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "pointer": "/routers/r1/sources/ospf",
+          "raw_file": "raw/r1-ospf.json",
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.412872+00:00",
+          "completed_at": "2026-11-19T10:06:22.542232+00:00"
+        },
+        "source": "router:r1",
+        "target": "router:r2",
+        "key": "ospf:L12"
+      },
+      {
+        "kind": "ospf",
+        "state": "absent",
+        "healthy": false,
+        "peer_address": "10.0.12.1",
+        "link_id": "L12",
+        "observed": [],
+        "expected": true,
+        "evidence": {
+          "snapshot": "data/host1/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "pointer": "/routers/r2/sources/ospf",
+          "raw_file": "raw/r2-ospf.json",
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.412453+00:00",
+          "completed_at": "2026-11-19T10:06:22.542669+00:00"
+        },
+        "source": "router:r2",
+        "target": "router:r1",
+        "key": "ospf:L12"
+      }
+    ],
+    "telemetry": [
+      {
+        "router": "r1",
+        "source": "interfaces",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.277836+00:00",
+          "completed_at": "2026-11-19T10:06:22.409530+00:00",
+          "duration_seconds": 0.131695,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r1-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.1.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.1.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 37,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:94:9e:4d",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.11",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 1868,
+                  "packets": 28,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 38,
+              "peer_ifindex": 39,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:9e:52:a7",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.13.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.13.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::8532:020b:886e:c52d",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 220525,
+                  "packets": 2738,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 219657,
+                  "packets": 2740,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 54,
+              "peer_ifindex": 53,
+              "role": "data",
+              "admin_up": false,
+              "lower_up": false,
+              "operstate": "DOWN",
+              "mtu": 1500,
+              "mac": "02:00:00:11:f4:e6",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.12.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.12.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 294516,
+                  "packets": 3712,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 300914,
+                  "packets": 3801,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r1/sources/interfaces"
+        }
+      },
+      {
+        "router": "r1",
+        "source": "ospf",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.412872+00:00",
+          "completed_at": "2026-11-19T10:06:22.542232+00:00",
+          "duration_seconds": 0.129362,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "vtysh",
+            "-c",
+            "show ip ospf neighbor json"
+          ],
+          "raw_file": "raw/r1-ospf.json",
+          "data": [
+            {
+              "router_id": "10.255.0.3",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth2:10.0.13.1",
+              "peer_address": "10.0.13.2",
+              "uptime_ms": 1608971,
+              "dead_timer_remaining_ms": 3149
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r1/sources/ospf"
+        }
+      },
+      {
+        "router": "r1",
+        "source": "bgp",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.547858+00:00",
+          "completed_at": "2026-11-19T10:06:22.725736+00:00",
+          "duration_seconds": 0.177874,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r1-bgp.json",
+          "data": {
+            "router_id": "10.255.0.1",
+            "local_as": 65001,
+            "peers": [
+              {
+                "address": "10.255.0.2",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1604000,
+                "prefixes_received": 1,
+                "prefixes_sent": 1,
+                "messages_received": 537,
+                "messages_sent": 537,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.3",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1604000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 540,
+                "messages_sent": 537,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.4",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1604000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 536,
+                "messages_sent": 537,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r1/sources/bgp"
+        }
+      },
+      {
+        "router": "r1",
+        "source": "routes",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.730611+00:00",
+          "completed_at": "2026-11-19T10:06:22.857737+00:00",
+          "duration_seconds": 0.127147,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r1-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.13.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.13.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 50,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 30,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 2,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.2",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:43",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:26:45",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 30,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:43",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.3/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:26:45",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.4/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 30,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.11/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r1/sources/routes"
+        }
+      },
+      {
+        "router": "r1",
+        "source": "kernel_routes",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.861605+00:00",
+          "completed_at": "2026-11-19T10:06:22.985625+00:00",
+          "duration_seconds": 0.124028,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r1-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.13.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.13.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.23.0/30",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.24.0/30",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.34.0/30",
+              "nhid": 26,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.2.1",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.3.1",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.4.1",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.5.1",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.6.1",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.2",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.3",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.4",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.11",
+              "flags": []
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r1/sources/kernel_routes"
+        }
+      },
+      {
+        "router": "r2",
+        "source": "interfaces",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.278002+00:00",
+          "completed_at": "2026-11-19T10:06:22.409357+00:00",
+          "duration_seconds": 0.131355,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r2-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.2",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.2",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.2.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.2.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 42,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:98:b2:0c",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.12",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 1606,
+                  "packets": 25,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 45,
+              "peer_ifindex": 46,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:be:f0:b5",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.24.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.24.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::bd46:4f29:9885:bb84",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 382945,
+                  "packets": 4873,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 387627,
+                  "packets": 4930,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth3",
+              "ifindex": 47,
+              "peer_ifindex": 48,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:a5:81:11",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.23.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.23.3",
+                  "scope": "global",
+                  "label": "eth3",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::b9b5:01a1:3062:b79f",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 134058,
+                  "packets": 1627,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 134318,
+                  "packets": 1629,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 53,
+              "peer_ifindex": 54,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": false,
+              "operstate": "DOWN",
+              "mtu": 1500,
+              "mac": "02:00:00:ad:8f:69",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.12.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.12.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::5ef5:b198:8706:6efd",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 300914,
+                  "packets": 3801,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 294516,
+                  "packets": 3712,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r2/sources/interfaces"
+        }
+      },
+      {
+        "router": "r2",
+        "source": "ospf",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.412453+00:00",
+          "completed_at": "2026-11-19T10:06:22.542669+00:00",
+          "duration_seconds": 0.130215,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "vtysh",
+            "-c",
+            "show ip ospf neighbor json"
+          ],
+          "raw_file": "raw/r2-ospf.json",
+          "data": [
+            {
+              "router_id": "10.255.0.4",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth2:10.0.24.1",
+              "peer_address": "10.0.24.2",
+              "uptime_ms": 1603955,
+              "dead_timer_remaining_ms": 3149
+            },
+            {
+              "router_id": "10.255.0.3",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth3:10.0.23.1",
+              "peer_address": "10.0.23.2",
+              "uptime_ms": 1603955,
+              "dead_timer_remaining_ms": 3149
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r2/sources/ospf"
+        }
+      },
+      {
+        "router": "r2",
+        "source": "bgp",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.547015+00:00",
+          "completed_at": "2026-11-19T10:06:22.724824+00:00",
+          "duration_seconds": 0.177819,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r2-bgp.json",
+          "data": {
+            "router_id": "10.255.0.2",
+            "local_as": 65001,
+            "peers": [
+              {
+                "address": "10.255.0.1",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1604000,
+                "prefixes_received": 1,
+                "prefixes_sent": 1,
+                "messages_received": 537,
+                "messages_sent": 537,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.3",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1604000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 540,
+                "messages_sent": 537,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.4",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1604000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 536,
+                "messages_sent": 537,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r2/sources/bgp"
+        }
+      },
+      {
+        "router": "r2",
+        "source": "routes",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.731384+00:00",
+          "completed_at": "2026-11-19T10:06:22.857429+00:00",
+          "duration_seconds": 0.126054,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r2-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.13.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 47,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 47,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:26:45",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.1",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:43",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:26:45",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:43",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:26:45",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:43",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:43",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:50",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.3/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:26:45",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.4/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:26:45",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.12/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:26:51",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r2/sources/routes"
+        }
+      },
+      {
+        "router": "r2",
+        "source": "kernel_routes",
+        "observation": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:22.862352+00:00",
+          "completed_at": "2026-11-19T10:06:22.985810+00:00",
+          "duration_seconds": 0.123459,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r2-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.12.0/30",
+              "dev": "eth1",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.12.2",
+              "flags": [
+                "linkdown"
+              ]
+            },
+            {
+              "dst": "10.0.13.0/30",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.23.0/30",
+              "dev": "eth3",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.23.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.24.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.24.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.34.0/30",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.1.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.3.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.4.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.5.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.6.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.3",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.4",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.12",
+              "flags": []
+            }
+          ]
+        },
+        "evidence": {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23",
+          "pointer": "/routers/r2/sources/kernel_routes"
+        }
+      }
+    ],
+    "logs": [
+      {
+        "graph_node": "log:667395df77347782afff87838b67244e72dbbb64b98f301c1292d22829b162ce",
+        "event": {
+          "daemon": "OSPF",
+          "event_timestamp": "2026-11-19T10:06:20.832746Z",
+          "ingested_at": "2026-11-19T10:06:29.092535783Z",
+          "lab": "rca",
+          "message": "[Y05P2-YJVXY] AdjChg: Nbr 10.255.0.2, NbrIP 10.0.12.2 (default) on eth1:10.0.12.1: Full -> Deleted (KillNbr)",
+          "parse_status": "parsed",
+          "raw_message": "2026/11/19 10:06:20.832746 notifications: OSPF: [Y05P2-YJVXY] AdjChg: Nbr 10.255.0.2, NbrIP 10.0.12.2 (default) on eth1:10.0.12.1: Full -> Deleted (KillNbr)",
+          "router": "r1",
+          "schema_version": 1,
+          "severity": "notifications",
+          "source_file": "/frr/r1/events.log",
+          "source_type": "frr_file"
+        },
+        "evidence": [
+          {
+            "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r1.jsonl",
+            "sha256": "0ac5b07a8503154c61c7289dba6e112f0e5b94412190beb8e2af5fc94685b90d",
+            "line": 26
+          }
+        ],
+        "graph_edges": [
+          {
+            "kind": "emitted_by",
+            "source": "log:667395df77347782afff87838b67244e72dbbb64b98f301c1292d22829b162ce",
+            "target": "router:r1",
+            "key": 0
+          },
+          {
+            "kind": "temporal_context",
+            "relation": "before",
+            "delta_to_snapshot_start_seconds": -1.444877,
+            "causal_claim": false,
+            "source": "log:667395df77347782afff87838b67244e72dbbb64b98f301c1292d22829b162ce",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443",
+            "key": 0
+          },
+          {
+            "kind": "protocol_context",
+            "relation": "before",
+            "observation_status": "ok",
+            "causal_claim": false,
+            "source": "log:667395df77347782afff87838b67244e72dbbb64b98f301c1292d22829b162ce",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443:observation:r1:ospf",
+            "key": 0
+          }
+        ]
+      },
+      {
+        "graph_node": "log:85d1f65876c11acab4bd69bfbf41f452d8c0be1cd8c973ad9119d087e582f789",
+        "event": {
+          "daemon": "OSPF",
+          "event_timestamp": "2026-11-19T10:06:20.833062Z",
+          "ingested_at": "2026-11-19T10:06:29.092549572Z",
+          "lab": "rca",
+          "message": "[S3578-FNEB0] nsm_change_state:[10.255.0.2:default], Full -> Deleted): scheduling new router-LSA origination",
+          "parse_status": "parsed",
+          "raw_message": "2026/11/19 10:06:20.833062 informational: OSPF: [S3578-FNEB0] nsm_change_state:[10.255.0.2:default], Full -> Deleted): scheduling new router-LSA origination",
+          "router": "r1",
+          "schema_version": 1,
+          "severity": "informational",
+          "source_file": "/frr/r1/events.log",
+          "source_type": "frr_file"
+        },
+        "evidence": [
+          {
+            "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r1.jsonl",
+            "sha256": "0ac5b07a8503154c61c7289dba6e112f0e5b94412190beb8e2af5fc94685b90d",
+            "line": 27
+          }
+        ],
+        "graph_edges": [
+          {
+            "kind": "emitted_by",
+            "source": "log:85d1f65876c11acab4bd69bfbf41f452d8c0be1cd8c973ad9119d087e582f789",
+            "target": "router:r1",
+            "key": 0
+          },
+          {
+            "kind": "temporal_context",
+            "relation": "before",
+            "delta_to_snapshot_start_seconds": -1.444561,
+            "causal_claim": false,
+            "source": "log:85d1f65876c11acab4bd69bfbf41f452d8c0be1cd8c973ad9119d087e582f789",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443",
+            "key": 0
+          },
+          {
+            "kind": "protocol_context",
+            "relation": "before",
+            "observation_status": "ok",
+            "causal_claim": false,
+            "source": "log:85d1f65876c11acab4bd69bfbf41f452d8c0be1cd8c973ad9119d087e582f789",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443:observation:r1:ospf",
+            "key": 0
+          }
+        ]
+      },
+      {
+        "graph_node": "log:d9672f6303bfa78360eb68a5242dcf7f02b8849ce7efdb2110b30e7ac4cead50",
+        "event": {
+          "daemon": "OSPF",
+          "event_timestamp": "2026-11-19T10:06:20.832830Z",
+          "ingested_at": "2026-11-19T10:06:29.092605500Z",
+          "lab": "rca",
+          "message": "[Y05P2-YJVXY] AdjChg: Nbr 10.255.0.1, NbrIP 10.0.12.1 (default) on eth1:10.0.12.2: Full -> Deleted (KillNbr)",
+          "parse_status": "parsed",
+          "raw_message": "2026/11/19 10:06:20.832830 notifications: OSPF: [Y05P2-YJVXY] AdjChg: Nbr 10.255.0.1, NbrIP 10.0.12.1 (default) on eth1:10.0.12.2: Full -> Deleted (KillNbr)",
+          "router": "r2",
+          "schema_version": 1,
+          "severity": "notifications",
+          "source_file": "/frr/r2/events.log",
+          "source_type": "frr_file"
+        },
+        "evidence": [
+          {
+            "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r2.jsonl",
+            "sha256": "d560aed2fbf480e9937d81f14b4dc3d363c7d28d9b48c5be20ba231098e9cc2b",
+            "line": 27
+          }
+        ],
+        "graph_edges": [
+          {
+            "kind": "emitted_by",
+            "source": "log:d9672f6303bfa78360eb68a5242dcf7f02b8849ce7efdb2110b30e7ac4cead50",
+            "target": "router:r2",
+            "key": 0
+          },
+          {
+            "kind": "temporal_context",
+            "relation": "before",
+            "delta_to_snapshot_start_seconds": -1.444793,
+            "causal_claim": false,
+            "source": "log:d9672f6303bfa78360eb68a5242dcf7f02b8849ce7efdb2110b30e7ac4cead50",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443",
+            "key": 0
+          },
+          {
+            "kind": "protocol_context",
+            "relation": "before",
+            "observation_status": "ok",
+            "causal_claim": false,
+            "source": "log:d9672f6303bfa78360eb68a5242dcf7f02b8849ce7efdb2110b30e7ac4cead50",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443:observation:r2:ospf",
+            "key": 0
+          }
+        ]
+      },
+      {
+        "graph_node": "log:ee7e6f2b03556665a14586163f26e5043d5e521eea64c52901e1c9c3b041626d",
+        "event": {
+          "daemon": "OSPF",
+          "event_timestamp": "2026-11-19T10:06:20.833068Z",
+          "ingested_at": "2026-11-19T10:06:29.092610288Z",
+          "lab": "rca",
+          "message": "[S3578-FNEB0] nsm_change_state:[10.255.0.1:default], Full -> Deleted): scheduling new router-LSA origination",
+          "parse_status": "parsed",
+          "raw_message": "2026/11/19 10:06:20.833068 informational: OSPF: [S3578-FNEB0] nsm_change_state:[10.255.0.1:default], Full -> Deleted): scheduling new router-LSA origination",
+          "router": "r2",
+          "schema_version": 1,
+          "severity": "informational",
+          "source_file": "/frr/r2/events.log",
+          "source_type": "frr_file"
+        },
+        "evidence": [
+          {
+            "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r2.jsonl",
+            "sha256": "d560aed2fbf480e9937d81f14b4dc3d363c7d28d9b48c5be20ba231098e9cc2b",
+            "line": 28
+          }
+        ],
+        "graph_edges": [
+          {
+            "kind": "emitted_by",
+            "source": "log:ee7e6f2b03556665a14586163f26e5043d5e521eea64c52901e1c9c3b041626d",
+            "target": "router:r2",
+            "key": 0
+          },
+          {
+            "kind": "temporal_context",
+            "relation": "before",
+            "delta_to_snapshot_start_seconds": -1.444555,
+            "causal_claim": false,
+            "source": "log:ee7e6f2b03556665a14586163f26e5043d5e521eea64c52901e1c9c3b041626d",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443",
+            "key": 0
+          },
+          {
+            "kind": "protocol_context",
+            "relation": "before",
+            "observation_status": "ok",
+            "causal_claim": false,
+            "source": "log:ee7e6f2b03556665a14586163f26e5043d5e521eea64c52901e1c9c3b041626d",
+            "target": "snapshot:f5ae6d0b4441f4a8d3537b90ebc96c19bc8b107b8a236afb143f1c63637cb443:observation:r2:ospf",
+            "key": 0
+          }
+        ]
+      }
+    ],
+    "omitted_other_router_or_protocol_events": 0,
+    "semantics": "Frozen non-atomic observations; event-time context is not cause. Recent down logs may remain after recovery."
+  },
+  "documentation": [
+    {
+      "trigger_evidence": [
+        {
+          "path": "results/integration-faults/20261119T100613Z/graphs/L12/down/graph.json",
+          "sha256": "704031eee7b8e9dcfa7acc8ef591e1c392f4e7764ed8100f401cd2ce34fe11dc"
+        },
+        {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23"
+        }
+      ],
+      "retrieval": {
+        "query": "OSPF neighbor adjacency interface link state shortest path routing. Observed interface down; neighbor states absent, absent.",
+        "platform_filter": "frr",
+        "top_k": 5,
+        "mode": "hybrid",
+        "hits": [
+          {
+            "rank": 1,
+            "id": "d1b651665bd338581a94cf423061062f68f9b98a9393e87b4bc4274df607909b",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   Show information on a variety of general OSPF and area state and\n   configuration information.\n\n.. clicmd:: show ip ospf interface [INTERFACE] [json]\n\n   Show state and configuration of OSPF the specified interface, or all\n   interfaces if no interface is given.\n\n.. clicmd:: show ip ospf neighbor [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor INTERFACE [json]\n\n.. clicmd:: show ip ospf neighbor detail [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor A.B.C.D [detail] [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor INTERFACE detail [json]\n\n   Display lsa information of LSDB.\n   Json o/p of this command covers base route information\n   i.e all LSAs except opaque lsa info.\n",
+            "metadata": {
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "format": "rst",
+              "line_end": 1049,
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "id": "frr-ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "content_sha256": "a98ff9f9bbb17d9cc9a57706a3c3de5edccda4df286447a31acc4768345a960f",
+              "model_revision": "",
+              "platform": "frr",
+              "repository_path": "doc/user/ospfd.rst",
+              "filename": "frr-ospfd.rst",
+              "content_kind": "cli_documentation",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "document_version": "10.7.1",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1028-L1049",
+              "line_start": 1028,
+              "repository": "FRRouting/frr"
+            },
+            "cosine_distance": 0.3886948823928833,
+            "dense_rank": 1,
+            "lexical_rank": 2,
+            "bm25": 14.5310578313161,
+            "rrf_score": 0.016208355367530406
+          },
+          {
+            "rank": 2,
+            "id": "763ad470aedccf3c708e3472ad386b82cb82179fd94e40d51d5cfdef6a3b89c9",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   :rfc:`2328`, the successor to :rfc:`1583`, suggests according\n   to section G.2 (changes) in section 16.4 a change to the path\n   preference algorithm that prevents possible routing loops that were\n   possible in the old version of OSPFv2. More specifically it demands\n   that inter-area paths and intra-area backbone path are now of equal preference\n   but still both preferred to external paths.\n\n   This command should NOT be set normally.\n\n.. clicmd:: log-adjacency-changes [detail]\n   :daemon: ospfd\n\n   Configures ospfd to log changes in adjacency. With the optional\n   detail argument, all changes in adjacency status are shown. Without detail,\n   only changes to full or regressions are shown.\n\n.. clicmd:: passive-interface default\n\n   Make all interfaces that belong to this router passive by default. For the",
+            "metadata": {
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "line_start": 141,
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "model_revision": "",
+              "content_sha256": "263d11684ed0a71fc2ba10ebfadaaeb379f3cae093cf3542b41b352f21d88a30",
+              "format": "rst",
+              "id": "frr-ospfd.rst",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L141-L159",
+              "repository": "FRRouting/frr",
+              "platform": "frr",
+              "line_end": 159,
+              "repository_path": "doc/user/ospfd.rst",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "content_kind": "cli_documentation",
+              "document_version": "10.7.1",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "filename": "frr-ospfd.rst"
+            },
+            "cosine_distance": 0.42911386489868164,
+            "dense_rank": 2,
+            "lexical_rank": 3,
+            "bm25": 14.290619198353436,
+            "rrf_score": 0.015949820788530467
+          },
+          {
+            "rank": 3,
+            "id": "8eaac5fd3fc0785565f01866fbc7415dac3e6b5805d0f090d20748b3535e6b24",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   interface will not be flooded back out on the interface immediately.\n   Rather, they will be added to the neighbor's link state retransmission\n   list and only sent to the neighbor if the neighbor doesn't acknowledge\n   the LSA prior to the link state retransmission timer expiring.\n\n   Set explicitly network type for specified interface.\n\n.. clicmd:: ip ospf priority (0-255)\n\n\n   Set RouterPriority integer value. The router with the highest priority will\n   be more eligible to become Designated Router. Setting the value to 0, makes\n   the router ineligible to become Designated Router. The default value is 1.\n\n.. clicmd:: ip ospf retransmit-interval (1-65535)\n\n\n   Set number of seconds for RxmtInterval timer value. This value is used when\n   retransmitting Database Description and Link State Request packets. The\n   default value is 5 seconds.\n",
+            "metadata": {
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "content_sha256": "747dc9ccb2385c7f2ffc571a628ac019b8c04810354ea6a421392de64f380fb2",
+              "document_version": "10.7.1",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "content_kind": "cli_documentation",
+              "repository_path": "doc/user/ospfd.rst",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L799-L819",
+              "line_end": 819,
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "format": "rst",
+              "repository": "FRRouting/frr",
+              "model_revision": "",
+              "filename": "frr-ospfd.rst",
+              "id": "frr-ospfd.rst",
+              "platform": "frr",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "line_start": 799
+            },
+            "cosine_distance": 0.46400487422943115,
+            "dense_rank": 9,
+            "lexical_rank": 1,
+            "bm25": 16.40854337431412,
+            "rrf_score": 0.015823235923022094
+          },
+          {
+            "rank": 4,
+            "id": "dbc1c6d75bfee9f9cbc060704cb5af78ab8b7714e8f5828b73521441ddae05c1",
+            "text": "frr 10.7.1 frr-ospfd.rst\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database detail [LINK-STATE-ID] [self-originate] [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database (asbr-summary|external|network|router|summary|nssa-external|opaque-link|opaque-area|opaque-as) [LINK-STATE-ID] [adv-router A.B.C.D] [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database (asbr-summary|external|network|router|summary|nssa-external|opaque-link|opaque-area|opaque-as) [LINK-STATE-ID] [self-originate] [json]\n\n   Show detailed information about the OSPF link-state database.\n",
+            "metadata": {
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "line_end": 1067,
+              "id": "frr-ospfd.rst",
+              "line_start": 1059,
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1059-L1067",
+              "format": "rst",
+              "model_revision": "",
+              "document_version": "10.7.1",
+              "filename": "frr-ospfd.rst",
+              "repository_path": "doc/user/ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "content_sha256": "da3852b7a42bb5666d18d22661a4158d1dfb16d446f2b9405e9295dbcef9d814",
+              "repository": "FRRouting/frr",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "content_kind": "cli_documentation",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "platform": "frr",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX"
+            },
+            "cosine_distance": 0.4542304277420044,
+            "dense_rank": 6,
+            "lexical_rank": 4,
+            "bm25": 13.976828737218256,
+            "rrf_score": 0.015482954545454545
+          },
+          {
+            "rank": 5,
+            "id": "aa3f280d96ac168809be25f1e8300c56d7adbb8e4bfb787834cb9c0c2a660d11",
+            "text": "frr 10.7.1 frr-ospfd.rst\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database (opaque-link|opaque-area|opaque-external)\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database (opaque-link|opaque-area|opaque-external) LINK-STATE-ID\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database (opaque-link|opaque-area|opaque-external) LINK-STATE-ID adv-router ADV-ROUTER\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database (opaque-link|opaque-area|opaque-external) adv-router ADV-ROUTER\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database (opaque-link|opaque-area|opaque-external) LINK-STATE-ID self-originate\n",
+            "metadata": {
+              "filename": "frr-ospfd.rst",
+              "content_kind": "cli_documentation",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "line_end": 1126,
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1116-L1126",
+              "document_version": "10.7.1",
+              "repository_path": "doc/user/ospfd.rst",
+              "id": "frr-ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "repository": "FRRouting/frr",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "model_revision": "",
+              "line_start": 1116,
+              "content_sha256": "8e1c2ec3e3f38133ce12fd15807d18f02a7a0508efe90e589ba740e6ab655fc8",
+              "platform": "frr",
+              "format": "rst",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst"
+            },
+            "cosine_distance": 0.455350399017334,
+            "dense_rank": 7,
+            "lexical_rank": 5,
+            "bm25": 13.882626803409323,
+            "rrf_score": 0.015246842709529276
+          }
+        ],
+        "seconds": 0.08436162800080638,
+        "semantics": "Ranked documentation evidence, not diagnosis/confidence or validated CLI patch"
+      },
+      "relation": "documentation_context",
+      "relevance": "candidate_not_validated",
+      "causal_claim": false
+    },
+    {
+      "trigger_evidence": [
+        {
+          "path": "results/integration-faults/20261119T100613Z/L12/down/0002/snapshot.json",
+          "sha256": "48ff09090e05cfb05cb8e8083c676bdaa3f8c0d4239161325794e0b0f8b55b23"
+        }
+      ],
+      "retrieval": {
+        "query": "interface MTU maximum transmission unit admin-status oper-status",
+        "platform_filter": "openconfig",
+        "top_k": 5,
+        "mode": "hybrid",
+        "hits": [
+          {
+            "rank": 1,
+            "id": "38bf9ca25d40da1b5f38c9c7b3b23c5a24658090570049028219e110677dd29f",
+            "text": "openconfig 3.11.1 openconfig-openconfig-interfaces.yang\n        value that can never be used by the system, e.g., if the\n        type is not supported or if the type does not match the\n        name of the interface, the server MUST reject the request.\n        A NETCONF server MUST reply with an rpc-error with the\n        error-tag 'invalid-value' in this case.\";\n      reference\n        \"RFC 2863: The Interfaces Group MIB - ifType\";\n    }\n\n    leaf mtu {\n      type uint16;\n      description\n        \"Set the max transmission unit size in octets\n        for the physical interface.  If this is not set, the mtu is\n        set to the operational default -- e.g., 1514 bytes on an\n        Ethernet interface.\";\n    }\n\n    leaf loopback-mode {\n      type oc-opt-types:loopback-mode-type;\n      description\n        \"Sets the loopback type on the interface. Setting the\n        mode to something besides NONE activates the loopback in\n        the specified mode.\";\n    }\n\n    uses interface-common-config;",
+            "metadata": {
+              "content_sha256": "1cabb8265647cba02984cbac0eed748225b3d9a19b5dbc249d527b8ec65083da",
+              "line_end": 502,
+              "repository": "openconfig/public",
+              "line_start": 476,
+              "document_version": "3.11.1",
+              "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "repository_path": "release/models/interfaces/openconfig-interfaces.yang",
+              "filename": "openconfig-openconfig-interfaces.yang",
+              "fetched_at": "2026-11-19T10:13:06.988732+00:00",
+              "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+              "model_revision": "2026-10-05",
+              "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+              "sha256": "b4e92e39467ae69b7a9d63281b1464f529b727d10dfd218d1efe2ecfd896d19c",
+              "content_kind": "yang_schema",
+              "platform": "openconfig",
+              "id": "openconfig-openconfig-interfaces.yang",
+              "format": "yang",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang#L476-L502",
+              "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang"
+            },
+            "cosine_distance": 0.466896116733551,
+            "dense_rank": 1,
+            "lexical_rank": 1,
+            "bm25": 13.83632730818062,
+            "rrf_score": 0.016393442622950817
+          },
+          {
+            "rank": 2,
+            "id": "0bbdc0418874837bd36c56fcf04be5df64d87fbd9abd851f2980461ab87d9cd9",
+            "text": "openconfig 3.11.1 openconfig-openconfig-interfaces.yang\n        reflects the administrative state as set by enabling or\n        disabling the interface.\";\n      reference\n        \"RFC 2863: The Interfaces Group MIB - ifAdminStatus\";\n      oc-ext:telemetry-on-change;\n    }\n\n    leaf oper-status {\n      type enumeration {\n        enum UP {\n          value 1;\n          description\n            \"Ready to pass packets.\";\n        }\n        enum DOWN {\n          value 2;\n          description\n            \"The interface does not pass any packets.\";\n        }\n        enum TESTING {\n          value 3;\n          description\n            \"In test mode.  No operational packets can\n             be passed.\";\n        }\n        enum UNKNOWN {\n          value 4;\n          description\n            \"Status cannot be determined for some reason.\";\n        }\n        enum DORMANT {\n          value 5;\n          description\n            \"Waiting for some external event.\";\n        }\n        enum NOT_PRESENT {\n          value 6;\n          description\n            \"Some component (typically hardware) is missing.\";\n        }\n        enum LOWER_LAYER_DOWN {\n          value 7;\n          description",
+            "metadata": {
+              "content_kind": "yang_schema",
+              "fetched_at": "2026-11-19T10:13:06.988732+00:00",
+              "line_end": 725,
+              "id": "openconfig-openconfig-interfaces.yang",
+              "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang#L683-L725",
+              "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+              "model_revision": "2026-10-05",
+              "sha256": "b4e92e39467ae69b7a9d63281b1464f529b727d10dfd218d1efe2ecfd896d19c",
+              "content_sha256": "d9d082c9008d507d548bcd65e8d362665884161e3cba1f4b91305ddf1c00f7e1",
+              "repository_path": "release/models/interfaces/openconfig-interfaces.yang",
+              "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "document_version": "3.11.1",
+              "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+              "repository": "openconfig/public",
+              "platform": "openconfig",
+              "line_start": 683,
+              "filename": "openconfig-openconfig-interfaces.yang",
+              "format": "yang"
+            },
+            "cosine_distance": 0.6133008003234863,
+            "dense_rank": 6,
+            "lexical_rank": 2,
+            "bm25": 8.217387750766633,
+            "rrf_score": 0.015835777126099706
+          },
+          {
+            "rank": 3,
+            "id": "0979fa121fbaea14db40ba4b7c824e09b5d2bea8a0fe8ef2cf281f78ea5452df",
+            "text": "openconfig 3.11.1 openconfig-openconfig-interfaces.yang\n      }\n\n      container state {\n        config false;\n        description\n          \"Operational state data for link damping settings.\";\n        uses interface-link-damping-config;\n        uses interface-link-damping-state;\n      }\n    }\n  }\n\n  grouping interface-common-state {\n    description\n      \"Operational state data (in addition to intended configuration)\n      at the global level for this interface\";\n\n    oc-ext:operational;\n\n    leaf ifindex {\n      type uint32;\n      description\n        \"System assigned number for each interface.  Corresponds to\n        ifIndex object in SNMP Interface MIB\";\n      reference\n        \"RFC 2863 - The Interfaces Group MIB\";\n      oc-ext:telemetry-on-change;\n    }\n\n    leaf admin-status {\n      type enumeration {\n        enum UP {\n          description\n            \"Ready to pass packets.\";\n        }\n        enum DOWN {\n          description\n            \"Not ready to pass packets and not in some test mode.\";\n        }\n        enum TESTING {\n          description",
+            "metadata": {
+              "repository_path": "release/models/interfaces/openconfig-interfaces.yang",
+              "document_version": "3.11.1",
+              "content_sha256": "d8336ebdac4b3bc87e414f76e16cdcbbf0be27df4118d5c39bd42de76c800916",
+              "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+              "repository": "openconfig/public",
+              "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang#L624-L664",
+              "line_end": 664,
+              "sha256": "b4e92e39467ae69b7a9d63281b1464f529b727d10dfd218d1efe2ecfd896d19c",
+              "id": "openconfig-openconfig-interfaces.yang",
+              "filename": "openconfig-openconfig-interfaces.yang",
+              "platform": "openconfig",
+              "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+              "model_revision": "2026-10-05",
+              "format": "yang",
+              "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "fetched_at": "2026-11-19T10:13:06.988732+00:00",
+              "content_kind": "yang_schema",
+              "line_start": 624
+            },
+            "cosine_distance": 0.6425682902336121,
+            "dense_rank": 13,
+            "lexical_rank": 3,
+            "bm25": 8.016141759526322,
+            "rrf_score": 0.015220700152207
+          },
+          {
+            "rank": 4,
+            "id": "03341b16020664f7f35aee8fec5a61da73a8623904ab070b44261cad5f46426e",
+            "text": "openconfig 3.11.1 openconfig-openconfig-interfaces.yang\n        received via the interface that were discarded because\n        of an unknown or unsupported protocol.  For\n        character-oriented or fixed-length interfaces that\n        support protocol multiplexing, the number of\n        transmission units received via the interface that were\n        discarded because of an unknown or unsupported protocol.\n        For any interface that does not support protocol\n        multiplexing, this counter is not present.\n\n        Discontinuities in the value of this counter can occur\n        at re-initialization of the management system, and at\n        other times as indicated by the value of 'last-clear'.\";\n      reference\n        \"RFC 2863: The Interfaces Group MIB - ifInUnknownProtos\";\n    }\n\n    leaf in-fcs-errors {\n      type oc-yang:counter64;\n      status deprecated;\n      description\n        \"Number of received packets which had errors in the\n        frame check sequence (FCS), i.e., framing errors.\n\n        Discontinuities in the value of this counter can occur",
+            "metadata": {
+              "platform": "openconfig",
+              "content_kind": "yang_schema",
+              "format": "yang",
+              "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+              "document_version": "3.11.1",
+              "repository_path": "release/models/interfaces/openconfig-interfaces.yang",
+              "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang#L1179-L1202",
+              "line_start": 1179,
+              "model_revision": "2026-10-05",
+              "content_sha256": "f848244b856486b75af39266e360dfc0ea541e429194c53bb5876aed7e6642bf",
+              "fetched_at": "2026-11-19T10:13:06.988732+00:00",
+              "line_end": 1202,
+              "repository": "openconfig/public",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "sha256": "b4e92e39467ae69b7a9d63281b1464f529b727d10dfd218d1efe2ecfd896d19c",
+              "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+              "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "filename": "openconfig-openconfig-interfaces.yang",
+              "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "id": "openconfig-openconfig-interfaces.yang"
+            },
+            "cosine_distance": 0.6117713451385498,
+            "dense_rank": 5,
+            "lexical_rank": 7,
+            "bm25": 6.497414593687682,
+            "rrf_score": 0.015063145809414464
+          },
+          {
+            "rank": 5,
+            "id": "6b34942dcd4e91abce97ea5b23b8478b76a2dbfd994f29bf8d7b524b00d38498",
+            "text": "openconfig 3.11.1 openconfig-openconfig-interfaces.yang\n\n  revision \"2023-11-06\" {\n      description\n        \"Clarify description for admin-status TESTING.\";\n      reference\n        \"3.7.0\";\n  }\n\n  revision \"2023-08-29\" {\n      description\n        \"Add augment for penalty-based additive-increase, exponential-decrease link damping algorithm.\";\n      reference\n        \"3.6.0\";\n  }\n\n  revision \"2023-07-14\" {\n    description\n      \"Move counters which apply to both interfaces and subinterfaces to\n      a common grouping.  Deprecate physical counters from subinterface\";\n    reference \"3.5.0\";\n  }\n\n  revision \"2023-02-06\" {\n    description\n      \"Add further specification to interface-ref type to\n       clarify that the interface and subinterface leaves\n       are how an interface is referenced, regardless of\n       context.\";\n    reference \"3.0.2\";\n  }\n\n  revision \"2022-10-25\" {\n    description\n      \"change loopback-mode to align with available modes\";",
+            "metadata": {
+              "content_kind": "yang_schema",
+              "filename": "openconfig-openconfig-interfaces.yang",
+              "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+              "line_start": 108,
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "model_revision": "2026-10-05",
+              "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "content_sha256": "92446a75ab1d96f975a30ded036a4f7d1e2334010745c825ab3f6d814a2f08d4",
+              "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+              "platform": "openconfig",
+              "repository": "openconfig/public",
+              "id": "openconfig-openconfig-interfaces.yang",
+              "repository_path": "release/models/interfaces/openconfig-interfaces.yang",
+              "document_version": "3.11.1",
+              "line_end": 141,
+              "format": "yang",
+              "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang#L108-L141",
+              "sha256": "b4e92e39467ae69b7a9d63281b1464f529b727d10dfd218d1efe2ecfd896d19c",
+              "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+              "fetched_at": "2026-11-19T10:13:06.988732+00:00"
+            },
+            "cosine_distance": 0.6420421600341797,
+            "dense_rank": 12,
+            "lexical_rank": 5,
+            "bm25": 7.60914256526445,
+            "rrf_score": 0.014935897435897436
+          }
+        ],
+        "seconds": 0.06312588200034952,
+        "semantics": "Ranked documentation evidence, not diagnosis/confidence or validated CLI patch"
+      },
+      "relation": "documentation_context",
+      "relevance": "candidate_not_validated",
+      "causal_claim": false
+    },
+    {
+      "trigger_evidence": [
+        {
+          "graph_node": "log:ee7e6f2b03556665a14586163f26e5043d5e521eea64c52901e1c9c3b041626d",
+          "log_citations": [
+            {
+              "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r2.jsonl",
+              "sha256": "d560aed2fbf480e9937d81f14b4dc3d363c7d28d9b48c5be20ba231098e9cc2b",
+              "line": 28
+            }
+          ]
+        }
+      ],
+      "retrieval": {
+        "query": "OSPF neighbor adjacency interface link state shortest path routing. Log message: [S3578-FNEB0] nsm_change_state:[10.255.0.1:default], Full -> Deleted): scheduling new router-LSA origination",
+        "platform_filter": "frr",
+        "top_k": 5,
+        "mode": "hybrid",
+        "hits": [
+          {
+            "rank": 1,
+            "id": "763ad470aedccf3c708e3472ad386b82cb82179fd94e40d51d5cfdef6a3b89c9",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   :rfc:`2328`, the successor to :rfc:`1583`, suggests according\n   to section G.2 (changes) in section 16.4 a change to the path\n   preference algorithm that prevents possible routing loops that were\n   possible in the old version of OSPFv2. More specifically it demands\n   that inter-area paths and intra-area backbone path are now of equal preference\n   but still both preferred to external paths.\n\n   This command should NOT be set normally.\n\n.. clicmd:: log-adjacency-changes [detail]\n   :daemon: ospfd\n\n   Configures ospfd to log changes in adjacency. With the optional\n   detail argument, all changes in adjacency status are shown. Without detail,\n   only changes to full or regressions are shown.\n\n.. clicmd:: passive-interface default\n\n   Make all interfaces that belong to this router passive by default. For the",
+            "metadata": {
+              "filename": "frr-ospfd.rst",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "content_sha256": "263d11684ed0a71fc2ba10ebfadaaeb379f3cae093cf3542b41b352f21d88a30",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L141-L159",
+              "platform": "frr",
+              "format": "rst",
+              "content_kind": "cli_documentation",
+              "document_version": "10.7.1",
+              "line_start": 141,
+              "line_end": 159,
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "repository_path": "doc/user/ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "id": "frr-ospfd.rst",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "repository": "FRRouting/frr",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "model_revision": ""
+            },
+            "cosine_distance": 0.3944249749183655,
+            "dense_rank": 2,
+            "lexical_rank": 1,
+            "bm25": 28.997830362261492,
+            "rrf_score": 0.01631411951348493
+          },
+          {
+            "rank": 2,
+            "id": "8eaac5fd3fc0785565f01866fbc7415dac3e6b5805d0f090d20748b3535e6b24",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   interface will not be flooded back out on the interface immediately.\n   Rather, they will be added to the neighbor's link state retransmission\n   list and only sent to the neighbor if the neighbor doesn't acknowledge\n   the LSA prior to the link state retransmission timer expiring.\n\n   Set explicitly network type for specified interface.\n\n.. clicmd:: ip ospf priority (0-255)\n\n\n   Set RouterPriority integer value. The router with the highest priority will\n   be more eligible to become Designated Router. Setting the value to 0, makes\n   the router ineligible to become Designated Router. The default value is 1.\n\n.. clicmd:: ip ospf retransmit-interval (1-65535)\n\n\n   Set number of seconds for RxmtInterval timer value. This value is used when\n   retransmitting Database Description and Link State Request packets. The\n   default value is 5 seconds.\n",
+            "metadata": {
+              "platform": "frr",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "filename": "frr-ospfd.rst",
+              "document_version": "10.7.1",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L799-L819",
+              "model_revision": "",
+              "id": "frr-ospfd.rst",
+              "format": "rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "content_sha256": "747dc9ccb2385c7f2ffc571a628ac019b8c04810354ea6a421392de64f380fb2",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "repository": "FRRouting/frr",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "line_end": 819,
+              "content_kind": "cli_documentation",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "repository_path": "doc/user/ospfd.rst",
+              "line_start": 799
+            },
+            "cosine_distance": 0.38617175817489624,
+            "dense_rank": 1,
+            "lexical_rank": 2,
+            "bm25": 27.678666131112788,
+            "rrf_score": 0.016208355367530406
+          },
+          {
+            "rank": 3,
+            "id": "d1b651665bd338581a94cf423061062f68f9b98a9393e87b4bc4274df607909b",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   Show information on a variety of general OSPF and area state and\n   configuration information.\n\n.. clicmd:: show ip ospf interface [INTERFACE] [json]\n\n   Show state and configuration of OSPF the specified interface, or all\n   interfaces if no interface is given.\n\n.. clicmd:: show ip ospf neighbor [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor INTERFACE [json]\n\n.. clicmd:: show ip ospf neighbor detail [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor A.B.C.D [detail] [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor INTERFACE detail [json]\n\n   Display lsa information of LSDB.\n   Json o/p of this command covers base route information\n   i.e all LSAs except opaque lsa info.\n",
+            "metadata": {
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "repository_path": "doc/user/ospfd.rst",
+              "id": "frr-ospfd.rst",
+              "format": "rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "model_revision": "",
+              "document_version": "10.7.1",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "content_sha256": "a98ff9f9bbb17d9cc9a57706a3c3de5edccda4df286447a31acc4768345a960f",
+              "repository": "FRRouting/frr",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1028-L1049",
+              "filename": "frr-ospfd.rst",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "line_end": 1049,
+              "content_kind": "cli_documentation",
+              "platform": "frr",
+              "line_start": 1028
+            },
+            "cosine_distance": 0.4194287657737732,
+            "dense_rank": 5,
+            "lexical_rank": 5,
+            "bm25": 18.771705565400392,
+            "rrf_score": 0.015384615384615384
+          },
+          {
+            "rank": 4,
+            "id": "53f68f46d5fd95b6706ec2b8e429bebf238d28c3df700e298eea0f351af2e1f9",
+            "text": "frr 10.7.1 frr-ospfd.rst\nAn :abbr:`ABR` router, with MD5 authentication and performing summarisation\nof networks between the areas:\n\n.. code-block:: frr\n\n   !\n   password ABCDEF\n   log file /var/log/frr/ospfd.log\n   service advanced-vty\n   !\n   interface eth0\n    ip ospf authentication message-digest\n    ip ospf message-digest-key 1 md5 ABCDEFGHIJK\n   !\n   interface ppp0\n    ip ospf passive\n   !\n   interface br0\n    ip ospf authentication message-digest\n    ip ospf message-digest-key 2 md5 XYZ12345\n   !\n   router ospf\n    ospf router-id 192.168.0.1\n    redistribute connected\n    network 192.168.0.0/24 area 0.0.0.0\n    network 10.0.0.0/16 area 0.0.0.0\n    network 192.168.1.0/24 area 0.0.0.1",
+            "metadata": {
+              "format": "rst",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "line_end": 1438,
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "id": "frr-ospfd.rst",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1412-L1438",
+              "line_start": 1412,
+              "repository_path": "doc/user/ospfd.rst",
+              "content_sha256": "9741adde40aff5c9e2f7e0ecfc7093f8967b349f00ca94fc1b793b717b89a795",
+              "repository": "FRRouting/frr",
+              "document_version": "10.7.1",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "filename": "frr-ospfd.rst",
+              "content_kind": "cli_documentation",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "model_revision": "",
+              "platform": "frr"
+            },
+            "cosine_distance": 0.4708789587020874,
+            "dense_rank": 15,
+            "lexical_rank": 3,
+            "bm25": 23.008980778481348,
+            "rrf_score": 0.01511111111111111
+          },
+          {
+            "rank": 5,
+            "id": "66ee839a2ac09a206906de5baa7cd9f1185470a140c6a4aa9002b97ac7523a86",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   Json o/p of this command covers base route information\n   i.e all LSAs except opaque lsa info.\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database [self-originate] [json]\n\n   Show the OSPF database summary.\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database max-age [json]\n\n   Show all MaxAge LSAs present in the OSPF link-state database.\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database detail [LINK-STATE-ID] [adv-router A.B.C.D] [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] database detail [LINK-STATE-ID] [self-originate] [json]\n",
+            "metadata": {
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "format": "rst",
+              "line_end": 1061,
+              "model_revision": "",
+              "document_version": "10.7.1",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "content_sha256": "2868ba8ce3f57209398977b029fcca8c09d05a1efadf6b7cfed75799b237a383",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1047-L1061",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "content_kind": "cli_documentation",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "line_start": 1047,
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "filename": "frr-ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "repository_path": "doc/user/ospfd.rst",
+              "id": "frr-ospfd.rst",
+              "repository": "FRRouting/frr",
+              "platform": "frr"
+            },
+            "cosine_distance": 0.41288626194000244,
+            "dense_rank": 3,
+            "lexical_rank": 10,
+            "bm25": 17.546837136006385,
+            "rrf_score": 0.01476190476190476
+          }
+        ],
+        "seconds": 0.07768550799937657,
+        "semantics": "Ranked documentation evidence, not diagnosis/confidence or validated CLI patch"
+      },
+      "relation": "documentation_context",
+      "relevance": "candidate_not_validated",
+      "causal_claim": false
+    },
+    {
+      "trigger_evidence": [
+        {
+          "graph_node": "log:85d1f65876c11acab4bd69bfbf41f452d8c0be1cd8c973ad9119d087e582f789",
+          "log_citations": [
+            {
+              "path": "results/integration-faults/20261119T100613Z/logs/2026-11-19/r1.jsonl",
+              "sha256": "0ac5b07a8503154c61c7289dba6e112f0e5b94412190beb8e2af5fc94685b90d",
+              "line": 27
+            }
+          ]
+        }
+      ],
+      "retrieval": {
+        "query": "OSPF neighbor adjacency interface link state shortest path routing. Log message: [S3578-FNEB0] nsm_change_state:[10.255.0.2:default], Full -> Deleted): scheduling new router-LSA origination",
+        "platform_filter": "frr",
+        "top_k": 5,
+        "mode": "hybrid",
+        "hits": [
+          {
+            "rank": 1,
+            "id": "763ad470aedccf3c708e3472ad386b82cb82179fd94e40d51d5cfdef6a3b89c9",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   :rfc:`2328`, the successor to :rfc:`1583`, suggests according\n   to section G.2 (changes) in section 16.4 a change to the path\n   preference algorithm that prevents possible routing loops that were\n   possible in the old version of OSPFv2. More specifically it demands\n   that inter-area paths and intra-area backbone path are now of equal preference\n   but still both preferred to external paths.\n\n   This command should NOT be set normally.\n\n.. clicmd:: log-adjacency-changes [detail]\n   :daemon: ospfd\n\n   Configures ospfd to log changes in adjacency. With the optional\n   detail argument, all changes in adjacency status are shown. Without detail,\n   only changes to full or regressions are shown.\n\n.. clicmd:: passive-interface default\n\n   Make all interfaces that belong to this router passive by default. For the",
+            "metadata": {
+              "format": "rst",
+              "platform": "frr",
+              "repository_path": "doc/user/ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "content_sha256": "263d11684ed0a71fc2ba10ebfadaaeb379f3cae093cf3542b41b352f21d88a30",
+              "filename": "frr-ospfd.rst",
+              "line_start": 141,
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "model_revision": "",
+              "document_version": "10.7.1",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "id": "frr-ospfd.rst",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L141-L159",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "content_kind": "cli_documentation",
+              "repository": "FRRouting/frr",
+              "line_end": 159,
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst"
+            },
+            "cosine_distance": 0.39309656620025635,
+            "dense_rank": 2,
+            "lexical_rank": 1,
+            "bm25": 30.34975926983569,
+            "rrf_score": 0.01631411951348493
+          },
+          {
+            "rank": 2,
+            "id": "8eaac5fd3fc0785565f01866fbc7415dac3e6b5805d0f090d20748b3535e6b24",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   interface will not be flooded back out on the interface immediately.\n   Rather, they will be added to the neighbor's link state retransmission\n   list and only sent to the neighbor if the neighbor doesn't acknowledge\n   the LSA prior to the link state retransmission timer expiring.\n\n   Set explicitly network type for specified interface.\n\n.. clicmd:: ip ospf priority (0-255)\n\n\n   Set RouterPriority integer value. The router with the highest priority will\n   be more eligible to become Designated Router. Setting the value to 0, makes\n   the router ineligible to become Designated Router. The default value is 1.\n\n.. clicmd:: ip ospf retransmit-interval (1-65535)\n\n\n   Set number of seconds for RxmtInterval timer value. This value is used when\n   retransmitting Database Description and Link State Request packets. The\n   default value is 5 seconds.\n",
+            "metadata": {
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "content_kind": "cli_documentation",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "line_end": 819,
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L799-L819",
+              "repository": "FRRouting/frr",
+              "repository_path": "doc/user/ospfd.rst",
+              "model_revision": "",
+              "platform": "frr",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "line_start": 799,
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "id": "frr-ospfd.rst",
+              "filename": "frr-ospfd.rst",
+              "content_sha256": "747dc9ccb2385c7f2ffc571a628ac019b8c04810354ea6a421392de64f380fb2",
+              "format": "rst",
+              "document_version": "10.7.1"
+            },
+            "cosine_distance": 0.38718855381011963,
+            "dense_rank": 1,
+            "lexical_rank": 2,
+            "bm25": 27.67735813645919,
+            "rrf_score": 0.016208355367530406
+          },
+          {
+            "rank": 3,
+            "id": "d1b651665bd338581a94cf423061062f68f9b98a9393e87b4bc4274df607909b",
+            "text": "frr 10.7.1 frr-ospfd.rst\n   Show information on a variety of general OSPF and area state and\n   configuration information.\n\n.. clicmd:: show ip ospf interface [INTERFACE] [json]\n\n   Show state and configuration of OSPF the specified interface, or all\n   interfaces if no interface is given.\n\n.. clicmd:: show ip ospf neighbor [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor INTERFACE [json]\n\n.. clicmd:: show ip ospf neighbor detail [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor A.B.C.D [detail] [json]\n\n.. clicmd:: show ip ospf [vrf <NAME|all>] neighbor INTERFACE detail [json]\n\n   Display lsa information of LSDB.\n   Json o/p of this command covers base route information\n   i.e all LSAs except opaque lsa info.\n",
+            "metadata": {
+              "document_version": "10.7.1",
+              "id": "frr-ospfd.rst",
+              "format": "rst",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "content_kind": "cli_documentation",
+              "line_start": 1028,
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1028-L1049",
+              "platform": "frr",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "repository": "FRRouting/frr",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "line_end": 1049,
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "repository_path": "doc/user/ospfd.rst",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "model_revision": "",
+              "filename": "frr-ospfd.rst",
+              "content_sha256": "a98ff9f9bbb17d9cc9a57706a3c3de5edccda4df286447a31acc4768345a960f",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git"
+            },
+            "cosine_distance": 0.4209926128387451,
+            "dense_rank": 5,
+            "lexical_rank": 6,
+            "bm25": 18.77087964630465,
+            "rrf_score": 0.01522144522144522
+          },
+          {
+            "rank": 4,
+            "id": "3a183054c57792c4e501f06f378c1f5ded4550d47e59c7943c21b7270ba43673",
+            "text": "frr 10.7.1 frr-ospfd.rst\n        unrsv-bw 0 1.25e+06\n        unrsv-bw 1 1.25e+06\n        unrsv-bw 2 1.25e+06\n        unrsv-bw 3 1.25e+06\n        unrsv-bw 4 1.25e+06\n        unrsv-bw 5 1.25e+06\n        unrsv-bw 6 1.25e+06\n        unrsv-bw 7 1.25e+06\n        neighbor 192.168.2.2 as 65000\n\nThen the :file:`ospfd.conf` itself:\n\n.. code-block:: frr\n\n   hostname HOSTNAME\n   password PASSWORD\n   log file /var/log/ospfd.log\n   !\n   !\n   interface eth0\n    ip ospf hello-interval 60\n    ip ospf dead-interval 240\n   !\n   interface eth1\n    ip ospf hello-interval 60\n    ip ospf dead-interval 240\n   !\n   !\n   router ospf",
+            "metadata": {
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "repository": "FRRouting/frr",
+              "content_kind": "cli_documentation",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "content_sha256": "0dd7f981a19625a6beb15b9d2001201764fe287fd274fa9a816fc72b80b79b09",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "line_start": 1514,
+              "platform": "frr",
+              "repository_path": "doc/user/ospfd.rst",
+              "model_revision": "",
+              "document_version": "10.7.1",
+              "id": "frr-ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "filename": "frr-ospfd.rst",
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1514-L1542",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "line_end": 1542,
+              "format": "rst"
+            },
+            "cosine_distance": 0.42882871627807617,
+            "dense_rank": 8,
+            "lexical_rank": 5,
+            "bm25": 19.244656290242077,
+            "rrf_score": 0.015180995475113122
+          },
+          {
+            "rank": 5,
+            "id": "53f68f46d5fd95b6706ec2b8e429bebf238d28c3df700e298eea0f351af2e1f9",
+            "text": "frr 10.7.1 frr-ospfd.rst\nAn :abbr:`ABR` router, with MD5 authentication and performing summarisation\nof networks between the areas:\n\n.. code-block:: frr\n\n   !\n   password ABCDEF\n   log file /var/log/frr/ospfd.log\n   service advanced-vty\n   !\n   interface eth0\n    ip ospf authentication message-digest\n    ip ospf message-digest-key 1 md5 ABCDEFGHIJK\n   !\n   interface ppp0\n    ip ospf passive\n   !\n   interface br0\n    ip ospf authentication message-digest\n    ip ospf message-digest-key 2 md5 XYZ12345\n   !\n   router ospf\n    ospf router-id 192.168.0.1\n    redistribute connected\n    network 192.168.0.0/24 area 0.0.0.0\n    network 10.0.0.0/16 area 0.0.0.0\n    network 192.168.1.0/24 area 0.0.0.1",
+            "metadata": {
+              "document_version": "10.7.1",
+              "content_kind": "cli_documentation",
+              "model_revision": "",
+              "fetched_at": "2026-11-19T10:13:04.567662+00:00",
+              "sha256": "e2bf5e3f88aeb77b88e239d2c7a3b89c4a5fce6f5c2c01c8e901be4a7a503935",
+              "repository": "FRRouting/frr",
+              "platform": "frr",
+              "download_url": "https://raw.githubusercontent.com/FRRouting/frr/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "source_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst",
+              "repository_path": "doc/user/ospfd.rst",
+              "line_start": 1412,
+              "citation_url": "https://github.com/FRRouting/frr/blob/f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1/doc/user/ospfd.rst#L1412-L1438",
+              "embedding_model": "all-MiniLM-L6-v2 ONNX",
+              "line_end": 1438,
+              "content_sha256": "9741adde40aff5c9e2f7e0ecfc7093f8967b349f00ca94fc1b793b717b89a795",
+              "compatibility": "FRR 10.7.1 documentation; actual lab binary 10.7.1_git",
+              "id": "frr-ospfd.rst",
+              "format": "rst",
+              "filename": "frr-ospfd.rst",
+              "commit": "f8c0b08dcb0c78f9e42b9b86ae70b049e4e617c1"
+            },
+            "cosine_distance": 0.47260981798171997,
+            "dense_rank": 15,
+            "lexical_rank": 3,
+            "bm25": 24.43655711183452,
+            "rrf_score": 0.01511111111111111
+          }
+        ],
+        "seconds": 0.07227283500014892,
+        "semantics": "Ranked documentation evidence, not diagnosis/confidence or validated CLI patch"
+      },
+      "relation": "documentation_context",
+      "relevance": "candidate_not_validated",
+      "causal_claim": false
+    }
+  ],
+  "diagnosis": null,
+  "executable_patch": null,
+  "limitations": [
+    "No automatic root-cause inference or command execution",
+    "Log selection is by endpoint/protocol/time, not proven peer or fault identity",
+    "No relevance threshold; candidate documentation can be irrelevant",
+    "Pinned OSPF corpus does not establish MTU-mismatch remediation",
+    "OpenConfig schema is not FRR CLI"
+  ]
+}

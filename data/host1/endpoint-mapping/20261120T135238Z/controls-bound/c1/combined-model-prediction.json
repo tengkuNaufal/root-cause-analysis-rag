@@ -1,0 +1,11 @@
+{
+  "current": "healthy",
+  "phase": "baseline",
+  "target": null,
+  "explanation": "Healthy at this snapshot; no DOWN/UP transition in the complete provided history.",
+  "citations": [
+    "R616",
+    "R539",
+    "R505"
+  ]
+}

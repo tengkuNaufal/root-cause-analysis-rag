@@ -1,0 +1,155 @@
+{
+  "$defs": {
+    "Gate": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "title": "Version",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "context_ready",
+            "abstain"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "answer_supported": {
+          "title": "Answer Supported",
+          "type": "boolean"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "version",
+        "decision",
+        "answer_supported",
+        "reasons"
+      ],
+      "title": "Gate",
+      "type": "object"
+    },
+    "Reference": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "telemetry",
+            "log",
+            "graph",
+            "documentation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "source_path": {
+          "minLength": 1,
+          "title": "Source Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "content": {
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "source_path",
+        "sha256",
+        "locator",
+        "content"
+      ],
+      "title": "Reference",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "request_id": {
+      "minLength": 1,
+      "title": "Request Id",
+      "type": "string"
+    },
+    "lab": {
+      "const": "rca",
+      "default": "rca",
+      "title": "Lab",
+      "type": "string"
+    },
+    "question": {
+      "minLength": 1,
+      "title": "Question",
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "replay",
+        "live"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "snapshot_completed_at": {
+      "minLength": 1,
+      "title": "Snapshot Completed At",
+      "type": "string"
+    },
+    "gate": {
+      "$ref": "#/$defs/Gate"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Reference"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "execution_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Execution Allowed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "request_id",
+    "question",
+    "mode",
+    "snapshot_completed_at",
+    "gate",
+    "evidence"
+  ],
+  "title": "Request",
+  "type": "object"
+}

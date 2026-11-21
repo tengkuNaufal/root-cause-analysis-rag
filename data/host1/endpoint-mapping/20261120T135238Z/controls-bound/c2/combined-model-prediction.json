@@ -1,0 +1,13 @@
+{
+  "current": "healthy",
+  "phase": "recovered",
+  "target": null,
+  "explanation": "Healthy at this snapshot; provided history records DOWN followed by UP.",
+  "citations": [
+    "R616",
+    "R539",
+    "R505",
+    "R651",
+    "R164"
+  ]
+}

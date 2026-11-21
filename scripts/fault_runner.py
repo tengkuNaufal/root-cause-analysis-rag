@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-# Menjalankan fault dari faults/catalog.yaml satu per satu: cek awal, inject, tunggu gejala,
+# Menjalankan fault dari katalog satu per satu: cek awal, inject, tunggu gejala,
 # simpan evidence, revert, lalu nunggu lab balik normal. Hasilnya satu baris JSON per fault.
+# Katalog default-nya faults/host1.yaml (lab rca), nama lab diambil dari field `lab` di katalog.
 #
 #   python3 scripts/fault_runner.py list
 #   python3 scripts/fault_runner.py run F01 F16
 #   python3 scripts/fault_runner.py run --all
+#   python3 scripts/fault_runner.py --catalog faults/replica.yaml run --all
 #   python3 scripts/fault_runner.py plan --seed 42
 import argparse
 import csv
@@ -22,14 +24,16 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_lab import EXPECTED, check  # noqa: E402
 
-LAB = "topik8"
 ROOT = Path(__file__).resolve().parent.parent
-CATALOG = ROOT / "faults" / "catalog.yaml"
+LAB = None
 VARIANTS = ["zero_shot", "text_rag", "graph_rag"]
 
 
-def load_catalog():
-    return yaml.safe_load(CATALOG.read_text())["faults"]
+def load_catalog(path):
+    global LAB
+    doc = yaml.safe_load(Path(path).read_text())
+    LAB = doc["lab"]
+    return doc["faults"]
 
 
 def container(router):
@@ -47,20 +51,24 @@ def apply_steps(router, steps):
         else:
             raise ValueError(f"tipe langkah tidak dikenal: {step['type']}")
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-        if p.returncode != 0 or "%" in p.stdout:
+        # Mengabaikan catatan mgmtd "applied with notes" soalnya perintahnya tetap kepasang.
+        errors = [l for l in p.stdout.splitlines()
+                  if l.startswith("%") and not l.startswith("% Configuration applied with notes")]
+        if p.returncode != 0 or errors:
             raise RuntimeError(f"{router}: {' '.join(cmd[3:])} gagal: {p.stdout.strip()} {p.stderr.strip()}")
 
 
-# Mengambil rute terpilih ke loopback router lain, buat dibandingin sama kondisi awal.
+# Mengambil rute terpilih ke alamat ping router lain, buat dibandingin sama kondisi awal.
 # Fault BGP yang ada jalur cadangannya cuma kelihatan dari sini, ping-nya tetap lolos.
 def loopback_routes():
+    targets = {f"{e['addr']}/32": r for r, e in EXPECTED[LAB].items()}
     table = {}
     for r in EXPECTED[LAB]:
         out = subprocess.run(["docker", "exec", container(r), "vtysh", "-c", "show ip route json"],
                              capture_output=True, text=True, timeout=20).stdout
         rows = {}
         for prefix, entries in json.loads(out or "{}").items():
-            if not prefix.startswith("10.255.0.") or prefix == f"10.255.0.{r[1:]}/32":
+            if targets.get(prefix, r) == r:
                 continue
             best = next((e for e in entries if e.get("selected")), None)
             if best:
@@ -103,7 +111,12 @@ def run_fault(fault, base_routes, symptom_timeout, recover_timeout):
     rec = {"fault_id": fault["id"], "class": fault["class"], "ground_truth": fault["ground_truth"],
            "started_at_utc": datetime.now(timezone.utc).isoformat()}
     t0 = time.monotonic()
-    apply_steps(fault["inject"]["router"], fault["inject"]["steps"])
+    try:
+        apply_steps(fault["inject"]["router"], fault["inject"]["steps"])
+    except RuntimeError:
+        # Mencoba revert dulu kalau inject gagal di tengah, biar lab gak ketinggalan setengah rusak.
+        apply_steps(fault["revert"]["router"], fault["revert"]["steps"])
+        raise
     rec["t_inject_s"] = round(time.monotonic() - t0, 2)
 
     seen, t_sym = wait_for(lambda: symptoms(base_routes)[1], symptom_timeout, interval=2)
@@ -125,7 +138,7 @@ def run_fault(fault, base_routes, symptom_timeout, recover_timeout):
 
 
 def cmd_run(args):
-    faults = load_catalog()
+    faults = load_catalog(args.catalog)
     if not args.all:
         wanted = set(args.ids)
         faults = [f for f in faults if f["id"] in wanted]
@@ -140,7 +153,7 @@ def cmd_run(args):
 
     out_dir = ROOT / args.out
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"faults_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.jsonl"
+    path = out_dir / f"{LAB}_faults_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.jsonl"
     with path.open("w") as fh:
         for f in faults:
             rec = run_fault(f, base_routes, args.symptom_timeout, args.recover_timeout)
@@ -159,13 +172,13 @@ def fmt_t(v):
     return "  -   " if v is None else f"{v:5.1f}s"
 
 
-def cmd_list(_args):
-    for f in load_catalog():
-        print(f"{f['id']}  {f['class']:<22} {f['link']:<6} {f['ground_truth']['root_cause']}")
+def cmd_list(args):
+    for f in load_catalog(args.catalog):
+        print(f"{f['id']}  {f['class']:<22} {f['link']:<10} {f['ground_truth']['root_cause']}")
 
 
 def cmd_plan(args):
-    rows = [(f["id"], v, t) for f in load_catalog() for v in VARIANTS for t in range(1, args.trials + 1)]
+    rows = [(f["id"], v, t) for f in load_catalog(args.catalog) for v in VARIANTS for t in range(1, args.trials + 1)]
     random.Random(args.seed).shuffle(rows)
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -179,6 +192,7 @@ def cmd_plan(args):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--catalog", default=str(ROOT / "faults" / "host1.yaml"))
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list")
     r = sub.add_parser("run")

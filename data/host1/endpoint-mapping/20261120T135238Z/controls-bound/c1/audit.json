@@ -1,0 +1,49 @@
+{
+  "model_called": true,
+  "llm_requests": 4,
+  "status": "hypothesis",
+  "analysis_origin": "source_bound_llm_temporal_no_rule_substitution",
+  "execution_allowed": false,
+  "diagnosis_allowed": false,
+  "mode": "replay",
+  "options": {
+    "reverse_endpoints": true,
+    "citation_map": {
+      "D1": "R247",
+      "T1": "R539",
+      "T2": "R616",
+      "G1": "R505",
+      "L1": "R651",
+      "L2": "R164"
+    }
+  },
+  "extractor": "bound",
+  "bundle": {
+    "path": "results/evidence-retrieval/replay-final-20261119/L12-before.json",
+    "sha256": "0cccb08c17d6080e2d3c0381df93bfb6566ee20a85afb1ec26530502ffe46f9d"
+  },
+  "endpoint_rows_validated": 2,
+  "observation_origin": "model_values_aggregated_with_controller_owned_source_identity",
+  "facts_validated": true,
+  "phase_input_normalization": "sorted_verified_model_lists",
+  "raw_phase_prediction": {
+    "phase": "baseline"
+  },
+  "raw_prediction": {
+    "current": "healthy",
+    "phase": "baseline",
+    "target": null,
+    "explanation": "Healthy at this snapshot; no DOWN/UP transition in the complete provided history.",
+    "citations": [
+      "R616",
+      "R539",
+      "R505"
+    ]
+  },
+  "explanation_origin": "controller_rendering_of_model_chosen_phase",
+  "citation_origin": "controller_binding_of_verified_source_refs",
+  "contract_valid": true,
+  "prompt_eval_count": 249,
+  "eval_count": 10,
+  "wall_seconds": 8.184654831999069
+}

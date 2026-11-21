@@ -1,0 +1,245 @@
+{
+  "case": {
+    "case": "state-en",
+    "answerable": true,
+    "reference_anchor_ranks": [],
+    "gate_expected": "context_ready",
+    "gate_actual": "abstain",
+    "gate_matches": false,
+    "accepted": 0,
+    "provenance_verified": 5
+  },
+  "query": "Where does a monitoring application read the current finite state machine state of a routing peer?",
+  "intent": "bgp_session_state",
+  "anchor_pattern": "leaf\\s+session-state\\s*\\{",
+  "input_evidence": {
+    "path": "results/evidence-retrieval/replay-final-20261119/L35-down.json",
+    "sha256": "3e38e7563227c2bd00a7e0f33613263c20aa0508947e02155e83dcf37a58f539"
+  },
+  "retrieval": {
+    "query": "Where does a monitoring application read the current finite state machine state of a routing peer?",
+    "platform_filter": "openconfig",
+    "top_k": 5,
+    "mode": "hybrid",
+    "hits": [
+      {
+        "rank": 1,
+        "id": "1e5b64627e9f0d9306989f0b8ae4f23bacc1aff6fa9a82b3dbf4542702b03b14",
+        "text": "openconfig 9.10.0 openconfig-openconfig-bgp-neighbor.yang\n          enum OPENCONFIRM {\n            description\n              \"neighbor is in the process of being established.\n              The local system is awaiting a NOTIFICATION or\n              KEEPALIVE message\";\n          }\n          enum ESTABLISHED {\n            description\n              \"neighbor is up - the BGP session with the peer is\n              established\";\n          }\n        }\n      description\n        \"Operational state of the BGP peer\";\n    }\n\n    leaf last-established {\n      type oc-types:timeticks64;\n      description\n        \"This timestamp indicates the time that the\n        BGP session last transitioned in or out of the Established\n        state.  The value is the timestamp in nanoseconds relative to\n        the Unix Epoch (Jan 1, 1970 00:00:00 UTC).\n\n        The BGP session uptime can be computed by clients as the\n        difference between this value and the current time in UTC\n        (assuming the session is in the ESTABLISHED state, per the\n        session-state leaf).\";\n    }\n\n    leaf established-transitions {\n      type oc-yang:counter64;\n      description",
+        "metadata": {
+          "repository": "openconfig/public",
+          "line_end": 378,
+          "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang",
+          "fetched_at": "2026-11-19T10:13:07.877135+00:00",
+          "content_sha256": "5939d05892b29d1337ed9734da086ea4cb3ede212344a30d5916e828708ae769",
+          "filename": "openconfig-openconfig-bgp-neighbor.yang",
+          "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+          "platform": "openconfig",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "repository_path": "release/models/bgp/openconfig-bgp-neighbor.yang",
+          "id": "openconfig-openconfig-bgp-neighbor.yang",
+          "format": "yang",
+          "line_start": 346,
+          "content_kind": "yang_schema",
+          "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang#L346-L378",
+          "document_version": "9.10.0",
+          "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+          "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang",
+          "sha256": "1f282a75896dcbc593844c36e86f4797a926b0d78f4d27a0eaef1fef9623fa99",
+          "model_revision": "2026-06-16"
+        },
+        "cosine_distance": 0.6027342081069946,
+        "dense_rank": 2,
+        "lexical_rank": 4,
+        "bm25": 7.540890373688424,
+        "rrf_score": 0.015776209677419356
+      },
+      {
+        "rank": 2,
+        "id": "cf388d44c9759efa1d3021446226d30d37d6a71653d67a9ad7b6754208e4714a",
+        "text": "openconfig 9.10.0 openconfig-openconfig-bgp-common.yang\n\n  grouping bgp-common-neighbor-group-logging-options-config {\n    description\n      \"Configuration parameters specifying the logging behaviour for\n      BGP sessions to the peer\";\n\n    leaf log-neighbor-state-changes {\n      type boolean;\n      default \"true\";\n      description\n        \"Configure logging of peer state changes.  Default is\n        to enable logging of peer state changes.\";\n    }\n  }\n\n  grouping bgp-common-neighbor-group-multihop-config {\n    description\n      \"Configuration parameters specifying the multihop behaviour for\n      BGP sessions to the peer\";\n\n    leaf enabled {\n      type boolean;\n      default \"false\";\n      description\n        \"When enabled the referenced group or neighbors are permitted\n        to be indirectly connected - including cases where the TTL\n        can be decremented between the BGP peers\";\n    }\n\n    leaf multihop-ttl {\n      type uint8;\n      description\n        \"Time-to-live value to use when packets are sent to the",
+        "metadata": {
+          "line_end": 514,
+          "filename": "openconfig-openconfig-bgp-common.yang",
+          "content_kind": "yang_schema",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "platform": "openconfig",
+          "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+          "line_start": 482,
+          "repository": "openconfig/public",
+          "format": "yang",
+          "fetched_at": "2026-11-19T10:13:07.427181+00:00",
+          "sha256": "d6db40093954fd748c55379fd6792e0ed74a19f06cfe0a8e2ec26e67f130a13e",
+          "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-common.yang",
+          "repository_path": "release/models/bgp/openconfig-bgp-common.yang",
+          "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-common.yang",
+          "model_revision": "2026-06-16",
+          "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+          "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-common.yang#L482-L514",
+          "content_sha256": "18d74df39a30941524fe2298535bfd52fda0536b3008963972440560880159e7",
+          "document_version": "9.10.0",
+          "id": "openconfig-openconfig-bgp-common.yang"
+        },
+        "cosine_distance": 0.6810975074768066,
+        "dense_rank": 31,
+        "lexical_rank": 3,
+        "bm25": 7.575351124480959,
+        "rrf_score": 0.014407814407814407
+      },
+      {
+        "rank": 3,
+        "id": "b13d36e0b2d29e290ce339f5d7ce4078734ee99a45915df5c15e4146713dcd90",
+        "text": "openconfig 9.10.0 openconfig-openconfig-bgp-neighbor.yang\n    leaf active {\n      type boolean;\n      description\n        \"This value indicates whether a particular AFI-SAFI has\n        been succesfully negotiated with the peer. An AFI-SAFI\n        may be enabled in the current running configuration, but a\n        session restart may be required in order to negotiate the new\n        capability.\";\n    }\n\n    container prefixes {\n      description \"Prefix counters for the BGP session\";\n      leaf received {\n        type uint32;\n        description\n          \"The number of prefixes that are received from the\n          neighbor after applying any policies. This count is the\n          number of prefixes present in the post-policy Adj-RIB-In\n          for the neighbor\";\n      }\n\n      leaf received-pre-policy {\n        type uint32;\n        description\n          \"The number of prefixes that are received from the\n          neighbor before applying any policies. This count is\n          the number of prefixes present in the pre-policy\n          Adj-RIB-In for the neighbor\";\n      }\n\n      leaf sent {\n        type uint32;\n        description",
+        "metadata": {
+          "model_revision": "2026-06-16",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "format": "yang",
+          "content_sha256": "0d48282e1b25db095f0b76a1483b43434edc33fbf2595ce064d1828d5c466a4d",
+          "fetched_at": "2026-11-19T10:13:07.877135+00:00",
+          "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+          "content_kind": "yang_schema",
+          "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang",
+          "repository": "openconfig/public",
+          "document_version": "9.10.0",
+          "sha256": "1f282a75896dcbc593844c36e86f4797a926b0d78f4d27a0eaef1fef9623fa99",
+          "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+          "repository_path": "release/models/bgp/openconfig-bgp-neighbor.yang",
+          "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang",
+          "line_end": 692,
+          "id": "openconfig-openconfig-bgp-neighbor.yang",
+          "filename": "openconfig-openconfig-bgp-neighbor.yang",
+          "platform": "openconfig",
+          "line_start": 660,
+          "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang#L660-L692"
+        },
+        "cosine_distance": 0.6657838821411133,
+        "dense_rank": 16,
+        "lexical_rank": 9,
+        "bm25": 5.9224907538719505,
+        "rrf_score": 0.014092295957284515
+      },
+      {
+        "rank": 4,
+        "id": "eb232447b542c60d4b7f9146518130633c4411cef4a00c22a448eb70160e862d",
+        "text": "openconfig 3.11.1 openconfig-openconfig-interfaces.yang\n        at re-initialization of the management system, and at\n        other times as indicated by the value of 'last-clear'.\";\n      reference\n        \"RFC 2863: The Interfaces Group MIB - ifHCOutOctets.\n        RFC 4293: Management Information Base for the\n        Internet Protocol (IP).\";\n    }\n\n    leaf out-pkts {\n      type oc-yang:counter64;\n      description\n        \"The total number of packets transmitted out of the\n        interface, including all unicast, multicast, broadcast,\n        and bad packets etc.\";\n      reference\n        \"RFC 2819: Remote Network Monitoring Management Information Base.\n        RFC 4293: Management Information Base for the\n        Internet Protocol (IP).\";\n    }\n\n    leaf out-unicast-pkts {\n      type oc-yang:counter64;\n      description\n        \"The total number of packets that higher-level protocols\n        requested be transmitted, and that were not addressed\n        to a multicast or broadcast address at this sub-layer,",
+        "metadata": {
+          "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+          "document_version": "3.11.1",
+          "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+          "content_kind": "yang_schema",
+          "repository": "openconfig/public",
+          "line_end": 954,
+          "fetched_at": "2026-11-19T10:13:06.988732+00:00",
+          "model_revision": "2026-10-05",
+          "repository_path": "release/models/interfaces/openconfig-interfaces.yang",
+          "id": "openconfig-openconfig-interfaces.yang",
+          "format": "yang",
+          "sha256": "b4e92e39467ae69b7a9d63281b1464f529b727d10dfd218d1efe2ecfd896d19c",
+          "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang",
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "line_start": 929,
+          "content_sha256": "8c3b171b8d4d761b46763a89b203ed45cbfafb9979d59489c3126aede022b05c",
+          "platform": "openconfig",
+          "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+          "filename": "openconfig-openconfig-interfaces.yang",
+          "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/interfaces/openconfig-interfaces.yang#L929-L954"
+        },
+        "cosine_distance": 0.6099056601524353,
+        "dense_rank": 5,
+        "lexical_rank": 17,
+        "bm25": 5.170378543461867,
+        "rrf_score": 0.013706293706293705
+      },
+      {
+        "rank": 5,
+        "id": "9465995d1cb311ea2a20a92cbd44de716d886be3a83e476c2de30068e5507477",
+        "text": "openconfig 9.10.0 openconfig-openconfig-bgp-neighbor.yang\n      leaf sent {\n        type uint32;\n        description\n          \"The number of prefixes that are advertised to the\n          neighbor after applying any policies. This count is\n          the number of prefixes present in the post-policy\n          Adj-RIB-Out for the neighbor\";\n      }\n\n      leaf installed {\n        type uint32;\n        description\n          \"The number of prefices received from the neighbor that\n          are installed in the network instance RIB and actively used\n          for forwarding.\n\n          Routes that are actively used for forwarding are\n           defined to be those that:\n           - are selected, after the application of policies, to be\n             included in the Adj-RIB-In-Post, AND\n           - are selected by best path selection and hence installed\n             in the Loc-RIB (either as the only route, or as part of\n             a multipath set, AND\n           - are selected, after the application of protocol\n             preferences (e.g., administrative distance) as the\n             route to be used by the system's RIB\";\n      }\n    }\n  }\n",
+        "metadata": {
+          "content_sha256": "7f87d8a00c9c430ca4459a9ab7c31bcbf3fc0f276c129accab2437609e9b2c0f",
+          "document_version": "9.10.0",
+          "model_revision": "2026-06-16",
+          "commit": "d7c253b48db010c2872a26813bf41b6237e506b2",
+          "sha256": "1f282a75896dcbc593844c36e86f4797a926b0d78f4d27a0eaef1fef9623fa99",
+          "line_start": 690,
+          "fetched_at": "2026-11-19T10:13:07.877135+00:00",
+          "compatibility": "Vendor-neutral schema; not FRR CLI or proof of implementation support",
+          "platform": "openconfig",
+          "content_kind": "yang_schema",
+          "citation_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang#L690-L719",
+          "format": "yang",
+          "source_url": "https://github.com/openconfig/public/blob/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang",
+          "id": "openconfig-openconfig-bgp-neighbor.yang",
+          "line_end": 719,
+          "embedding_model": "all-MiniLM-L6-v2 ONNX",
+          "filename": "openconfig-openconfig-bgp-neighbor.yang",
+          "repository_path": "release/models/bgp/openconfig-bgp-neighbor.yang",
+          "repository": "openconfig/public",
+          "download_url": "https://raw.githubusercontent.com/openconfig/public/d7c253b48db010c2872a26813bf41b6237e506b2/release/models/bgp/openconfig-bgp-neighbor.yang"
+        },
+        "cosine_distance": 0.6956182718276978,
+        "dense_rank": 41,
+        "lexical_rank": 8,
+        "bm25": 6.039428189115212,
+        "rrf_score": 0.013264414676761795
+      }
+    ],
+    "seconds": 0.07254234499998802,
+    "semantics": "Ranked documentation evidence, not diagnosis/confidence or validated CLI patch"
+  },
+  "gate": {
+    "gate_version": "1.0",
+    "intent": "bgp_session_state",
+    "mode": "replay",
+    "decision": "abstain",
+    "reasons": [
+      "no_topically_relevant_verified_documentation"
+    ],
+    "hit_checks": [
+      {
+        "group": 0,
+        "id": "1e5b64627e9f0d9306989f0b8ae4f23bacc1aff6fa9a82b3dbf4542702b03b14",
+        "accepted": false,
+        "rule": "requires_openconfig_leaf_session_state",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "cf388d44c9759efa1d3021446226d30d37d6a71653d67a9ad7b6754208e4714a",
+        "accepted": false,
+        "rule": "requires_openconfig_leaf_session_state",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "b13d36e0b2d29e290ce339f5d7ce4078734ee99a45915df5c15e4146713dcd90",
+        "accepted": false,
+        "rule": "requires_openconfig_leaf_session_state",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "eb232447b542c60d4b7f9146518130633c4411cef4a00c22a448eb70160e862d",
+        "accepted": false,
+        "rule": "requires_openconfig_leaf_session_state",
+        "provenance": true
+      },
+      {
+        "group": 0,
+        "id": "9465995d1cb311ea2a20a92cbd44de716d886be3a83e476c2de30068e5507477",
+        "accepted": false,
+        "rule": "requires_openconfig_leaf_session_state",
+        "provenance": true
+      }
+    ],
+    "accepted_citations": [],
+    "diagnosis_allowed": false,
+    "execution_allowed": false,
+    "semantics": "Rule-based topical context eligibility only; not semantic entailment, confidence or root cause",
+    "freshness": {
+      "age_seconds": 18641.948284,
+      "enforced": false,
+      "max_age_seconds": 120
+    },
+    "next_action": "Collect missing/fresh evidence or retrieve verified documentation; do not generate a fix"
+  }
+}

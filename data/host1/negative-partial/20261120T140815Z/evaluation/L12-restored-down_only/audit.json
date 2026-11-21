@@ -1,0 +1,52 @@
+{
+  "model_called": true,
+  "llm_requests": 4,
+  "status": "hypothesis",
+  "analysis_origin": "source_bound_llm_temporal_no_rule_substitution",
+  "execution_allowed": false,
+  "diagnosis_allowed": false,
+  "mode": "replay",
+  "options": {
+    "history": "down_only",
+    "reverse_endpoints": true,
+    "reverse_events": true,
+    "doc_last": true,
+    "citation_map": {
+      "D1": "N310",
+      "T1": "N311",
+      "T2": "N312",
+      "G1": "N313",
+      "L1": "N314",
+      "L2": "N315"
+    }
+  },
+  "extractor": "bound",
+  "bundle": {
+    "path": "results/evidence-retrieval/replay-final-20261119/L12-restored.json",
+    "sha256": "c26c087a472352b563ccf8f85639adf6a5c6709f7bbb8ab5ce7f69fe1669e934"
+  },
+  "endpoint_rows_validated": 2,
+  "observation_origin": "model_values_aggregated_with_controller_owned_source_identity",
+  "facts_validated": true,
+  "phase_input_normalization": "sorted_verified_model_lists",
+  "raw_phase_prediction": {
+    "phase": "undetermined"
+  },
+  "raw_prediction": {
+    "current": "healthy",
+    "phase": "undetermined",
+    "target": null,
+    "explanation": "Healthy at this snapshot; supplied history cannot establish baseline versus recovery.",
+    "citations": [
+      "N312",
+      "N311",
+      "N313"
+    ]
+  },
+  "explanation_origin": "controller_rendering_of_model_chosen_phase",
+  "citation_origin": "controller_binding_of_verified_source_refs",
+  "contract_valid": true,
+  "prompt_eval_count": 250,
+  "eval_count": 11,
+  "wall_seconds": 10.631509417000416
+}

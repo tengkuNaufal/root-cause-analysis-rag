@@ -1,0 +1,6 @@
+<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+
+Choose phase from model_observations. Return JSON with only phase. No commands or actor/config claims. Examples with unrelated nodes: admin_down=[X:if0],physical=down,peers=[Active,Active] => fault. admin_down=[],physical=up,peers=[Full/-,Full/-],coverage=complete,events=[] => baseline. admin_down=[],physical=up,peers=[Established,Established],coverage=complete,events=[] => baseline. admin_down=[],physical=up,peers=[Full/-,Full/-],coverage=complete,events=[DOWN,UP] => recovered. admin_down=[],physical=up,peers=[Established,Established],coverage=complete,events=[DOWN,UP] => recovered. admin_down=[],physical=up,peers=[Established,Established],coverage=partial,events=[DOWN] or [] => undetermined. Current faults take priority over history. Full and Established mean healthy peers.<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+{"model_observations":{"admin_down":["r3:eth4"],"carrier_down":["r3:eth4","r5:eth1"],"peer_states":["Active","Active"],"physical":"down","coverage":"complete","events":["DOWN"]}}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+

@@ -1,0 +1,5996 @@
+{
+  "schema_version": 1,
+  "lab": "rca",
+  "started_at": "2026-11-19T10:06:37.647437+00:00",
+  "completed_at": "2026-11-19T10:06:38.614512+00:00",
+  "duration_seconds": 0.967069,
+  "status": "complete",
+  "source_counts": {
+    "ok": 28,
+    "error": 0,
+    "not_applicable": 2
+  },
+  "timestamp_semantics": "UTC collector observation windows; not router event timestamps; sources are not atomic.",
+  "routers": {
+    "r1": {
+      "container": "clab-rca-r1",
+      "inventory_asn": 65001,
+      "sources": {
+        "interfaces": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.647649+00:00",
+          "completed_at": "2026-11-19T10:06:37.769735+00:00",
+          "duration_seconds": 0.122085,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r1-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.1.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.1.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 37,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:94:9e:4d",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.11",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 1868,
+                  "packets": 28,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 38,
+              "peer_ifindex": 39,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:9e:52:a7",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.13.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.13.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::8532:020b:886e:c52d",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 225426,
+                  "packets": 2793,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 224457,
+                  "packets": 2794,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 54,
+              "peer_ifindex": 53,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:11:f4:e6",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.12.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.12.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::51bb:71d3:6b27:5f60",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 300708,
+                  "packets": 3783,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 307468,
+                  "packets": 3875,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "ospf": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.776924+00:00",
+          "completed_at": "2026-11-19T10:06:37.981815+00:00",
+          "duration_seconds": 0.204893,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "vtysh",
+            "-c",
+            "show ip ospf neighbor json"
+          ],
+          "raw_file": "raw/r1-ospf.json",
+          "data": [
+            {
+              "router_id": "10.255.0.3",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth2:10.0.13.1",
+              "peer_address": "10.0.13.2",
+              "uptime_ms": 1625718,
+              "dead_timer_remaining_ms": 3411
+            },
+            {
+              "router_id": "10.255.0.2",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth1:10.0.12.1",
+              "peer_address": "10.0.12.2",
+              "uptime_ms": 14817,
+              "dead_timer_remaining_ms": 3188
+            }
+          ]
+        },
+        "bgp": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.986032+00:00",
+          "completed_at": "2026-11-19T10:06:38.181464+00:00",
+          "duration_seconds": 0.195435,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r1-bgp.json",
+          "data": {
+            "router_id": "10.255.0.1",
+            "local_as": 65001,
+            "peers": [
+              {
+                "address": "10.255.0.2",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 1,
+                "prefixes_sent": 1,
+                "messages_received": 542,
+                "messages_sent": 542,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.3",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 547,
+                "messages_sent": 542,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.4",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 543,
+                "messages_sent": 542,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.185804+00:00",
+          "completed_at": "2026-11-19T10:06:38.407614+00:00",
+          "duration_seconds": 0.221815,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r1-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.12.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:16",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.12.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:16",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.13.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.13.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 30,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.2",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:59",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.3/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 38,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.4/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 54,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.11/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "kernel_routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.412851+00:00",
+          "completed_at": "2026-11-19T10:06:38.610985+00:00",
+          "duration_seconds": 0.198131,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r1",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r1-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.12.0/30",
+              "dev": "eth1",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.12.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.13.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.13.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.23.0/30",
+              "nhid": 14,
+              "gateway": "10.0.12.2",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.24.0/30",
+              "nhid": 14,
+              "gateway": "10.0.12.2",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.34.0/30",
+              "nhid": 26,
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": [],
+              "nexthops": [
+                {
+                  "gateway": "10.0.12.2",
+                  "dev": "eth1",
+                  "weight": 1,
+                  "flags": []
+                },
+                {
+                  "gateway": "10.0.13.2",
+                  "dev": "eth2",
+                  "weight": 1,
+                  "flags": []
+                }
+              ]
+            },
+            {
+              "dst": "10.100.2.1",
+              "nhid": 14,
+              "gateway": "10.0.12.2",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.3.1",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.4.1",
+              "nhid": 14,
+              "gateway": "10.0.12.2",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.5.1",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.6.1",
+              "nhid": 14,
+              "gateway": "10.0.12.2",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.2",
+              "nhid": 14,
+              "gateway": "10.0.12.2",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.3",
+              "nhid": 16,
+              "gateway": "10.0.13.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.4",
+              "nhid": 14,
+              "gateway": "10.0.12.2",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.11",
+              "flags": []
+            }
+          ]
+        }
+      }
+    },
+    "r2": {
+      "container": "clab-rca-r2",
+      "inventory_asn": 65001,
+      "sources": {
+        "interfaces": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.647809+00:00",
+          "completed_at": "2026-11-19T10:06:37.769304+00:00",
+          "duration_seconds": 0.121503,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r2-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.2",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.2",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.2.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.2.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 42,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:98:b2:0c",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.12",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 1606,
+                  "packets": 25,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 45,
+              "peer_ifindex": 46,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:be:f0:b5",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.24.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.24.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::bd46:4f29:9885:bb84",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 392884,
+                  "packets": 4984,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 397297,
+                  "packets": 5038,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth3",
+              "ifindex": 47,
+              "peer_ifindex": 48,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:a5:81:11",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.23.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.23.3",
+                  "scope": "global",
+                  "label": "eth3",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::b9b5:01a1:3062:b79f",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 135912,
+                  "packets": 1648,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 136300,
+                  "packets": 1650,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 53,
+              "peer_ifindex": 54,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:ad:8f:69",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.12.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.12.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::5ef5:b198:8706:6efd",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 307468,
+                  "packets": 3875,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 300708,
+                  "packets": 3783,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "ospf": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.775323+00:00",
+          "completed_at": "2026-11-19T10:06:37.922628+00:00",
+          "duration_seconds": 0.147304,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "vtysh",
+            "-c",
+            "show ip ospf neighbor json"
+          ],
+          "raw_file": "raw/r2-ospf.json",
+          "data": [
+            {
+              "router_id": "10.255.0.4",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth2:10.0.24.1",
+              "peer_address": "10.0.24.2",
+              "uptime_ms": 1620643,
+              "dead_timer_remaining_ms": 3471
+            },
+            {
+              "router_id": "10.255.0.3",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth3:10.0.23.1",
+              "peer_address": "10.0.23.2",
+              "uptime_ms": 1620643,
+              "dead_timer_remaining_ms": 3471
+            },
+            {
+              "router_id": "10.255.0.1",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth1:10.0.12.2",
+              "peer_address": "10.0.12.1",
+              "uptime_ms": 14757,
+              "dead_timer_remaining_ms": 3248
+            }
+          ]
+        },
+        "bgp": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.930169+00:00",
+          "completed_at": "2026-11-19T10:06:38.153222+00:00",
+          "duration_seconds": 0.223055,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r2-bgp.json",
+          "data": {
+            "router_id": "10.255.0.2",
+            "local_as": 65001,
+            "peers": [
+              {
+                "address": "10.255.0.1",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 1,
+                "prefixes_sent": 1,
+                "messages_received": 542,
+                "messages_sent": 542,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.3",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 547,
+                "messages_sent": 542,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.4",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 2,
+                "prefixes_sent": 1,
+                "messages_received": 543,
+                "messages_sent": 542,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.157854+00:00",
+          "completed_at": "2026-11-19T10:06:38.357089+00:00",
+          "duration_seconds": 0.199238,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r2-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.12.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:16",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 53,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.12.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:16",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 53,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.13.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 30,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 53,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 47,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 47,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.1",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.12.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 53,
+                  "interfaceName": "eth1",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 53,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:59",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:59",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:59",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.12.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 53,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:06",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.3/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.4/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 45,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.12/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "kernel_routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.362014+00:00",
+          "completed_at": "2026-11-19T10:06:38.566353+00:00",
+          "duration_seconds": 0.204339,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r2",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r2-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.12.0/30",
+              "dev": "eth1",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.12.2",
+              "flags": []
+            },
+            {
+              "dst": "10.0.13.0/30",
+              "nhid": 35,
+              "gateway": "10.0.12.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.23.0/30",
+              "dev": "eth3",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.23.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.24.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.24.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.34.0/30",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.1.1",
+              "nhid": 35,
+              "gateway": "10.0.12.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.3.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.4.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.5.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.6.1",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.1",
+              "nhid": 35,
+              "gateway": "10.0.12.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.3",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.4",
+              "nhid": 20,
+              "gateway": "10.0.24.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.12",
+              "flags": []
+            }
+          ]
+        }
+      }
+    },
+    "r3": {
+      "container": "clab-rca-r3",
+      "inventory_asn": 65001,
+      "sources": {
+        "interfaces": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.647958+00:00",
+          "completed_at": "2026-11-19T10:06:37.769581+00:00",
+          "duration_seconds": 0.121628,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r3",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r3-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.3",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.3",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.3.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.3.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 33,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:0b:1a:cc",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.13",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 2036,
+                  "packets": 32,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 39,
+              "peer_ifindex": 38,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:b4:29:dd",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.13.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.13.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::3120:77bc:9b60:5b22",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 224457,
+                  "packets": 2794,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 225426,
+                  "packets": 2793,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 41,
+              "peer_ifindex": 40,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:99:fe:f3",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.34.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.34.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::5f13:7036:6be3:aec1",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 317223,
+                  "packets": 3990,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 315279,
+                  "packets": 3959,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth3",
+              "ifindex": 48,
+              "peer_ifindex": 47,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:fc:91:ad",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.23.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.23.3",
+                  "scope": "global",
+                  "label": "eth3",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::247b:7042:8133:0859",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 136300,
+                  "packets": 1650,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 135912,
+                  "packets": 1648,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth4",
+              "ifindex": 51,
+              "peer_ifindex": 52,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:43:40:4f",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.35.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.35.3",
+                  "scope": "global",
+                  "label": "eth4",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::9d41:d5c9:33bb:6a7a",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 97382,
+                  "packets": 1239,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 97848,
+                  "packets": 1240,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "ospf": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.774193+00:00",
+          "completed_at": "2026-11-19T10:06:37.922803+00:00",
+          "duration_seconds": 0.148611,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r3",
+            "vtysh",
+            "-c",
+            "show ip ospf neighbor json"
+          ],
+          "raw_file": "raw/r3-ospf.json",
+          "data": [
+            {
+              "router_id": "10.255.0.1",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth1:10.0.13.2",
+              "peer_address": "10.0.13.1",
+              "uptime_ms": 1625659,
+              "dead_timer_remaining_ms": 3470
+            },
+            {
+              "router_id": "10.255.0.4",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth2:10.0.34.1",
+              "peer_address": "10.0.34.2",
+              "uptime_ms": 1625463,
+              "dead_timer_remaining_ms": 3471
+            },
+            {
+              "router_id": "10.255.0.2",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth3:10.0.23.2",
+              "peer_address": "10.0.23.1",
+              "uptime_ms": 1620643,
+              "dead_timer_remaining_ms": 3471
+            }
+          ]
+        },
+        "bgp": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.928564+00:00",
+          "completed_at": "2026-11-19T10:06:38.089098+00:00",
+          "duration_seconds": 0.16053,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r3",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r3-bgp.json",
+          "data": {
+            "router_id": "10.255.0.3",
+            "local_as": 65001,
+            "peers": [
+              {
+                "address": "10.0.35.2",
+                "remote_as": 65002,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 3000,
+                "prefixes_received": 2,
+                "prefixes_sent": 4,
+                "messages_received": 553,
+                "messages_sent": 559,
+                "connections_established": 2,
+                "connections_dropped": 1
+              },
+              {
+                "address": "10.255.0.1",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 1,
+                "prefixes_sent": 2,
+                "messages_received": 542,
+                "messages_sent": 547,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.2",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 1,
+                "prefixes_sent": 2,
+                "messages_received": 542,
+                "messages_sent": 547,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.4",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 2,
+                "prefixes_sent": 2,
+                "messages_received": 543,
+                "messages_sent": 547,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.096862+00:00",
+          "completed_at": "2026-11-19T10:06:38.257588+00:00",
+          "duration_seconds": 0.160725,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r3",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r3-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.12.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 30,
+              "uptime": "00:00:16",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 39,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.13.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 39,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.13.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 39,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 48,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 48,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.35.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:03",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 51,
+                  "interfaceName": "eth4",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.35.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:03",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 51,
+                  "interfaceName": "eth4",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.1",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.13.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 39,
+                  "interfaceName": "eth1",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 39,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:56",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.2",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:26:56",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:59",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.35.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 51,
+                  "interfaceName": "eth4",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:59",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.4",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.13.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 39,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:26:56",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.3/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.3/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.4/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 41,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.13/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "kernel_routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.262086+00:00",
+          "completed_at": "2026-11-19T10:06:38.469801+00:00",
+          "duration_seconds": 0.207717,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r3",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r3-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.12.0/30",
+              "nhid": 36,
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": [],
+              "nexthops": [
+                {
+                  "gateway": "10.0.13.1",
+                  "dev": "eth1",
+                  "weight": 1,
+                  "flags": []
+                },
+                {
+                  "gateway": "10.0.34.2",
+                  "dev": "eth2",
+                  "weight": 1,
+                  "flags": []
+                }
+              ]
+            },
+            {
+              "dst": "10.0.13.0/30",
+              "dev": "eth1",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.13.2",
+              "flags": []
+            },
+            {
+              "dst": "10.0.23.0/30",
+              "dev": "eth3",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.23.2",
+              "flags": []
+            },
+            {
+              "dst": "10.0.24.0/30",
+              "nhid": 26,
+              "gateway": "10.0.34.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.34.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.34.1",
+              "flags": []
+            },
+            {
+              "dst": "10.0.35.0/30",
+              "dev": "eth4",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.35.1",
+              "flags": []
+            },
+            {
+              "dst": "10.100.1.1",
+              "nhid": 24,
+              "gateway": "10.0.13.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.2.1",
+              "nhid": 26,
+              "gateway": "10.0.34.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.4.1",
+              "nhid": 26,
+              "gateway": "10.0.34.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.5.1",
+              "nhid": 48,
+              "gateway": "10.0.35.2",
+              "dev": "eth4",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.6.1",
+              "nhid": 26,
+              "gateway": "10.0.34.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.1",
+              "nhid": 24,
+              "gateway": "10.0.13.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.2",
+              "nhid": 26,
+              "gateway": "10.0.34.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.4",
+              "nhid": 26,
+              "gateway": "10.0.34.2",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.13",
+              "flags": []
+            }
+          ]
+        }
+      }
+    },
+    "r4": {
+      "container": "clab-rca-r4",
+      "inventory_asn": 65001,
+      "sources": {
+        "interfaces": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.648152+00:00",
+          "completed_at": "2026-11-19T10:06:37.770153+00:00",
+          "duration_seconds": 0.122002,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r4",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r4-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.4",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.4",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.4.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.4.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 35,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:0d:39:e6",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.14",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 1994,
+                  "packets": 31,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 40,
+              "peer_ifindex": 41,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:bf:0e:3f",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.34.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.34.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::28f8:068d:c370:ecf2",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 315279,
+                  "packets": 3959,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 317223,
+                  "packets": 3990,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth3",
+              "ifindex": 43,
+              "peer_ifindex": 44,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:0f:4c:51",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.46.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.46.3",
+                  "scope": "global",
+                  "label": "eth3",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::4283:54db:5754:d89f",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 95511,
+                  "packets": 1218,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 95269,
+                  "packets": 1215,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 46,
+              "peer_ifindex": 45,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:11:ba:0c",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.24.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.24.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::9e62:86e7:e436:86fb",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 397297,
+                  "packets": 5038,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 392884,
+                  "packets": 4984,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "ospf": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.773265+00:00",
+          "completed_at": "2026-11-19T10:06:37.922425+00:00",
+          "duration_seconds": 0.149169,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r4",
+            "vtysh",
+            "-c",
+            "show ip ospf neighbor json"
+          ],
+          "raw_file": "raw/r4-ospf.json",
+          "data": [
+            {
+              "router_id": "10.255.0.2",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth1:10.0.24.2",
+              "peer_address": "10.0.24.1",
+              "uptime_ms": 1620643,
+              "dead_timer_remaining_ms": 3471
+            },
+            {
+              "router_id": "10.255.0.3",
+              "state": "Full/-",
+              "converged": "Full",
+              "interface": "eth2:10.0.34.2",
+              "peer_address": "10.0.34.1",
+              "uptime_ms": 1625463,
+              "dead_timer_remaining_ms": 3471
+            }
+          ]
+        },
+        "bgp": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.927095+00:00",
+          "completed_at": "2026-11-19T10:06:38.088659+00:00",
+          "duration_seconds": 0.161566,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r4",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r4-bgp.json",
+          "data": {
+            "router_id": "10.255.0.4",
+            "local_as": 65001,
+            "peers": [
+              {
+                "address": "10.0.46.2",
+                "remote_as": 65003,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1623000,
+                "prefixes_received": 2,
+                "prefixes_sent": 4,
+                "messages_received": 550,
+                "messages_sent": 548,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.1",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 1,
+                "prefixes_sent": 2,
+                "messages_received": 542,
+                "messages_sent": 543,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.2",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 1,
+                "prefixes_sent": 2,
+                "messages_received": 542,
+                "messages_sent": 543,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.255.0.3",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1621000,
+                "prefixes_received": 2,
+                "prefixes_sent": 2,
+                "messages_received": 547,
+                "messages_sent": 543,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.094650+00:00",
+          "completed_at": "2026-11-19T10:06:38.250921+00:00",
+          "duration_seconds": 0.156271,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r4",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r4-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.12.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:00:16",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.13.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 30,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.23.0/30",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 40,
+              "uptime": "00:26:56",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.24.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.34.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.46.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 43,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.46.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 43,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.1",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:26:56",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.2",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 1,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:26:56",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "bgp",
+              "selected": false,
+              "installed": false,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 200,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 5,
+                  "ip": "10.255.0.3",
+                  "afi": "ipv4",
+                  "active": true,
+                  "recursive": true,
+                  "weight": 1
+                },
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "resolver": true,
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:27:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.46.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 43,
+                  "interfaceName": "eth3",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.1/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 20,
+              "uptime": "00:00:15",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.2/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:26:56",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.24.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 46,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.3/32",
+              "protocol": "ospf",
+              "selected": true,
+              "installed": true,
+              "distance": 110,
+              "metric": 10,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.34.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 40,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.4/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.4/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.14/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "kernel_routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.255842+00:00",
+          "completed_at": "2026-11-19T10:06:38.413921+00:00",
+          "duration_seconds": 0.158073,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r4",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r4-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.12.0/30",
+              "nhid": 30,
+              "gateway": "10.0.24.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.13.0/30",
+              "nhid": 20,
+              "gateway": "10.0.34.1",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.0.23.0/30",
+              "nhid": 31,
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": [],
+              "nexthops": [
+                {
+                  "gateway": "10.0.34.1",
+                  "dev": "eth2",
+                  "weight": 1,
+                  "flags": []
+                },
+                {
+                  "gateway": "10.0.24.1",
+                  "dev": "eth1",
+                  "weight": 1,
+                  "flags": []
+                }
+              ]
+            },
+            {
+              "dst": "10.0.24.0/30",
+              "dev": "eth1",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.24.2",
+              "flags": []
+            },
+            {
+              "dst": "10.0.34.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.34.2",
+              "flags": []
+            },
+            {
+              "dst": "10.0.46.0/30",
+              "dev": "eth3",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.46.1",
+              "flags": []
+            },
+            {
+              "dst": "10.100.1.1",
+              "nhid": 30,
+              "gateway": "10.0.24.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.2.1",
+              "nhid": 30,
+              "gateway": "10.0.24.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.3.1",
+              "nhid": 20,
+              "gateway": "10.0.34.1",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.5.1",
+              "nhid": 20,
+              "gateway": "10.0.34.1",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.6.1",
+              "nhid": 18,
+              "gateway": "10.0.46.2",
+              "dev": "eth3",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.1",
+              "nhid": 30,
+              "gateway": "10.0.24.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.2",
+              "nhid": 30,
+              "gateway": "10.0.24.1",
+              "dev": "eth1",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.255.0.3",
+              "nhid": 20,
+              "gateway": "10.0.34.1",
+              "dev": "eth2",
+              "protocol": "ospf",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.14",
+              "flags": []
+            }
+          ]
+        }
+      }
+    },
+    "r5": {
+      "container": "clab-rca-r5",
+      "inventory_asn": 65002,
+      "sources": {
+        "interfaces": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.648595+00:00",
+          "completed_at": "2026-11-19T10:06:37.828769+00:00",
+          "duration_seconds": 0.180183,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r5",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r5-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.5",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.5",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.5.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.5.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 36,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:d1:a9:8d",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.15",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 1910,
+                  "packets": 29,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 49,
+              "peer_ifindex": 50,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:72:1b:1a",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.56.1",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.56.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::7bd8:623a:a1e8:d52b",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 87534,
+                  "packets": 1139,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 87900,
+                  "packets": 1140,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 52,
+              "peer_ifindex": 51,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:56:ad:28",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.35.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.35.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::eca4:957f:7ff7:10e5",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 97999,
+                  "packets": 1242,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 97533,
+                  "packets": 1241,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "ospf": {
+          "status": "not_applicable",
+          "reason": "No OSPF links assigned in inventory",
+          "data": null
+        },
+        "bgp": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.832463+00:00",
+          "completed_at": "2026-11-19T10:06:38.030991+00:00",
+          "duration_seconds": 0.19853,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r5",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r5-bgp.json",
+          "data": {
+            "router_id": "10.255.0.5",
+            "local_as": 65002,
+            "peers": [
+              {
+                "address": "10.0.35.1",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 3000,
+                "prefixes_received": 4,
+                "prefixes_sent": 2,
+                "messages_received": 555,
+                "messages_sent": 552,
+                "connections_established": 2,
+                "connections_dropped": 1
+              },
+              {
+                "address": "10.0.56.2",
+                "remote_as": 65003,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1623000,
+                "prefixes_received": 5,
+                "prefixes_sent": 5,
+                "messages_received": 553,
+                "messages_sent": 559,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.035898+00:00",
+          "completed_at": "2026-11-19T10:06:38.249892+00:00",
+          "duration_seconds": 0.213994,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r5",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r5-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.35.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:03",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 52,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.35.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:00:03",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 52,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.56.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 49,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.56.1/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 49,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.35.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 52,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.35.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 52,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.35.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 52,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:00:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.35.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 52,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:27:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.56.2",
+                  "afi": "ipv4",
+                  "interfaceIndex": 49,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.5/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.5/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.15/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "kernel_routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.253485+00:00",
+          "completed_at": "2026-11-19T10:06:38.414167+00:00",
+          "duration_seconds": 0.16068,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r5",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r5-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.35.0/30",
+              "dev": "eth1",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.35.2",
+              "flags": []
+            },
+            {
+              "dst": "10.0.56.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.56.1",
+              "flags": []
+            },
+            {
+              "dst": "10.100.1.1",
+              "nhid": 26,
+              "gateway": "10.0.35.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.2.1",
+              "nhid": 26,
+              "gateway": "10.0.35.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.3.1",
+              "nhid": 26,
+              "gateway": "10.0.35.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.4.1",
+              "nhid": 26,
+              "gateway": "10.0.35.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.6.1",
+              "nhid": 15,
+              "gateway": "10.0.56.2",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.15",
+              "flags": []
+            }
+          ]
+        }
+      }
+    },
+    "r6": {
+      "container": "clab-rca-r6",
+      "inventory_asn": 65003,
+      "sources": {
+        "interfaces": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.648818+00:00",
+          "completed_at": "2026-11-19T10:06:37.769926+00:00",
+          "duration_seconds": 0.121112,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r6",
+            "ip",
+            "-j",
+            "-s",
+            "addr",
+            "show"
+          ],
+          "raw_file": "raw/r6-interfaces.json",
+          "data": [
+            {
+              "name": "lo",
+              "ifindex": 1,
+              "peer_ifindex": null,
+              "role": "loopback",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UNKNOWN",
+              "mtu": 65536,
+              "mac": "00:00:00:00:00:00",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "127.0.0.1",
+                  "prefixlen": 8,
+                  "scope": "host",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.255.0.6",
+                  "prefixlen": 32,
+                  "broadcast": "10.255.0.6",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet",
+                  "local": "10.100.6.1",
+                  "prefixlen": 32,
+                  "broadcast": "10.100.6.1",
+                  "scope": "global",
+                  "label": "lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "::1",
+                  "prefixlen": 128,
+                  "scope": "host",
+                  "protocol": "kernel_lo",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 0,
+                  "packets": 0,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth0",
+              "ifindex": 2,
+              "peer_ifindex": 34,
+              "role": "management",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:d2:fe:8f",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "172.30.80.16",
+                  "prefixlen": 24,
+                  "broadcast": "172.30.80.255",
+                  "scope": "global",
+                  "label": "eth0",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 1994,
+                  "packets": 31,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 126,
+                  "packets": 3,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth1",
+              "ifindex": 44,
+              "peer_ifindex": 43,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:e0:dd:79",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.46.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.46.3",
+                  "scope": "global",
+                  "label": "eth1",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::d547:6c86:eeb5:a742",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 95269,
+                  "packets": 1215,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 95511,
+                  "packets": 1218,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            },
+            {
+              "name": "eth2",
+              "ifindex": 50,
+              "peer_ifindex": 49,
+              "role": "data",
+              "admin_up": true,
+              "lower_up": true,
+              "operstate": "UP",
+              "mtu": 1500,
+              "mac": "02:00:00:26:48:64",
+              "addresses": [
+                {
+                  "family": "inet",
+                  "local": "10.0.56.2",
+                  "prefixlen": 30,
+                  "broadcast": "10.0.56.3",
+                  "scope": "global",
+                  "label": "eth2",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                },
+                {
+                  "family": "inet6",
+                  "local": "fe80::dc5e:2a3d:1ccb:d896",
+                  "prefixlen": 64,
+                  "scope": "link",
+                  "protocol": "kernel_ll",
+                  "valid_life_time": 4294967295,
+                  "preferred_life_time": 4294967295
+                }
+              ],
+              "counters": {
+                "rx": {
+                  "bytes": 87834,
+                  "packets": 1139,
+                  "errors": 0,
+                  "dropped": 0,
+                  "over_errors": 0,
+                  "multicast": 0
+                },
+                "tx": {
+                  "bytes": 87449,
+                  "packets": 1138,
+                  "errors": 0,
+                  "dropped": 0,
+                  "carrier_errors": 0,
+                  "collisions": 0
+                }
+              }
+            }
+          ]
+        },
+        "ospf": {
+          "status": "not_applicable",
+          "reason": "No OSPF links assigned in inventory",
+          "data": null
+        },
+        "bgp": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.772240+00:00",
+          "completed_at": "2026-11-19T10:06:37.923495+00:00",
+          "duration_seconds": 0.151255,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r6",
+            "vtysh",
+            "-c",
+            "show bgp ipv4 unicast summary json"
+          ],
+          "raw_file": "raw/r6-bgp.json",
+          "data": {
+            "router_id": "10.255.0.6",
+            "local_as": 65003,
+            "peers": [
+              {
+                "address": "10.0.46.1",
+                "remote_as": 65001,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1623000,
+                "prefixes_received": 4,
+                "prefixes_sent": 2,
+                "messages_received": 548,
+                "messages_sent": 550,
+                "connections_established": 1,
+                "connections_dropped": 0
+              },
+              {
+                "address": "10.0.56.1",
+                "remote_as": 65002,
+                "state": "Established",
+                "peer_state": "OK",
+                "uptime_ms": 1623000,
+                "prefixes_received": 5,
+                "prefixes_sent": 5,
+                "messages_received": 559,
+                "messages_sent": 554,
+                "connections_established": 1,
+                "connections_dropped": 0
+              }
+            ]
+          }
+        },
+        "routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:37.931913+00:00",
+          "completed_at": "2026-11-19T10:06:38.088923+00:00",
+          "duration_seconds": 0.157003,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r6",
+            "vtysh",
+            "-c",
+            "show ip route json"
+          ],
+          "raw_file": "raw/r6-routes.json",
+          "data": [
+            {
+              "prefix": "10.0.46.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 44,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.46.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 44,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.56.0/30",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 50,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.0.56.2/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 50,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.1.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.46.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 44,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.2.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.46.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 44,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.3.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:27:01",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.46.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 44,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.4.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:27:02",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.46.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 44,
+                  "interfaceName": "eth1",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.5.1/32",
+              "protocol": "bgp",
+              "selected": true,
+              "installed": true,
+              "distance": 20,
+              "metric": 0,
+              "uptime": "00:27:03",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "ip": "10.0.56.1",
+                  "afi": "ipv4",
+                  "interfaceIndex": 50,
+                  "interfaceName": "eth2",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.100.6.1/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.6/32",
+              "protocol": "local",
+              "selected": false,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "10.255.0.6/32",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 1,
+                  "interfaceName": "lo",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.0/24",
+              "protocol": "connected",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "prefix": "172.30.80.16/32",
+              "protocol": "local",
+              "selected": true,
+              "installed": true,
+              "distance": 0,
+              "metric": 0,
+              "uptime": "00:27:07",
+              "nexthops": [
+                {
+                  "flags": 3,
+                  "fib": true,
+                  "directlyConnected": true,
+                  "interfaceIndex": 2,
+                  "interfaceName": "eth0",
+                  "active": true,
+                  "weight": 1
+                }
+              ]
+            }
+          ]
+        },
+        "kernel_routes": {
+          "status": "ok",
+          "started_at": "2026-11-19T10:06:38.093178+00:00",
+          "completed_at": "2026-11-19T10:06:38.239470+00:00",
+          "duration_seconds": 0.146295,
+          "returncode": 0,
+          "error": null,
+          "command": [
+            "docker",
+            "exec",
+            "clab-rca-r6",
+            "ip",
+            "-j",
+            "-4",
+            "route",
+            "show"
+          ],
+          "raw_file": "raw/r6-kernel_routes.json",
+          "data": [
+            {
+              "dst": "10.0.46.0/30",
+              "dev": "eth1",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.46.2",
+              "flags": []
+            },
+            {
+              "dst": "10.0.56.0/30",
+              "dev": "eth2",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "10.0.56.2",
+              "flags": []
+            },
+            {
+              "dst": "10.100.1.1",
+              "nhid": 17,
+              "gateway": "10.0.46.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.2.1",
+              "nhid": 17,
+              "gateway": "10.0.46.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.3.1",
+              "nhid": 17,
+              "gateway": "10.0.46.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.4.1",
+              "nhid": 17,
+              "gateway": "10.0.46.1",
+              "dev": "eth1",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "10.100.5.1",
+              "nhid": 14,
+              "gateway": "10.0.56.1",
+              "dev": "eth2",
+              "protocol": "bgp",
+              "metric": 20,
+              "flags": []
+            },
+            {
+              "dst": "172.30.80.0/24",
+              "dev": "eth0",
+              "protocol": "kernel",
+              "scope": "link",
+              "prefsrc": "172.30.80.16",
+              "flags": []
+            }
+          ]
+        }
+      }
+    }
+  }
+}
