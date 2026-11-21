@@ -45,7 +45,7 @@ Masukkan password akun Windows host utama. Setelah masuk:
 wsl -d NetworkLab -u USER_LINUX -- docker ps
 ```
 
-Harus tampil daftar container `clab-topik8-r1` sampai `r6` kalau lab sedang jalan.
+Harus tampil daftar container `clab-rca-r1` sampai `clab-rca-r6` kalau lab sedang jalan.
 
 Menjalankan cek lab langsung dari laptop dalam satu perintah:
 
