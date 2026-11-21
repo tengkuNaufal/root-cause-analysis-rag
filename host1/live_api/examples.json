@@ -1,0 +1,288 @@
+{
+  "request": {
+    "contract_version": "live.v1-draft2",
+    "request_id": "00000000-0000-4000-8000-000000000001",
+    "lab": "rca",
+    "variant": "graph_rag",
+    "symptom_detected_at_utc": "2026-11-21T00:00:00Z",
+    "execution_allowed": false
+  },
+  "pending": {
+    "contract_version": "live.v1-draft2",
+    "request_id": "00000000-0000-4000-8000-000000000001",
+    "job_id": "00000000-0000-4000-8000-000000000002",
+    "mode": "live",
+    "lab": "rca",
+    "variant": "graph_rag",
+    "state": "accepted",
+    "received_at": "2026-11-21T00:00:00Z",
+    "updated_at": "2026-11-21T00:00:00Z",
+    "execution_allowed": false,
+    "simulation": true
+  },
+  "hypothesis": {
+    "contract_version": "live.v1-draft2",
+    "request_id": "00000000-0000-4000-8000-000000000001",
+    "job_id": "00000000-0000-4000-8000-000000000002",
+    "mode": "live",
+    "lab": "rca",
+    "variant": "graph_rag",
+    "received_at": "2026-11-21T00:00:00Z",
+    "updated_at": "2026-11-21T00:00:00Z",
+    "execution_allowed": false,
+    "simulation": true,
+    "state": "completed",
+    "result": {
+      "schema_version": 1,
+      "request_id": "00000000-0000-4000-8000-000000000001",
+      "status": "hypothesis",
+      "root_cause_hypothesis": "Synthetic fixture: unequal MTU values.",
+      "confidence": 0.5,
+      "claims": [
+        {
+          "statement": "Synthetic MTU values differ.",
+          "evidence_ids": [
+            "e1"
+          ]
+        }
+      ],
+      "missing_evidence": [],
+      "proposed_patch": [
+        {
+          "router": "r1",
+          "interface": "eth1",
+          "interpreter": "linux_argv",
+          "arguments": [
+            "ip",
+            "link",
+            "set",
+            "eth1",
+            "mtu",
+            "1500"
+          ],
+          "evidence_ids": [
+            "e1"
+          ],
+          "rationale": "Synthetic proposal only; not executed.",
+          "validation_status": "unvalidated"
+        }
+      ],
+      "execution_allowed": false
+    },
+    "assessment": {
+      "router": "r1",
+      "root_cause": "mtu_mismatch",
+      "confidence": 0.5,
+      "evidence_ids": [
+        "e1"
+      ],
+      "commands": [
+        {
+          "router": "r1",
+          "interpreter": "ip",
+          "args": [
+            "link",
+            "set",
+            "eth1",
+            "mtu",
+            "1500"
+          ]
+        }
+      ],
+      "explanation": "Synthetic fixture only; no real diagnosis."
+    },
+    "evidence": [
+      {
+        "id": "e1",
+        "kind": "telemetry",
+        "source_id": "sha256:d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+        "source_sha256": "d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+        "locator": "/",
+        "url": "/v1/diagnoses/00000000-0000-4000-8000-000000000002/evidence/e1",
+        "capture_started_at": "2026-11-21T00:00:00Z",
+        "capture_completed_at": "2026-11-21T00:00:00Z"
+      }
+    ],
+    "timing": {
+      "collection_seconds": 0.0,
+      "retrieval_seconds": 0.0,
+      "reasoning_seconds": 0.0,
+      "validation_seconds": 0.0,
+      "total_seconds": 0.0
+    },
+    "provenance": {
+      "synthetic": true,
+      "inventory_sha256": "4f63624b0259deb037101f1e23a61480b334d37ad1bf7d987a1a88c0d1005cbf",
+      "capture_sha256": "d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+      "agent_version": "mock-1",
+      "gate_version": "mock-1",
+      "prompt_version": "not_used",
+      "retriever_version": "not_used",
+      "model_profile": "not_used",
+      "model_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+      "model_options": {},
+      "actual_variant": "graph_rag",
+      "model_evidence_ids": [],
+      "selection_notes": [
+        "No model/retriever used. All three variants return synthetic fixtures."
+      ],
+      "evidence_age_at_reasoning_seconds": 0.0,
+      "evidence_age_at_completion_seconds": 0.0
+    }
+  },
+  "abstain": {
+    "contract_version": "live.v1-draft2",
+    "request_id": "00000000-0000-4000-8000-000000000001",
+    "job_id": "00000000-0000-4000-8000-000000000002",
+    "mode": "live",
+    "lab": "rca",
+    "variant": "graph_rag",
+    "received_at": "2026-11-21T00:00:00Z",
+    "updated_at": "2026-11-21T00:00:00Z",
+    "execution_allowed": false,
+    "simulation": true,
+    "state": "completed",
+    "result": {
+      "schema_version": 1,
+      "request_id": "00000000-0000-4000-8000-000000000001",
+      "status": "abstain",
+      "root_cause_hypothesis": null,
+      "confidence": null,
+      "claims": [],
+      "missing_evidence": [
+        "Mock intentionally abstains."
+      ],
+      "proposed_patch": [],
+      "execution_allowed": false
+    },
+    "assessment": {
+      "router": null,
+      "root_cause": "unknown",
+      "confidence": null,
+      "evidence_ids": [],
+      "commands": [],
+      "explanation": "Synthetic mock abstention."
+    },
+    "evidence": [
+      {
+        "id": "e1",
+        "kind": "telemetry",
+        "source_id": "sha256:d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+        "source_sha256": "d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+        "locator": "/",
+        "url": "/v1/diagnoses/00000000-0000-4000-8000-000000000002/evidence/e1",
+        "capture_started_at": "2026-11-21T00:00:00Z",
+        "capture_completed_at": "2026-11-21T00:00:00Z"
+      }
+    ],
+    "timing": {
+      "collection_seconds": 0.0,
+      "retrieval_seconds": 0.0,
+      "reasoning_seconds": 0.0,
+      "validation_seconds": 0.0,
+      "total_seconds": 0.0
+    },
+    "provenance": {
+      "synthetic": true,
+      "inventory_sha256": "4f63624b0259deb037101f1e23a61480b334d37ad1bf7d987a1a88c0d1005cbf",
+      "capture_sha256": "d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+      "agent_version": "mock-1",
+      "gate_version": "mock-1",
+      "prompt_version": "not_used",
+      "retriever_version": "not_used",
+      "model_profile": "not_used",
+      "model_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+      "model_options": {},
+      "actual_variant": "graph_rag",
+      "model_evidence_ids": [],
+      "selection_notes": [
+        "No model/retriever used. All three variants return synthetic fixtures."
+      ],
+      "evidence_age_at_reasoning_seconds": 0.0,
+      "evidence_age_at_completion_seconds": 0.0
+    }
+  },
+  "failed": {
+    "contract_version": "live.v1-draft2",
+    "request_id": "00000000-0000-4000-8000-000000000001",
+    "job_id": "00000000-0000-4000-8000-000000000002",
+    "mode": "live",
+    "lab": "rca",
+    "variant": "graph_rag",
+    "received_at": "2026-11-21T00:00:00Z",
+    "updated_at": "2026-11-21T00:00:00Z",
+    "execution_allowed": false,
+    "simulation": true,
+    "state": "failed",
+    "error": {
+      "code": "mock_failed",
+      "message": "Synthetic mock outcome; no backend or router was called.",
+      "retryable": false
+    }
+  },
+  "interrupted": {
+    "contract_version": "live.v1-draft2",
+    "request_id": "00000000-0000-4000-8000-000000000001",
+    "job_id": "00000000-0000-4000-8000-000000000002",
+    "mode": "live",
+    "lab": "rca",
+    "variant": "graph_rag",
+    "received_at": "2026-11-21T00:00:00Z",
+    "updated_at": "2026-11-21T00:00:00Z",
+    "execution_allowed": false,
+    "simulation": true,
+    "state": "interrupted",
+    "error": {
+      "code": "mock_interrupted",
+      "message": "Synthetic mock outcome; no backend or router was called.",
+      "retryable": false
+    }
+  },
+  "evidence": {
+    "id": "e1",
+    "kind": "telemetry",
+    "source_id": "sha256:d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+    "source_sha256": "d1f5a11532bf587b16f6d3fc3dbc6c3502b042d6b2c91b22fc2bebbebce5a655",
+    "locator": "/",
+    "content": "{\"local_mtu\": 1400, \"peer_mtu\": 1500, \"synthetic\": true}"
+  },
+  "lint_input": {
+    "contract_version": "live.v1-draft2",
+    "job_id": "00000000-0000-4000-8000-000000000002",
+    "inventory_sha256": "4f63624b0259deb037101f1e23a61480b334d37ad1bf7d987a1a88c0d1005cbf",
+    "commands": [
+      {
+        "router": "r1",
+        "interpreter": "ip",
+        "args": [
+          "link",
+          "set",
+          "eth1",
+          "mtu",
+          "1500"
+        ]
+      }
+    ],
+    "commands_sha256": "078114fce6e5c49f429ce1745ce433bcdb7a0eefb490e702e3f22fb4d974ac6c"
+  },
+  "lint_output": {
+    "job_id": "00000000-0000-4000-8000-000000000002",
+    "commands_sha256": "078114fce6e5c49f429ce1745ce433bcdb7a0eefb490e702e3f22fb4d974ac6c",
+    "inventory_sha256": "4f63624b0259deb037101f1e23a61480b334d37ad1bf7d987a1a88c0d1005cbf",
+    "linter_version": "synthetic-only",
+    "policy_version": "synthetic-only",
+    "policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "status": "passed",
+    "violations": [],
+    "checked_at": "2026-11-21T00:00:00Z"
+  },
+  "error": {
+    "contract_version": "live.v1-draft2",
+    "request_id": null,
+    "error": {
+      "code": "invalid_request",
+      "message": "Synthetic example.",
+      "retryable": false
+    }
+  }
+}

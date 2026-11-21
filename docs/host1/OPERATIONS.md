@@ -52,6 +52,10 @@ Topologi sumber menunjuk log router ke `data/host1/logs/raw/`. Skrip `host1/log_
 
 Baseline live yang perlu diperiksa kembali: delapan link data, lima adjacency OSPF FULL, sembilan sesi BGP Established, service routes, ping 30 pasangan berarah dan ingestion log keenam router. Prosedur detail ada di [panduan lab](../../lab/host1/frr/README.md). Hindari prune global atau operasi pada container di luar proyek.
 
+Pemulihan terkontrol pada 21 November 2026 telah membuat ulang enam router `rca` dan `rca-vector` yang sebelumnya berhenti. Semua bind mount sekarang memakai root repositori baru: konfigurasi FRR di `lab/host1/frr/clab-rca/`, log di `data/host1/logs/`, dan konfigurasi Vector di `host1/log_ingestion/vector.yaml`. Runtime `clab-rca/` termasuk konfigurasi/kunci yang dihasilkan tetap di-ignore; jangan menambahkannya ke Git. Metadata dan log container sebelum pemulihan beserta hasil pemeriksaan baru disimpan di `private/recovery/20261121T135741Z/`.
+
+Baseline jaringan, satu snapshot telemetry dan 10 marker ingestion lulus. Pemulihan ini mempertahankan proses Ollama/API serta listener replay yang sudah berjalan. Jangan menjalankan ulang launcher layanan untuk mengulangi pemeriksaan lab. Hasil ini berlaku pada waktu pemeriksaan; sesudah WSL berhenti, periksa kembali link dan mount sebelum eksperimen.
+
 ## Evidence dan file Git
 
 Fixture publik merupakan turunan yang disanitasi: path mesin menjadi relatif, sedangkan MAC dan IPv6 link-local terekam menjadi sintetis. Evidence asli disimpan privat. Hash salinan publik beserta seluruh referensinya dihitung ulang tanpa mengubah state routing IPv4, MTU atau label kasus. `knowledge.evidence.local_path` tetap dapat merebase arsip Windows/Linux lama berdasarkan nama folder proyek, tanpa menanam lokasi komputer seseorang dalam kode. Perbandingan konteks tetap memeriksa hash, nilai observasi dan batas repositori. Hash kode pada laporan eksperimen lama menunjuk versi historis.

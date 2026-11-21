@@ -14,6 +14,26 @@ Ringkasan ini menggabungkan laporan Host 1 tanggal 19–21 November 2026. Angka 
 
 Snapshot collector tidak atomik. Event log, status interface dan peer dapat berasal dari waktu pengamatan berbeda. Korelasi window dan transisi link tidak membuktikan pelaku, perintah pemicu, kerusakan perangkat atau sebab awal. Status container running pada laporan lama bukan bukti bahwa layanan masih hidup sekarang.
 
+## Pemulihan lab dari lokasi baru — 21 November 2026
+
+Enam router dan Vector yang berhenti dengan mount ke lokasi lama dibuat ulang dari konfigurasi sumber di repositori baru. Ketujuh container berjalan dengan restart count 0; seluruh bind mount menunjuk repositori baru. Pemeriksaan baseline lulus: 16 endpoint pada delapan link UP/LOWER_UP dengan alamat sesuai desain dan MTU 1500, lima adjacency OSPF FULL, sembilan sesi BGP Established, enam prefix service per router, forwarding aktif dan tanpa default route management. Ping service lulus 30/30 arah, 120/120 paket; route-get memakai interface data.
+
+Satu snapshot collector lengkap memiliki 28 sumber sukses, dua not applicable dan nol error, serta lolos validator baseline. Vector menerima tepat 10 marker (enam BGP dan empat OSPF) dari enam router. Tidak ada fault injection atau pengujian repair pada tahap ini.
+
+API replay tetap memakai proses API/Ollama dan katalog 16 skenario yang sama. Selama pemulihan, 21 sampel health berhasil tanpa error; 11 sampel menunjukkan request sedang aktif. Sesudah deploy, health melalui loopback dan listener LAN tetap `ok`, dengan eksekusi dinonaktifkan. Ini memverifikasi kesinambungan layanan dari Host 1; hasil akhir eksperimen Host 2 tetap perlu diperiksa dari JSONL milik Host 2. Tidak ada inferensi tambahan yang dipicu untuk pemeriksaan ini. Bukti lengkap tersimpan lokal di `private/recovery/20261121T135741Z/` dan di-ignore Git.
+
+## Review integrasi katalog Host 1 — 21 November 2026
+
+Referensi `origin/main` telah diambil dan checkout di-fast-forward ke `a8ba75d`, yang memuat merge PR #2 (adaptasi katalog) dan PR #3 (client replay), tanpa membuat commit baru. Audit offline katalog mendapati 30 ID unik dan 10 kelas masing-masing tiga kasus; pemeriksaan target interface/peer/ASN terhadap `design-plan.json` tanpa error. Seluruh 30 baris hasil tersimpan pada `data/rca-sim/` memiliki observable dan recovered true; ini hasil lab tiruan, bukan eksekusi ulang di Host 1.
+
+`scripts/check_lab.py --lab rca` yang baru dijalankan read-only pada lab asli dan lulus, dengan enam router dan ping service 30/30 arah. Snapshot lokal: `private/integration-review/baseline/rca_20261121T140839Z.json`; audit: `private/integration-review/catalog-audit.json`. Health API replay loopback dan LAN tetap ok. Tidak ada fault, restart layanan atau inferensi tambahan. Temuan cleanup/exit code runner dan kesiapan SSH dicatat pada draf API live; tidak ada klaim bahwa pilot diagnosis/perbaikan siap.
+
+## Schema dan mock API live revisi 2 — 21 November 2026
+
+Modul `host1/live_api/` memiliki schema terpisah, satu bundle contoh sintetis dan mock server loopback; tidak mengubah schema agen atau kode API replay. Sebanyak 19 tes baru lulus: validasi Pydantic dan JSON Schema Draft 2020-12, kecocokan artefak ekspor, bindings evidence/proyeksi patch/hash linter, auth, konkurensi/idempotensi, busy, respons POST hilang, client berhenti polling, deadline server, restart/reload indeks, interrupted, expiry dan evidence berubah. Tes tidak mengimplementasikan linter/allowlist dan tidak membuktikan freshness telemetry atau kemampuan agen live.
+
+Bersama 16 tes regresi API replay dengan transport model simulasi, total 35 tes lulus. Server tes memakai port OS sementara dan output sementara; tidak memanggil model asli atau router. Smoke CLI terpisah juga lulus: startup port sementara, health/capabilities, POST/poll/evidence, lalu SIGINT menghentikan hanya mock. Sebelum/sesudah smoke, metadata container/PID/start/restart serta hash konfigurasi FRR sama; proses API/Ollama tetap sama dan health replay tetap ok. Bukti smoke lokal di `private/live-mock/last-smoke.json`, di-ignore. Mock tidak ditinggalkan berjalan dan listener LAN baru belum dibuka.
+
 ## Retrieval dan quality gate
 
 Retriever memakai 739 chunk dari enam sumber FRR/OpenConfig yang dipin, embedding MiniLM ONNX lokal dan Chroma. Hybrid dense/BM25 pernah lulus 6/6 acceptance terarah. Gate memeriksa provenance dan dukungan klaim pertanyaan yang dikenali; bukan semantic entailment umum atau izin mengeksekusi perintah.
@@ -72,6 +92,10 @@ Audit isi file menemukan path absolut mesin pada field JSON, termasuk JSON yang 
 Pengujian setelah sanitasi lulus 163 tes Linux pada salinan terisolasi dan 16 tes graf/collector Windows. Semua 16 skenario replay simulasi tetap memenuhi fase, kontrak tanpa patch dan pengambilan ulang evidence. Sanitasi tidak mengubah MTU, state routing IPv4 atau label kasus, dan bukan pengujian jaringan live baru. Nama login/path pribadi pada kode serta template diganti dengan aturan portabel dan placeholder.
 
 ## Client JSONL Host 2
+
+Laporan pengelola Host 2 yang diteruskan pengguna: sesi replay lintas LAN selesai 16/16, exit code 0, semua HTTP 201, 14 success dan dua abstain yang diharapkan (`mtu.l12.invalid-mtu`, `mtu.l35.invalid-mtu`), dengan 88 evidence lolos pemeriksaan client. Median POST client 5,4 detik (min 0,9; max 11,5), median temporal-bound 9,5 detik dan mtu-observation 3,2 detik; median waktu agen server 5,1 detik, total fetch evidence 5,8 detik, sesi sekitar 98 detik. Angka ini merupakan laporan Host 2, belum dihitung ulang dari JSONL di Host 1. File resmi berada di `data/host2/replay-20261121T140113730Z-09e2e3d2.jsonl` pada Host 2, 16 baris, tetap privat/di-ignore.
+
+Runtime sesi tersebut adalah PowerShell 7 di lingkungan Linux pada laptop Host 2; jalur jaringan tetap lintas host melalui LAN. Pernyataan client tidak berjalan di Windows PowerShell 5.1 pada lingkungan mereka belum disertai error untuk menentukan penyebab, dan tidak menggantikan hasil tes simulasi 5.1 di Host 1. Dua sesi sebelumnya terputus karena batas durasi perintah alat pengelola, menghasilkan total 16 request replay tambahan menurut laporannya. File terputus dipisahkan dari sesi resmi; jangan mencampur request tersebut dalam statistik sesi resmi. Model sudah dipakai sebelum sesi resmi, sehingga hasil latensi tersebut bukan pengukuran cold start yang terisolasi.
 
 `laptop/replay.ps1` diuji dengan delapan tes HTTP simulasi pada Windows PowerShell 5.1 dan delapan tes yang sama pada PowerShell 7. Cakupannya: tepat 16 POST berurutan, abstain valid, UTF-8 tanpa BOM, timing dan respons lengkap pada JSONL, larangan overwrite, error/busy tanpa retry, timeout dengan penyelesaian server tidak diketahui, katalog tidak valid, JSON rusak serta evidence/URL yang tidak sesuai.
 

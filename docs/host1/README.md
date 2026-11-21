@@ -25,4 +25,6 @@ Lab replika, katalog fault dan runner kelompok dijelaskan di [fault harness](../
 
 Client HTTP untuk menjalankan 16 replay dari Host 2 tersedia pada [panduan replay dan JSONL](../host2-replay.md); client ini tidak memerlukan SSH atau instalasi model di Host 2.
 
+Rencana integrasi berikutnya ada di [draf kontrak API live](LIVE-API-DRAFT.md). [Schema, contoh payload dan mock lokal](../../host1/live_api/README.md) sudah tersedia untuk pengembangan client Host 2 tanpa router/model. Endpoint live nyata belum diaktifkan dan kontrak replay tetap berlaku.
+
 Laporan per tahap, catatan progres berulang dan panduan migrasi lama digabung menjadi dokumen di atas. Salinan lengkapnya tetap disimpan lokal di `private/docs-history/host1/`, yang diabaikan Git. Data yang dibagikan mengikuti [kebijakan fixture](../../data/host1/README.md).
