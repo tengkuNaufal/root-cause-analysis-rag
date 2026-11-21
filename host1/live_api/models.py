@@ -5,7 +5,7 @@ import json
 from typing import Annotated, Literal
 from uuid import UUID
 from pydantic import Field, RootModel, field_validator, model_validator
-from agent_contract.models import Strict, Response
+from agent_contract.models import Strict, Response, Request as AgentRequest, validate_pair
 
 VERSION = 'live.v1-draft2'
 Router = Literal['r1', 'r2', 'r3', 'r4', 'r5', 'r6']
@@ -164,12 +164,34 @@ class ErrorResponse(Strict):
     error: Error
 
 class WireResponse(Response):
+    # Required on the live wire, independent of proposal targets and replay v1.
+    root_cause_class: Cause | None
+    root_cause_router: Router | None
+
+    @model_validator(mode='after')
+    def diagnosis_labels(self):
+        if self.status == 'abstain':
+            if self.root_cause_class is not None or self.root_cause_router is not None:
+                raise ValueError('Abstain cannot assign diagnosis labels')
+        elif self.root_cause_class is None:
+            raise ValueError('Hypothesis needs a class or explicit unknown')
+        return self
+
     @field_validator('execution_allowed', mode='before')
     @classmethod
     def boolean_only(cls, v):
         if type(v) is not bool:
             raise ValueError('execution_allowed must be a JSON boolean')
         return v
+
+def validate_live_pair(request, response):
+    """Apply replay-v1 evidence/gate guards without adding fields to that contract."""
+    req = AgentRequest.model_validate(request)
+    if req.mode != 'live':
+        raise ValueError('Live response requires live input')
+    res = WireResponse.model_validate(response)
+    validate_pair(req.model_dump(), res.model_dump(exclude={'root_cause_class', 'root_cause_router'}))
+    return res
 
 class Envelope(Strict):
     contract_version: Literal['live.v1-draft2']
@@ -216,6 +238,9 @@ class Completed(Envelope):
             raise ValueError('Duplicate assessment references')
         if self.result.request_id != self.request_id or self.assessment.confidence != self.result.confidence:
             raise ValueError('Agent/assessment mismatch')
+        if (self.assessment.router != self.result.root_cause_router or
+                self.assessment.root_cause != (self.result.root_cause_class or 'unknown')):
+            raise ValueError('Diagnosis labels/assessment mismatch')
         if self.assessment.commands != project(self.result.proposed_patch):
             raise ValueError('Command projection mismatch')
         if self.provenance.actual_variant != self.variant or not set(self.provenance.model_evidence_ids) <= ids:

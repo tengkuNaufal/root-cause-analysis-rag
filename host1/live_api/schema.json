@@ -1334,6 +1334,49 @@
           "default": false,
           "title": "Execution Allowed",
           "type": "boolean"
+        },
+        "root_cause_class": {
+          "anyOf": [
+            {
+              "enum": [
+                "mtu_mismatch",
+                "link_down",
+                "ospf_hello_mismatch",
+                "ospf_area_mismatch",
+                "ospf_auth_mismatch",
+                "bgp_neighbor_shutdown",
+                "bgp_wrong_remote_as",
+                "bgp_inbound_filter",
+                "bgp_missing_network",
+                "wrong_ip_address",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Root Cause Class"
+        },
+        "root_cause_router": {
+          "anyOf": [
+            {
+              "enum": [
+                "r1",
+                "r2",
+                "r3",
+                "r4",
+                "r5",
+                "r6"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Root Cause Router"
         }
       },
       "required": [
@@ -1342,7 +1385,9 @@
         "root_cause_hypothesis",
         "claims",
         "missing_evidence",
-        "proposed_patch"
+        "proposed_patch",
+        "root_cause_class",
+        "root_cause_router"
       ],
       "title": "WireResponse",
       "type": "object"
@@ -1351,6 +1396,9 @@
   "x-payload-schemas": {
     "DiagnosisRequest": {
       "$ref": "#/$defs/DiagnosisRequest"
+    },
+    "WireResponse": {
+      "$ref": "#/$defs/WireResponse"
     },
     "Job": {
       "$ref": "#/$defs/Job"

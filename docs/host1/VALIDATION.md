@@ -34,6 +34,18 @@ Modul `host1/live_api/` memiliki schema terpisah, satu bundle contoh sintetis da
 
 Bersama 16 tes regresi API replay dengan transport model simulasi, total 35 tes lulus. Server tes memakai port OS sementara dan output sementara; tidak memanggil model asli atau router. Smoke CLI terpisah juga lulus: startup port sementara, health/capabilities, POST/poll/evidence, lalu SIGINT menghentikan hanya mock. Sebelum/sesudah smoke, metadata container/PID/start/restart serta hash konfigurasi FRR sama; proses API/Ollama tetap sama dan health replay tetap ok. Bukti smoke lokal di `private/live-mock/last-smoke.json`, di-ignore. Mock tidak ditinggalkan berjalan dan listener LAN baru belum dibuka.
 
+## Review runner/linter/evaluator dan label diagnosis live
+
+Review memakai runner origin/fayyaz/host1-faults pada 4536517 serta linter/evaluator cc38e2b yang sudah di-merge ke main af9840f. Runner direview dari salinan privat, tidak digabung. Kontrak live sekarang memiliki root_cause_class dan root_cause_router wajib pada WireResponse; keduanya null saat abstain, dan assessment ditolak jika tidak konsisten. Guard gate/evidence tetap dijalankan melalui validate_live_pair tanpa mengubah model aktif agent_contract.Response maupun API replay.
+
+Sebanyak 43 tes lulus (27 live/mock, termasuk delapan tes diagnosis baru; 16 regresi replay dengan model simulasi). Suite kelompok juga lulus 259 tes pada dependency review terisolasi: pandas 2.3.3, matplotlib 3.10.9 dan pytest 9.2.0 di Python 3.10; ini bukan reproduksi penuh pin requirements.txt root. Tidak ada perubahan dependency environment layanan aktif. Total kedua suite 302 tes lulus.
+
+Smoke runner terbaru ke mock dengan no-lab menghasilkan sembilan baris dari tiga varian dan tiga ID jadwal; semuanya sintetis, lint passed, applied=false dan recovered=null. Resume tidak membuat job/hasil ganda. Subprocess dan fungsi router diganti guard yang menggagalkan tes bila dipanggil. ID fault hanya metadata runner, tidak dikirim ke API. Hasil ini menguji interoperabilitas format, bukan akurasi agen atau pemulihan fault tersebut.
+
+Reproduksi stub mengonfirmasi temuan terbuka: runner dapat revert setelah error transport dengan penyelesaian job tidak diketahui, CLI belum menolak mock tanpa no-lab, serta evaluator mengabaikan envelope assessment/status lint/simulation dan dapat mengasumsikan applied dari lint. Linter belum mengekspor POLICY_VERSION. Detail dan prioritas ada pada LIVE-API-DRAFT.md; tes yang lulus tidak menutup kekurangan integrasi yang belum diuji suite kelompok. Tidak ada perbaikan kode branch teman yang digabung atau diterapkan pada review ini.
+
+Smoke CLI mock dengan kontrak baru juga lulus dan dihentikan. Pemeriksaan read-only sebelum/sesudah menunjukkan state/PID/restart/hash konfigurasi router dan proses API/Ollama tetap sama; health replay tetap ok. Bukti privat pada private/branch-review-4536517/ dan private/live-mock/last-smoke.json, seluruhnya di-ignore.
+
 ## Retrieval dan quality gate
 
 Retriever memakai 739 chunk dari enam sumber FRR/OpenConfig yang dipin, embedding MiniLM ONNX lokal dan Chroma. Hybrid dense/BM25 pernah lulus 6/6 acceptance terarah. Gate memeriksa provenance dan dukungan klaim pertanyaan yang dikenali; bukan semantic entailment umum atau izin mengeksekusi perintah.
