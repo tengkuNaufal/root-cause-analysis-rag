@@ -34,6 +34,7 @@ Panduan endpoint, negatif/history parsial dan penjelasan sudah digabung ke `host
 | `private/output/`, `private/tmp/` | Laporan keluaran lokal dan file render sementara. |
 | `private/*.py`, `private/*.ps1`, `private/*.json`, `private/json-review-*/` | Utilitas migrasi/audit, hasil pencatatan input dan salinan uji kandidat Git lokal. |
 | `data/host1/` di luar manifest | Hasil run, dump debug, log instalasi, checkpoint dan percobaan historis yang di-ignore. |
+| `data/host2/` | JSONL hasil client replay dan waktu respons, termasuk endpoint lokal; seluruhnya di-ignore. |
 | `AGENTS.md` | Instruksi kerja agen lokal; bukan keluaran tugas. |
 | `laptop/config.ps1` | Alamat/user/konfigurasi koneksi pribadi. |
 | `host1/knowledge/build.json` | Laporan build Chroma yang dapat dibuat ulang. |
@@ -220,6 +221,7 @@ Panduan endpoint, negatif/history parsial dan penjelasan sudah digabung ke `host
 | File | Fungsi |
 |---|---|
 | `docs/akses-dari-laptop.md` | Panduan SSH Windows ke NetworkLab, konfigurasi laptop dan diagnosis koneksi. |
+| `docs/host2-replay.md` | Panduan client HTTP Host 2: 16 skenario berurutan, format JSONL, timing dan penanganan kegagalan. |
 | `docs/fault-harness.md` | Cara menjalankan lab replika, katalog dan fault runner serta batas adaptasi ke Host 1. |
 | `docs/host1/OPERATIONS.md` | Lokasi file, environment, menjalankan modul dan pemeriksaan mount setelah migrasi. |
 | `docs/host1/README.md` | Indeks dokumentasi Host 1 dan tautan ke panduan masing-masing modul. |
@@ -435,6 +437,8 @@ Panduan endpoint, negatif/history parsial dan penjelasan sudah digabung ke `host
 |---|---|
 | `laptop/config.example.ps1` | Template pengaturan koneksi; salin sebagai config.ps1 yang di-ignore dan isi secara lokal. |
 | `laptop/lab.ps1` | Pembungkus PowerShell untuk diagnosis koneksi dan menjalankan runner/cek melalui SSH ke Host 1. |
+| `laptop/replay.ps1` | Client HTTP PowerShell 5.1/7 yang menjalankan 16 replay berurutan, memverifikasi evidence dan menyimpan respons/timing ke JSONL. |
+| `laptop/tests/test_replay_client.py` | Tes pengembang terhadap script PowerShell asli menggunakan HTTP simulasi; mencakup urutan, UTF-8, error, timeout dan perlindungan file hasil. |
 
 ### scripts/
 
