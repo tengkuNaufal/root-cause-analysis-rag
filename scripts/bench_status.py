@@ -8,6 +8,7 @@
 #   python3 scripts/bench_status.py data/host2/smoke-mtu/... --target 10   # cek target waktu pulih smoke test
 import argparse
 import json
+import math
 import statistics
 import sys
 from pathlib import Path
@@ -154,7 +155,7 @@ def span(t, a, b):
 
 # Menilai smoke test: total dihitung dari gejala terdeteksi sampai lab terverifikasi pulih oleh perintah
 # agen (agent_recovery_s), lalu dipecah per tahap biar kelihatan bagian mana yang makan waktu.
-def smoke(out, target):
+def smoke(out, target, expected_faults=None):
     rows = latest(read_jsonl(out / "results.jsonl"))
     if not rows:
         sys.exit(f"Belum ada hasil di {out}")
@@ -165,7 +166,12 @@ def smoke(out, target):
     for r in rows:
         t = r.get("timing") or {}
         total = t.get("agent_recovery_s")
-        ok = total is not None and total < target
+        execution=r.get('execution') or {}
+        ok = (isinstance(total,(int,float)) and math.isfinite(total) and 0<=total<target
+              and r.get('status')=='completed' and r.get('applied') is True and r.get('recovered') is True
+              and execution.get('agent_recovered') is True
+              and not (r.get('fallback_revert') or {}).get('performed')
+              and (r.get('cleanup') or {}).get('recovered') is not False)
         passed += ok
         if ok or total is not None:
             verdict = "LULUS" if ok else "GAGAL"
@@ -175,7 +181,9 @@ def smoke(out, target):
               f"{fmt(span(t, 't_diagnosis_done', 't_apply_done')):>12}{fmt(span(t, 't_apply_done', 't_verified')):>13}"
               f"{fmt(total):>8}  {verdict}")
     print(f"\n{passed}/{len(rows)} run memenuhi target")
-    return passed == len(rows)
+    complete=expected_faults is None or set(expected_faults)=={r['fault_id'] for r in rows}
+    if not complete:print('GAGAL: daftar fault smoke belum lengkap')
+    return passed == len(rows) and complete
 
 
 def main():
@@ -183,12 +191,13 @@ def main():
     ap.add_argument("out", help="folder sesi bench.py, misalnya data/host2/bench")
     ap.add_argument("--show", help="nomor baris jadwal atau 'last' untuk detail satu run")
     ap.add_argument("--target", type=float, help="nilai smoke test terhadap batas waktu pulih ini (detik)")
+    ap.add_argument('--expected-faults',type=lambda s:s.split(','),help='Fault yang wajib memiliki hasil final untuk smoke')
     ap.add_argument("--catalog", default=str(fr.ROOT / "faults" / "host1.yaml"))
     ap.add_argument("--plan", default=str(fr.ROOT / "data" / "benchmark_plan.csv"))
     args = ap.parse_args()
     out = Path(args.out)
     if args.target:
-        sys.exit(0 if smoke(out, args.target) else 1)
+        sys.exit(0 if smoke(out, args.target,args.expected_faults) else 1)
     faults = {f["id"]: f for f in fr.load_catalog(args.catalog)}
     if args.show:
         show(out, faults, args.show)

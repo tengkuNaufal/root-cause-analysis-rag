@@ -7,17 +7,23 @@ python=${HOST1_PYTHON:-$root/private/.venv-retriever-wsl/bin/python}
 export PYTHONPATH="$root/host1:$root:$root/private/live-agent-deps${PYTHONPATH:+:$PYTHONPATH}"
 if [ "${1:-}" = _run ]; then
   exec "$python" - "$2" <<'PY'
-import datetime,json,os,subprocess,sys
+import argparse,datetime,json,os,subprocess,sys
 from pathlib import Path
 root=Path.cwd();session=Path(sys.argv[1]).resolve()
 assert session.is_relative_to(root/'private')
 args=json.loads((session/'arguments.json').read_text())
-api=root/(root/'private/live-agent/latest.txt').read_text().strip()
-assert api.resolve().is_relative_to(root/'private')
-env=dict(os.environ,LIVE_API_TOKEN=(api/'token.txt').read_text().strip(),PYTHONUNBUFFERED='1')
+parser=argparse.ArgumentParser(add_help=False);parser.add_argument('--variants')
+selected,_=parser.parse_known_args(args)
+regex_only=selected.variants is not None and set(selected.variants.split(','))=={'rule_based'}
+api_args=[];env=dict(os.environ,PYTHONUNBUFFERED='1')
+if not regex_only:
+    api=root/(root/'private/live-agent/latest.txt').read_text().strip()
+    assert api.resolve().is_relative_to(root/'private')
+    env['LIVE_API_TOKEN']=(api/'token.txt').read_text().strip()
+    api_args=['--api','http://127.0.0.1:8766']
 state=dict(started_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),exit_code=None)
 with (session/'runner.log').open('w') as log:
-    process=subprocess.Popen([sys.executable,'scripts/bench.py','--api','http://127.0.0.1:8766',*args],env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+    process=subprocess.Popen([sys.executable,'scripts/bench.py',*api_args,*args],env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
     state['pid']=process.pid;(session/'process.json').write_text(json.dumps(state))
     for line in process.stdout:
         print(line,end='',flush=True);log.write(line);log.flush()

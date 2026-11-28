@@ -34,4 +34,15 @@ class RetrievalSetTests(unittest.TestCase):
         from rca.linter import POLICY_VERSION
         self.assertEqual(POLICY_VERSION,'host1-policy-v2')
 
+    def test_all_ospf_data_interfaces_share_approved_retransmit_baseline(self):
+        import json
+        from .settings import parse
+        plan=json.loads((ROOT/'lab/host1/frr/design-plan.json').read_text())
+        endpoints=[e for link in plan['links'] if link['protocol']=='ospf' for e in link['endpoints']]
+        self.assertEqual(len(endpoints),10)
+        self.assertEqual(plan['timers']['ospf_retransmit_seconds'],1)
+        for ep in endpoints:
+            config=parse((ROOT/'lab/host1/frr/configs'/ep['router']/'frr.conf').read_text())
+            self.assertEqual(config['interface/'+ep['interface']+'/ospf_retransmit'],plan['timers']['ospf_retransmit_seconds'])
+
 if __name__=='__main__':unittest.main()

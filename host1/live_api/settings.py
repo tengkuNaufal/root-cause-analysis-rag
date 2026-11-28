@@ -31,6 +31,7 @@ def parse(text):
                 key='interface/'+iface+'/addresses';settings.setdefault(key,[]).append(str(ipaddress.IPv4Interface(line.split()[2])))
             elif line.startswith('ip ospf hello-interval '):put('ospf_hello',int(line.split()[-1]))
             elif line.startswith('ip ospf dead-interval '):put('ospf_dead',int(line.split()[-1]))
+            elif line.startswith('ip ospf retransmit-interval '):put('ospf_retransmit',int(line.split()[-1]))
             elif line.startswith('ip ospf area '):put('ospf_area',area(line.split()[-1]))
             elif line.startswith('ip ospf authentication'):
                 put('ospf_authentication','message-digest' if 'message-digest' in line else 'simple')

@@ -10,6 +10,9 @@ cd "$(dirname "$0")/.."
 variant=${1:-graph_rag}
 target=${SMOKE_TARGET:-10}
 api=${DEMO_API:-http://127.0.0.1:8766}
+python=${HOST1_PYTHON:-private/.venv-retriever-wsl/bin/python}
+if [ ! -x "$python" ]; then python=python3; fi
+export PYTHONPATH="$PWD/host1:$PWD:$PWD/private/live-agent-deps${PYTHONPATH:+:$PYTHONPATH}"
 case $variant in
     zero_shot | text_rag | graph_rag | rule_based) ;;
     *) echo "Varian gak dikenal: $variant"; exit 2 ;;
@@ -27,7 +30,7 @@ if [ "$variant" != rule_based ]; then
 fi
 
 out="data/host2/smoke-mtu/$(date -u +%Y%m%dT%H%M%SZ)-$variant"
-python3 scripts/bench.py "${api_args[@]}" --out "$out" --execute --faults F01,F02,F03 --variants "$variant" \
+"$python" scripts/bench.py "${api_args[@]}" --out "$out" --execute --faults F01,F02,F03 --variants "$variant" \
     --trials 1 || exit $?
 echo
-python3 scripts/bench_status.py "$out" --target "$target"
+"$python" scripts/bench_status.py "$out" --target "$target" --expected-faults F01,F02,F03

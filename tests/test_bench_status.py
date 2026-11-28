@@ -60,3 +60,15 @@ def test_held_retry_is_not_hidden_by_earlier_completed_attempt(tmp_path, capsys)
     (tmp_path / 'journal.jsonl').write_text(json.dumps({'event':'held','plan_order':7,'attempt':2})+'\n')
     bench_status.summary(tmp_path, FAULTS, 450)
     assert 'baris 7 attempt 2 ditahan' in capsys.readouterr().out
+
+def test_fast_time_does_not_override_failed_recovery(tmp_path):
+    rec=row(1,1,recovered=False)
+    rec['timing']['agent_recovery_s']=2
+    write(tmp_path,[rec])
+    assert not bench_status.smoke(tmp_path,10)
+
+def test_smoke_rejects_missing_faults_even_when_available_run_passes(tmp_path):
+    rec=row(1,1);rec['timing']['agent_recovery_s']=2
+    write(tmp_path,[rec])
+    assert not bench_status.smoke(tmp_path,10,['F01','F02','F03'])
+    assert bench_status.smoke(tmp_path,10,['F01'])
