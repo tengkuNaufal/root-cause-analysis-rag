@@ -9,11 +9,16 @@ def query_from_facts(facts):
     for f in facts:
         key=f.get('key','')
         if f['type']=='physical':
-            obs=[e['observed'] for e in f['endpoints'] if e['observed']]
-            terms.append('interface shutdown no shutdown admin down' if any(not o['admin_up'] for o in obs) else 'OSPF MTU mtu-ignore interface')
+            endpoints=[e for e in f['endpoints'] if e.get('observed')]
+            if any(not e['observed']['admin_up'] for e in endpoints):
+                terms.append('interface shutdown no shutdown admin down')
+            if any(e['expected_ipv4'] not in e['observed']['ipv4'] for e in endpoints):
+                terms.append('interface ip address subnet')
+            if any(e['observed']['mtu'] != f['expected_mtu'] for e in endpoints):
+                terms.append('OSPF MTU interface mismatch')
         elif key.endswith('/ospf_hello') or key.endswith('/ospf_dead'):terms.append('OSPF hello-interval dead-interval')
         elif key.endswith('/ospf_area'):terms.append('OSPF interface area')
-        elif 'ospf_auth' in key or key.endswith('/ospf_key_present'):terms.append('OSPF authentication message-digest-key')
+        elif 'ospf_auth' in key or key.endswith(('/ospf_key_present','/ospf_key_ids')):terms.append('OSPF authentication message-digest-key')
         elif key.endswith('/remote_as'):terms.append('BGP neighbor remote-as')
         elif key.endswith('/shutdown'):terms.append('BGP neighbor shutdown')
         elif key.startswith(('route_map/','prefix_list/')):terms.append('BGP inbound route-map prefix-list')
@@ -46,12 +51,32 @@ def excerpt(text,query,width=400):
     return start,end
 
 
-def retrieve(query,limit=2,full_text=False):
-    from knowledge.retriever import query as search
-    from knowledge.quality_gate import citation
+def command_reference(query):
+    """A verified command reference selected by observed query terms, never a fault ID."""
+    q=query.lower()
+    choices=[('remote-as','frr-bgp.rst',1695,1710),
+             ('network prefix advertisement','frr-bgp.rst',1225,1240),
+             ('inbound route-map','frr-bgp.rst',2443,2460),
+             ('hello-interval','frr-ospfd.rst',732,747),
+             ('ospf interface area','frr-ospfd.rst',626,637),
+             ('authentication','frr-ospfd.rst',648,675),
+             ('ip address subnet','frr-zebra.rst',174,182),
+             ('admin down','frr-zebra.rst',168,173)]
+    selected=next(((name,start,end) for term,name,start,end in choices if term in q),None)
+    if selected is None:return None
+    folder=ROOT/'host1/knowledge/sources'
+    manifest=json.loads((ROOT/'host1/knowledge/sources-manifest.json').read_text())
+    return _pinned(folder,manifest,*selected)
+
+
+def retrieve(query,limit=2,full_text=False,*,search=None,verify=None):
+    if search is None:
+        from knowledge.retriever import query as search
+    if verify is None:
+        from knowledge.quality_gate import citation as verify
     hits=search(query,platform='frr',top_k=5,mode='hybrid')['hits'];base=[]
     for h in hits:
-        citation(h,'frr');text=h['text'];start,end=(0,len(text)) if full_text else excerpt(text,query)
+        verify(h,'frr');text=h['text'];start,end=(0,len(text)) if full_text else excerpt(text,query)
         base.append(dict(content=text[start:end],citation_url=h['metadata']['citation_url'],
             original_source_sha256=h['metadata']['sha256'],chunk_id=h['id'],chunk_chars=[start,end],
             content_kind=h['metadata']['content_kind'],selection_origin='chroma_hybrid'))
@@ -64,4 +89,7 @@ def retrieve(query,limit=2,full_text=False):
     if ('neighbor' in q and 'shutdown' in q) or ('idle' in q and 'admin' in q):
         folder=ROOT/'host1/knowledge/sources';manifest=json.loads((ROOT/'host1/knowledge/sources-manifest.json').read_text())
         extras.append(_pinned(folder,manifest,'frr-bgp.rst',1788,1800))
-    return (extras+base)[:limit]
+    reference=command_reference(query)
+    # Specific configuration references take priority over incidental physical symptoms.
+    # Retain a real Chroma hit alongside the pinned CLI reference whenever available.
+    return ([reference]+base if reference is not None else extras+base)[:limit]

@@ -9,7 +9,7 @@ import tempfile
 import threading
 import time
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 import urllib.error
 import urllib.request
 import uuid
@@ -267,6 +267,13 @@ class EngineTests(unittest.TestCase):
 class LiveHttpTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.engine=engine()
+        artifacts=Path(self.tmp.name)/'synthetic-readiness'
+        (artifacts/'private/knowledge/chroma').mkdir(parents=True)
+        (artifacts/'host1/knowledge').mkdir(parents=True)
+        (artifacts/'host1/knowledge/chunks.jsonl').write_text('')
+        # Presence checks must use synthetic artifacts, never the operator's live database.
+        self.root_patch=patch('live_api.server.ROOT',artifacts);self.root_patch.start()
+        self.addCleanup(self.root_patch.stop)
         self.service=LiveService(self.tmp.name,'synthetic-test-token',engine=self.engine,baseline_confirmed=True,exclusive_model_session=True,replay_probe=lambda:False)
         self.server=ThreadingHTTPServer(('127.0.0.1',0),handler(self.service))
         self.thread=threading.Thread(target=self.server.serve_forever,daemon=True);self.thread.start()

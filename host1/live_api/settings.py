@@ -35,7 +35,9 @@ def parse(text):
             elif line.startswith('ip ospf area '):put('ospf_area',area(line.split()[-1]))
             elif line.startswith('ip ospf authentication'):
                 put('ospf_authentication','message-digest' if 'message-digest' in line else 'simple')
-            elif line.startswith('ip ospf message-digest-key '):put('ospf_key_present',True)
+            elif line.startswith('ip ospf message-digest-key '):
+                put('ospf_key_present',True)
+                settings.setdefault('interface/'+iface+'/ospf_key_ids',[]).append(int(line.split()[3]))
         elif route:
             if line.startswith(('match ','set ')):settings['route_map/'+route].append(line)
         elif bgp:
@@ -55,7 +57,7 @@ def parse(text):
 
 def differences(router,expected,observed):
     output=[]
-    defaults={'ospf_authentication':None,'ospf_key_present':False,'shutdown':False}
+    defaults={'ospf_authentication':None,'ospf_key_present':False,'ospf_key_ids':[],'shutdown':False}
     inbound_maps={v for source in (expected,observed) for k,v in source.items() if k.endswith('/route_map_in')}
     inbound_lists={line.split()[-1] for source in (expected,observed) for k,v in source.items()
                    if k.startswith('route_map/') and k.split('/')[1] in inbound_maps
@@ -71,6 +73,7 @@ def differences(router,expected,observed):
             fact['configuration_context']={'expected_bgp_asn':expected.get('bgp/asn'),'observed_bgp_asn':observed.get('bgp/asn')}
         if key.startswith(('route_map/','prefix_list/')):
             name=key.split('/')[1]
+            fact['configuration_context']['baseline_policy_entries']=[k for k in expected if k.startswith(key.split('/')[0]+'/'+name+'/')]
             fact['policy_direction']='inbound' if name in (inbound_maps if key.startswith('route_map/') else inbound_lists) else 'other'
         output.append(fact)
     return output
@@ -80,7 +83,7 @@ def supports(cause,fact):
     key=fact['key'];a=fact['expected'];b=fact['observed']
     if cause=='ospf_hello_mismatch':return key.endswith('/ospf_hello') and a!=b
     if cause=='ospf_area_mismatch':return key.endswith('/ospf_area') and a!=b
-    if cause=='ospf_auth_mismatch':return key.endswith(('/ospf_authentication','/ospf_key_present')) and a!=b
+    if cause=='ospf_auth_mismatch':return key.endswith(('/ospf_authentication','/ospf_key_present','/ospf_key_ids')) and a!=b
     if cause=='bgp_neighbor_shutdown':return key.startswith('neighbor/') and key.endswith('/shutdown') and b is True
     if cause=='bgp_wrong_remote_as':return key.startswith('neighbor/') and key.endswith('/remote_as') and a is not None and b!=a
     if cause=='bgp_missing_network':return key=='bgp/networks' and bool(set(a or [])-set(b or []))
