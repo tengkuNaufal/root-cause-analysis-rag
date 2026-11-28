@@ -21,12 +21,16 @@ esac
 
 api_args=()
 if [ "$variant" != rule_based ]; then
-    # Meminta token interaktif kalau belum ada di environment, biar gak pernah ketulis ke file atau history.
+    # Memakai token sesi live server Host 1 kalau ada, selain itu diminta interaktif biar gak masuk history.
+    session=$(cat private/live-agent/latest.txt 2>/dev/null)
+    if [ -z "${LIVE_API_TOKEN:-}" ] && [ -n "$session" ] && [ -r "$session/token.txt" ]; then
+        LIVE_API_TOKEN=$(cat "$session/token.txt")
+    fi
     if [ -z "${LIVE_API_TOKEN:-}" ]; then
         read -rsp 'Token API: ' LIVE_API_TOKEN
         echo
-        export LIVE_API_TOKEN
     fi
+    export LIVE_API_TOKEN
     api_args=(--api "$api")
 fi
 

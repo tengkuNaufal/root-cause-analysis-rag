@@ -119,7 +119,7 @@ Angka di `status` cuma pengecekan cepat terhadap katalog. Angka resmi tetap dari
 
 ## Demo satu run live
 
-`demo` menjalankan satu fault lengkap di lab asli: inject, diagnosis agen, lint, penerapan perintah, verifikasi, lalu menampilkan detail run. Token API diminta interaktif dan tidak disimpan. Varian `rule_based` (pembanding regex) tidak butuh API dan token.
+`demo` menjalankan satu fault lengkap di lab asli: inject, diagnosis agen, lint, penerapan perintah, verifikasi, lalu menampilkan detail run. Token API dibaca dari sesi live server Host 1 (`private/live-agent/latest.txt`, lihat [README API live](../host1/live_api/README.md)); kalau tidak ada, token diminta interaktif dan tidak disimpan. Varian `rule_based` (pembanding regex) tidak butuh API dan token.
 
 ```powershell
 .\laptop\lab.ps1 demo F01 graph_rag
