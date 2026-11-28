@@ -4,9 +4,9 @@ Dokumen ini menjelaskan **setiap file kandidat Git** satu per satu. File dengan 
 
 ## Cara membaca alur proyek
 
-`lab/` menyediakan konfigurasi router. `scripts/` dan `faults/` menyediakan cek serta eksperimen kelompok. Pada Host 1, `telemetry/` membaca state dan `log_ingestion/` mengumpulkan log; `graph_indexer/` menyusun relasi dan `knowledge/` mengikat fakta ke dokumentasi serta gate. `reasoning_agent/` melayani replay dengan `agent_contract/`. `live_api/` menyediakan capture terbaru, tiga varian diagnosis, API read-only serta executor/workflow lokal berotorisasi. Executor terpisah dari API; belum diuji apply ke router nyata.
+`lab/` menyediakan konfigurasi router. `scripts/` dan `faults/` menyediakan cek serta eksperimen kelompok. Pada Host 1, `telemetry/` membaca state dan `log_ingestion/` mengumpulkan log; `graph_indexer/` menyusun relasi dan `knowledge/` mengikat fakta ke dokumentasi serta gate. `reasoning_agent/` melayani replay dengan `agent_contract/`. `live_api/` menyediakan capture terbaru, tiga varian diagnosis, API read-only serta executor/workflow lokal berotorisasi. Executor terpisah dari API; apply lewat runner berhasil pada smoke F01 nyata. Status terbaru ada di READINESS.md.
 
-### Tambahan komponen pra-smoke Host 1
+### Tambahan komponen live Host 1
 
 | File | Fungsi |
 |---|---|
@@ -18,6 +18,11 @@ Dokumen ini menjelaskan **setiap file kandidat Git** satu per satu. File dengan 
 | `host1/live_api/evaluate_retrieval.py` | Membuat dan mengukur set retrieval Host 1 secara offline, terpisah dari runtime agen. |
 | `host1/live_api/test_agent.py`, `test_executor.py`, `test_workflow.py`, `test_retrieval_host1.py` | Regresi capture/model/API/execution tiruan, resume dan sumber retrieval. |
 | `data/retrieval_host1_testset.yaml` | Pertanyaan pengembangan retrieval dan metadata relevansi/hash katalog untuk evaluator offline. |
+| `host1/live_api/manage.sh` | Menjalankan API/model loopback dalam tmux dan memeriksa health. |
+| `scripts/lab_lock.py`, `tests/test_lab_lock.py` | Lock lab bersama dan regresi penolakan owner kedua. |
+| `scripts/start-benchmark.sh` | Peluncur runner detached dengan argumen/log privat dan token dari sesi lokal. |
+| `scripts/prepare-host1-access.ps1` | Setup Administrator Windows: SSH, firewall LAN/tailnet, Tailscale dan sleep AC. |
+| `scripts/bench_status.py`, `scripts/demo.sh` | Monitoring read-only dan satu demo terpisah dari hasil benchmark. |
 | `tests/test_evaluator_live.py` | Regresi hasil runner live, fallback, waktu, catalog binding dan partial execution. |
 
 `data/host1/` adalah input pengujian terpilih, bukan seluruh hasil eksperimen. `docs/` menjelaskan cara kerja, status dan batas pengujian. `laptop/` adalah jalur SSH dari laptop menuju host lab. Konfigurasi replika dan Host 1 berbeda dan harus disesuaikan sebelum integrasi benchmark.

@@ -4,6 +4,7 @@ import importlib.util
 from http.server import ThreadingHTTPServer
 import json
 import os
+import signal
 from pathlib import Path
 import subprocess
 import sys
@@ -18,7 +19,7 @@ class LiveService(Service):
     simulation=False
     def __init__(self,output,token,engine=None,baseline_confirmed=False,
                  exclusive_model_session=False,replay_probe=None,deadline=600):
-        self.engine=engine or DiagnosisEngine(model=PinnedOllama(),analyze_healthy=True)
+        self.engine=engine or DiagnosisEngine(model=PinnedOllama(),analyze_healthy=False)
         self.baseline_confirmed=baseline_confirmed
         self.exclusive_model_session=exclusive_model_session
         self.replay_probe=replay_probe or replay_present
@@ -148,6 +149,11 @@ class LiveService(Service):
 
 
 def main():
+    # Detached tmux shells can inherit SIGINT ignored. Restore graceful shutdown.
+    def interrupt(*_):
+        raise KeyboardInterrupt
+    signal.signal(signal.SIGINT,signal.default_int_handler)
+    signal.signal(signal.SIGTERM,interrupt)
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--output',type=Path,required=True)
     ap.add_argument('--port',type=int,default=8766)
@@ -157,7 +163,7 @@ def main():
     if args.port in (8765,11434) or not 0<=args.port<=65535:ap.error('Separate loopback port required')
     service=None;server=None
     try:
-        engine=DiagnosisEngine(model=PinnedOllama(),analyze_healthy=True);baseline=False
+        engine=DiagnosisEngine(model=PinnedOllama(),analyze_healthy=False);baseline=False
         args.output.mkdir(parents=True,exist_ok=True)
         if engine.capture.readiness()['ready']:
             p=subprocess.run([sys.executable,str(ROOT/'lab/host1/frr/verify-runtime.py'),str(args.output/'baseline')],capture_output=True,text=True,timeout=120)

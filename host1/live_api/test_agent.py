@@ -189,6 +189,17 @@ class EngineTests(unittest.TestCase):
         value['confidence']=.5
         with self.assertRaises(DiagnosisError):decision_to_draft(value)
 
+    def test_tool_grammar_requires_vtysh_lines_and_kernel_argv(self):
+        import jsonschema
+        from .agent import generation_schema
+        value=dict(root_cause_class='bgp_neighbor_shutdown',root_cause_router='r1',confidence=.8,
+            explanation='Observed shutdown',evidence_ids=['e1'],commands=[dict(router='r1',interpreter='vtysh',
+            args=['configure terminal','router bgp 65001','no neighbor 10.255.0.4 shutdown'])])
+        jsonschema.validate(value,generation_schema())
+        with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(value,generation_schema(True))
+        value['commands'][0]['args']=['neighbor','10.255.0.4','shutdown']
+        with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(value,generation_schema())
+
 class LiveHttpTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.engine=engine()

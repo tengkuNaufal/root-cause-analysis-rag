@@ -10,7 +10,7 @@ case ${1:-status} in
     session=$(cat private/live-agent/latest.txt)
     export LIVE_API_TOKEN=$(cat "$session/token.txt")
     printf '{"pid":%s,"port":8766,"mode":"live","token_file":"token.txt"}\n' "$$" >"$session/process.json"
-    exec "$python" scripts/host1.py -m live_api.server --output "$session/jobs" --port 8766 --exclusive-model-session >>"$session/server.log" 2>&1
+    exec "$python" -m live_api.server --output "$session/jobs" --port 8766 --exclusive-model-session >>"$session/server.log" 2>&1
     ;;
   _model)
     mkdir -p private/live-services

@@ -2,6 +2,20 @@
 
 Dokumen ini membedakan validasi terbaru dan laporan historis. Laporan lengkap serta artefak mesin tetap lokal di `private/` yang di-ignore.
 
+## Kesiapan lokal dan smoke fault nyata — 28 November 2026
+
+Hasil terbaru dirangkum pada [READINESS.md](READINESS.md). Ketiga varian berhasil mendiagnosis dan memulihkan F01 dengan model asli, evidence baru, lint policy v2, apply dan verifikasi runner tanpa fallback. Waktu pemulihan monotonic dari gejala: zero-shot 19,448 detik; text RAG sekitar 22,8 detik; graph RAG 37,635 detik. Target <10 detik **belum lulus**. Hasil development berbeda keadaan cache/warmup dan tidak dapat dibandingkan sebagai benchmark.
+
+Artefak privat: private/host1-readiness/smoke-20261128T061225Z (graph), detached-text-rag (text), smoke-20261128T061452Z (zero). Run text berjalan lewat launcher tmux sebagai user runner dan selesai exit 0 setelah terminal pemicu berakhir. Detachment lokal ini belum membuktikan SSH dari laptop asli.
+
+Regresi akhir: 295 tes repo dan 84 tes Host 1/kontrak/agen/executor/workflow/replay lulus, total 379. Tes policy menolak command MTU vtysh yang gagal pada build asli; seluruh revert katalog tetap diuji. Keputusan model ringkas diproyeksikan ke schema API yang sama dan diperiksa keterikatan label/router/evidence/commands. Set retrieval diukur ulang setelah koreksi source locator RFC: corrected expansion 52/60 keyword hit@5. Angka 58/60 pada laporan tahap lama tidak berlaku untuk versi ini; bukan skor akurasi agen.
+
+Percobaan pengembangan gagal sebelumnya (abstain keliru dan command tidak didukung) tidak dibuang. Lab dipulihkan oleh fallback dan run gagal tidak dihitung sebagai sukses agen. Tidak ada pilot atau benchmark resmi. SSH Windows dan Tailscale terpasang/otomatis, TCP22 loopback lulus; login Tailscale ditunda pengguna, Windows Update tetap aktif, dan SSH autentikasi dari Host 2 belum diuji. Seluruh hasil/kredensial/log mesin tetap di-ignore.
+
+F16 BGP neighbor shutdown juga berhasil diperbaiki lewat vtysh tanpa fallback, 29,597 detik dari gejala (private/host1-readiness/smoke-20261128T062831Z). Satu percobaan sebelumnya ditolak karena format command token, lalu grammar dipisahkan antara argv ip dan baris vtysh. Baseline sehat terbaru memakai gate no-supported-fault yang abstain tanpa memanggil model; satu percobaan commissioning model pada baseline sebelumnya ditolak controller karena dugaan tidak didukung.
+
+Bagian di bawah merupakan riwayat tahap sebelumnya.
+
 ## Penyelesaian komponen sebelum smoke MTU — 28 November 2026
 
 Setelah scope diperluas pengguna, lab dipulihkan dari konfigurasi Host 1 di repositori baru. Enam router dan Vector berjalan, restart count 0. Baseline lulus: 8 link/16 endpoint MTU 1500, 5 OSPF FULL, 9 BGP Established, 6 prefix service per router, ping 30/30 arah dan 120/120 paket. Vector menerima 10/10 marker dari enam router. Capture aktual 1,795 detik tidak menemukan anomali. Bukti: `private/pre-mtu-setup/20261128T045119Z/` dan direktori capture pada folder yang sama.

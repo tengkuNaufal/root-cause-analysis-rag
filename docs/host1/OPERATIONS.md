@@ -63,3 +63,10 @@ Diagnosis live read-only dijalankan melalui `python scripts/host1.py -m live_api
 Fixture publik merupakan turunan yang disanitasi: path mesin menjadi relatif, sedangkan MAC dan IPv6 link-local terekam menjadi sintetis. Evidence asli disimpan privat. Hash salinan publik beserta seluruh referensinya dihitung ulang tanpa mengubah state routing IPv4, MTU atau label kasus. `knowledge.evidence.local_path` tetap dapat merebase arsip Windows/Linux lama berdasarkan nama folder proyek, tanpa menanam lokasi komputer seseorang dalam kode. Perbandingan konteks tetap memeriksa hash, nilai observasi dan batas repositori. Hash kode pada laporan eksperimen lama menunjuk versi historis.
 
 [Manifest fixture](../../data/host1/fixtures-manifest.json) menetapkan 148 file input yang dibaca oleh tes dan seluruh katalog replay, termasuk 133 JSON. Log instalasi, checkpoint Vector, dump debug, percobaan lama, laporan build/migrasi, keluaran tes sementara serta hasil run baru tetap lokal dan di-ignore. `host1/knowledge/build.json` adalah laporan yang dibuat ulang oleh build, bukan konfigurasi atau input tes. Gunakan folder output baru; jangan menimpa fixture atau mengubah allowlist hanya untuk memasukkan hasil eksperimen sementara.
+
+
+## Kesiapan pengujian lokal dan dua host — 28 November 2026
+
+Panduan aktif ada di [READINESS.md](READINESS.md). API/model memakai tmux, sementara runner detached diluncurkan dengan scripts/start-benchmark.sh. Lock lab bersama mencegah CLI demo/benchmark/fault runner/executor standalone beroperasi bersamaan. Model tetap sama untuk tiga varian; jangan menerapkan satu diagnosis melalui dua executor.
+
+Setup Windows tersedia pada scripts/prepare-host1-access.ps1 (Administrator). Instalasi SSH/Tailscale, scope firewall LAN/tailnet, perubahan grup Docker user runner, dan sleep AC dilakukan dengan persetujuan pengguna. Login Tailscale ditunda, authentication SSH Host 2 belum diuji, dan Windows Update tetap aktif sesuai pilihan pengguna. Konfigurasi/kredensial pribadi tidak ditambahkan ke Git.

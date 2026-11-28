@@ -1,5 +1,7 @@
 # Schema, mock dan agen API live — revisi 2
 
+Status operasional terbaru: [kesiapan Host 1](../../docs/host1/READINESS.md). Smoke F01 nyata sudah berhasil pada tiga varian, sedangkan target pemulihan <10 detik belum lulus. Bagian riwayat pra-smoke di bawah bukan batas scope terbaru.
+
 Mock pada modul ini menyiapkan integrasi client Host 2 dengan **data sintetis saja**; jalur agen/live dan executor lokal dijelaskan pada bagian akhir. Tidak mengambil telemetry, membaca katalog fault, memanggil Ollama, menjalankan linter nyata atau mengubah router. Kontrak aktif replay dan schema internal agen tetap utuh. Rancangan: [LIVE-API-DRAFT.md](../../docs/host1/LIVE-API-DRAFT.md).
 
 ## File yang dipakai bersama
@@ -96,7 +98,7 @@ Tes memakai TemporaryDirectory, server 127.0.0.1 pada port OS sementara dan toke
 
 ## Agen live dan executor lokal
 
-Implementasi berjalan melalui `capture.py` → `settings.py` → `agent.py` → `server.py`. API diagnosis tetap read-only terhadap router: model boleh mengusulkan perintah, tetapi tidak dapat menjalankannya. Eksekusi hanya melalui `executor.py` lokal dengan otorisasi eksplisit dan hash diagnosis. Katalog/ground truth/revert tidak pernah dibaca runtime agen atau executor.
+Implementasi berjalan melalui `capture.py` → `settings.py` → `agent.py` → `server.py`. API diagnosis tetap read-only terhadap router: model boleh mengusulkan perintah, tetapi tidak dapat menjalankannya. Eksekusi bukan endpoint API: benchmark memakai executor runner, sedangkan `executor.py` adalah alternatif lokal berotorisasi hash. Jangan menjalankan keduanya untuk diagnosis yang sama; semua CLI perubahan lab berbagi lock. Katalog/ground truth/revert tidak pernah dibaca runtime agen atau executor.
 
 ### Evidence dan tiga varian
 
@@ -129,7 +131,7 @@ LIVE_SESSION=$(cat private/live-agent/latest.txt)
 export LIVE_API_TOKEN=$(cat "$LIVE_SESSION/token.txt")
 ```
 
-Runner lokal memakai WSL NetworkLab dengan hak akses Docker yang sudah diperiksa (sesi ini memakai root). Tidak ada perubahan permission socket atau instalasi SSH sebagai efek samping. Tidak perlu membuka API live ke LAN untuk runner yang berjalan di Host 1.
+Runner lokal memakai WSL NetworkLab. User runner sudah mendapat akses grup Docker dengan persetujuan eksplisit; tidak melonggarkan mode socket. SSH/Tailscale Windows juga sudah dipasang melalui skrip setup yang disetujui; login Tailscale ditunda pengguna. Tidak perlu membuka API live ke LAN untuk runner yang berjalan di Host 1.
 
 ### Executor dan verifikasi
 
@@ -147,17 +149,17 @@ python scripts/host1.py -m live_api.executor private/live-agent/session/jobs/JOB
   --output private/live-execution/apply-JOB --apply --expected-diagnosis-sha256 SHA_DARI_PREVIEW
 ```
 
-Jangan memakai placeholder JOB/SHA secara literal. Apply memeriksa source/hash manifest, baseline config fingerprint, ulang capture precondition yang stabil dan policy source digest sebelum dispatch. `POLICY_VERSION` dan hash source linter dicatat; policy yang berubah setelah di-import ditolak. Global lock/ledger privat mencegah dua executor atau pengulangan job yang completion-nya tidak diketahui. Semua perintah memakai argv `docker exec` langsung, tidak disambung ke shell.
+Jangan memakai placeholder JOB/SHA secara literal. Apply memeriksa source/hash manifest, baseline config fingerprint, ulang capture precondition yang stabil dan policy source digest sebelum dispatch. `POLICY_VERSION` dan hash source linter dicatat; policy yang berubah setelah di-import ditolak. Shared lab lock dan ledger privat mencegah dua executor atau pengulangan job yang completion-nya tidak diketahui. Semua perintah memakai argv `docker exec` langsung, tidak disambung ke shell.
 
-Verifier memeriksa interface/MTU/address, OSPF/BGP, routes, forwarding dan ping service 30 arah, lalu semantic config drift. Ada batas tunggu konvergensi 60 detik; ini bukan target waktu pemulihan. Hasil command, partial failure, application unknown saat timeout, dan verifikasi tersimpan dalam receipt. Tidak ada catalog revert tersembunyi. Executor gagal/partial walaupun jaringan tampak sehat tidak otomatis dihitung sukses agen oleh evaluator. Runner benchmark tetap default applied=false; integrasi apply pada eksperimen berikutnya harus mencatat receipt dan fallback secara terpisah.
+Verifier memeriksa interface/MTU/address, OSPF/BGP, routes, forwarding dan ping service 30 arah, lalu semantic config drift. Ada batas tunggu konvergensi 60 detik; ini bukan target waktu pemulihan. Hasil command, partial failure, application unknown saat timeout, dan verifikasi tersimpan dalam receipt. Tidak ada catalog revert tersembunyi. Executor gagal/partial walaupun jaringan tampak sehat tidak otomatis dihitung sukses agen oleh evaluator. Runner default read-only; --execute mengaktifkan executor runner dan mencatat apply/verifikasi/fallback terpisah. Executor standalone memakai receipt sendiri. Satu run hanya memakai salah satu jalur.
 
 ### Retrieval dan status validasi
 
-`evaluate_retrieval.py` adalah alat offline terpisah. Set `data/retrieval_host1_testset.yaml` berisi 60 pertanyaan ID/EN untuk 30 lokasi fault dengan hash katalog. Hanya question dikirim ke retriever Host 1; kelas/relevance adalah metadata evaluator. Hasil full retrieval chunks: dense 43/60, hybrid 46/60, dan hybrid dengan verified expansion 58/60 hit@5 menurut keyword proxy yang sama. Ekspansi dikembangkan setelah hasil awal terlihat; ini hasil pengembangan, bukan held-out evaluation. Skor ekspansi awal berbasis excerpt 46/60 tetap disimpan, tetapi tidak dibandingkan langsung dengan baseline full chunks. Prompt tetap memakai excerpt berbudget dan skor ini tidak mengukur kualitas excerpt tersebut. Angka tersebut bukan penilaian manusia independen atau akurasi diagnosis; retrieval belum sempurna.
+`evaluate_retrieval.py` adalah alat offline terpisah. Set `data/retrieval_host1_testset.yaml` berisi 60 pertanyaan ID/EN untuk 30 lokasi fault dengan hash katalog. Hanya question dikirim ke retriever Host 1; kelas/relevance adalah metadata evaluator. Baseline full chunks: dense 43/60 dan hybrid 46/60. Verified expansion setelah koreksi locator RFC dan potongan FRR adalah 52/60 hit@5. Angka 58/60 sebelum koreksi locator tidak mewakili versi saat ini. Ekspansi dikembangkan setelah hasil awal terlihat; ini hasil pengembangan, bukan held-out evaluation. Skor ekspansi awal berbasis excerpt 46/60 tetap disimpan, tetapi tidak dibandingkan langsung dengan baseline full chunks. Prompt tetap memakai excerpt berbudget dan skor ini tidak mengukur kualitas excerpt tersebut. Angka tersebut bukan penilaian manusia independen atau akurasi diagnosis; retrieval belum sempurna.
 
-Tiga varian telah memakai capture baseline terbaru dan Ollama asli: seluruhnya completed/abstain, tanpa patch/apply karena baseline sehat. Jalur HTTP graph RAG dan empat evidence juga berhasil; verifier baseline nyata lulus. Unit tests mencakup sepuluh kelas melalui konfigurasi/router/model tiruan, serta executor dispatch/precondition/partial failure/idempotency. Ini tidak membuktikan keberhasilan repair fault nyata.
+Tiga varian telah memakai capture baseline terbaru dan Ollama asli: seluruhnya completed/abstain, tanpa patch/apply karena baseline sehat. Jalur HTTP graph RAG dan empat evidence juga berhasil; verifier baseline nyata lulus. Unit tests mencakup sepuluh kelas melalui konfigurasi/router/model tiruan, serta executor dispatch/precondition/partial failure/idempotency. Baseline historis tersebut bukan bukti repair; smoke F01 nyata terbaru terpisah sudah berhasil pada ketiga varian, seperti dijelaskan di READINESS.md.
 
-Batas kerja sesi ini: **tidak menjalankan fault injection, smoke MTU di bawah 10 detik, pilot, benchmark 450 run atau apply perbaikan ke router nyata**. Semua itu merupakan tahap sesudah komponen yang disiapkan di sini. Model comparison, daftar fault final dan kemungkinan varian regex tetap keputusan kelompok sebelum benchmark.
+Batas kerja tahap pra-smoke sebelumnya adalah tidak melakukan injection/apply. Pada tahap kesiapan berikutnya, smoke nyata sudah dilakukan; pilot dan benchmark resmi tetap belum dijalankan. Semua itu merupakan tahap sesudah komponen yang disiapkan di sini. Model comparison, daftar fault final dan kemungkinan varian regex tetap keputusan kelompok sebelum benchmark.
 
 ### Workflow satu diagnosis dan perbaikan
 
@@ -170,3 +172,10 @@ python scripts/host1.py -m live_api.workflow --session "$LIVE_SESSION/jobs" \
 ```
 
 Tambahkan `--apply` hanya pada langkah eksekusi yang memang diotorisasi. Pada penyelesaian pra-smoke ini workflow nyata hanya dijalankan tanpa apply pada baseline sehat. Fault injection, smoke MTU dan benchmark tidak dijalankan. Laporan executor (termasuk policy/hash, precondition dan verification) tersedia pada `workflow.json`; ledger yang completion-nya tidak diketahui harus diperiksa operator, bukan diulang otomatis.
+
+
+### Draft model ringkas dan layanan persisten
+
+Model sekarang mengeluarkan class/router/confidence/explanation/evidence_ids/commands saja. Adapter memproyeksikannya tanpa mengarang label atau argumen ke claims/proposed_patch dan assessment kontrak yang sama. Abstain dengan class null/unknown dan confidence null/0 diproyeksikan menjadi confidence null; proposal/label/router yang bertentangan tetap ditolak. Raw model decision disimpan privat. Untuk penyimpangan physical tanpa perubahan setting, decoder membatasi tool ke ip karena kernel MTU/admin bukan perintah vtysh build ini. Keputusan diagnosis dan seluruh argumen tetap berasal dari model. Policy host1-policy-v2 juga menolak MTU via vtysh; tidak menormalisasi command yang salah menjadi command benar.
+
+Gunakan `bash host1/live_api/manage.sh status`, `start-model` atau `start-api` ketika belum ada listener. Launcher tmux memakai proses API langsung agar signal dan metadata PID benar. SIGINT/SIGTERM memicu graceful shutdown; jangan stop saat job aktif. `scripts/start-benchmark.sh` menyediakan runner detached yang tidak bergantung pada terminal SSH, dengan output wajib di private/ atau data/host2/. Lihat READINESS.md untuk resume dan pemakaian executor tunggal.
