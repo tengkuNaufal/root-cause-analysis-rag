@@ -13,10 +13,12 @@
 #
 # Hasil final ada di <out>/results.jsonl (satu baris per baris jadwal per attempt), kejadian
 # perantara (request tersimpan, hasil telat, run terputus) di <out>/journal.jsonl.
-# Exit code: 0 selesai, 1 gagal mulai (API gak bisa dihubungi, mode simulasi tanpa --no-lab), 2 dihentikan
-# karena error/respons gak valid/lab gak pulih, 4 ada job yang belum jelas selesai dan fault sengaja ditahan.
+# Exit code: 0 selesai, 1 gagal mulai (API gak bisa dihubungi, mode simulasi tanpa --no-lab, lab lagi dipakai
+# proses bench lain), 2 dihentikan karena error/respons gak valid/lab gak pulih, 4 ada job yang belum jelas selesai
+# dan fault sengaja ditahan.
 import argparse
 import csv
+import fcntl
 import hashlib
 import json
 import os
@@ -498,6 +500,14 @@ def main():
                  "kalau cuma mau uji client")
     if simulated:
         print(f"Catatan: API berjalan dalam mode {caps.get('mode')}, hasil diagnosis bukan dari agen sungguhan")
+
+    if not args.no_lab:
+        # Mengunci lab biar demo dan benchmark gak inject ke lab yang sama barengan.
+        lock = open(f"/tmp/bench-{fr.LAB}.lock", "w")
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            sys.exit(f"Lab {fr.LAB} lagi dipakai proses bench lain (benchmark atau demo), tunggu sampai selesai")
 
     try:
         Bench(args, client, faults, catalog_sha).run(rows)
