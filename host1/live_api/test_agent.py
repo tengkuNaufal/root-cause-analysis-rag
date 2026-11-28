@@ -210,8 +210,11 @@ class EngineTests(unittest.TestCase):
             value[5]=[['r1','vtysh',['interface eth1','mtu 1500']]]
             raw['response']=json.dumps(value);return raw
         eng.model.generate=generate
-        with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(DiagnosisError,'configuration_mode_required'):
-            run_engine(eng,tmp)
+        with tempfile.TemporaryDirectory() as tmp:
+            job=run_engine(eng,tmp)
+        from scripts.proposal_outcome import read_rejection
+        self.assertEqual(job['state'],'completed');self.assertEqual(job['assessment']['commands'],[])
+        self.assertEqual(read_rejection(job)['code'],'vtysh_configuration_mode_required')
 
     def test_compact_abstention_is_projected_without_inventing_diagnosis(self):
         from .agent import decision_to_draft

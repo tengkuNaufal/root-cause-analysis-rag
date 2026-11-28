@@ -309,6 +309,16 @@ class Bench:
                 rec["status"] = "evidence_error"
                 rec["error"] = "; ".join(rec["evidence_check"]["problems"])
                 return rec
+            rejection = lc.read_rejection(job)
+            rec["proposal"] = rejection or {"status": "available" if job["assessment"]["commands"] else "not_proposed"}
+            if rejection:
+                # No exported command is available to lint or execute. Preserve server rejection separately.
+                rec["lint"] = {"status": "not_requested", "violations": [], "commands_sha256": None,
+                               "reason": "api_proposal_rejected"}
+                rec["execution"] = {"attempted": False, "skipped_reason": "api_proposal_rejected",
+                                    "commands_sha256": None, "results": [], "agent_recovered": False}
+                mark("t_lint_done")
+                return rec
             rec["lint"] = run_lint(job["assessment"]["commands"])
             mark("t_lint_done")
             if self.args.execute and rec["lint"]["status"] == "passed":
@@ -348,6 +358,8 @@ class Bench:
         else:
             mark("t_revert")
             reason = "agent_fix_failed" if (rec["execution"] or {}).get("attempted") else "read_only_phase"
+            if (rec.get("proposal") or {}).get("status") == "rejected":
+                reason = "api_proposal_rejected"
             res = self.restore(fault, reason)
             rec["fallback_revert"] = res
             rec["recovered"] = res["recovered"]
@@ -447,7 +459,7 @@ def schema_problems(job):
 def new_record(order, attempt, fault_id, variant, trial, catalog_sha):
     return {"plan_order": order, "attempt": attempt, "fault_id": fault_id, "variant": variant, "trial": trial,
             "catalog_sha256": catalog_sha, "request_id": None, "job_id": None, "status": None, "symptoms": [],
-            "diagnosis": None, "evidence_check": None, "lint": None, "applied": False, "execution": None,
+            "diagnosis": None, "evidence_check": None, "proposal": None, "lint": None, "applied": False, "execution": None,
             "cleanup": None,
             "verification": None, "fallback_revert": {"performed": False, "reason": None}, "recovered": False,
             "completion_unknown": False, "error": None, "timing": None}

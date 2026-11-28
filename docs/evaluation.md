@@ -23,6 +23,11 @@ pada semua baris, termasuk attempt yang tidak dipilih; input lama tanpa hash mas
 
 Kelulusan tes offline tidak membuktikan baseline, koneksi dua host, atau latensi live sehat.
 
+Diagnosis yang didukung dapat memiliki proposal kosong karena penolakan API. Evaluator
+memisahkan akurasi diagnosis, approval perintah, penolakan lint/guard, dan pemulihan. Semantik
+catatan wire, JSONL runner dan metriknya dijelaskan di
+[diagnosis dan penolakan proposal](host1/PROPOSAL-OUTCOME.md).
+
 ## Audit sitasi
 
 Semua sitasi di assessment, claims, dan proposed_patch diperiksa, termasuk yang tidak disalin

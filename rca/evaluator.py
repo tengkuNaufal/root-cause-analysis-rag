@@ -44,6 +44,7 @@ import pandas as pd
 from rca.evaluation_inputs import ATTEMPT_POLICIES, checked_catalog, select_attempts
 from rca.linter import CommandLinter
 from rca.topology import Topology
+from scripts.proposal_outcome import read_rejection
 
 VARIANT_ORDER = ["zero_shot", "text_rag", "graph_rag", "rule_based"]
 TOPO_RULES = {"unknown_router", "unknown_interface", "unknown_neighbor"}
@@ -200,12 +201,19 @@ def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
     gt = catalog.get(fault_id)
     ag = _agent_view(run)
     pred_router, pred_class, commands = ag["router"], ag["root_cause"], ag["commands"]
+    rejection = read_rejection(run.get('diagnosis') or {})
+    stored = run.get('proposal')
+    if stored is not None and not isinstance(stored, dict):
+        raise ValueError('Runner proposal outcome must be an object')
+    if stored is not None and ((rejection is not None and stored != rejection) or
+                               (rejection is None and stored.get('status') == 'rejected')):
+        raise ValueError('Runner proposal outcome disagrees with API rejection note')
 
     lint = _get(run, "lint", "linter", default=None)
     if lint is None:  # runner belum menyimpan hasil linter: hitung ulang
         lint = linter.lint(commands).to_dict()
     # bentuk lama {"passed": bool}; bentuk live {"status": passed|rejected|error|not_requested}
-    lint_passed = lint.get("passed") is True or lint.get("status") == "passed"
+    lint_passed = (lint.get("passed") is True or lint.get("status") == "passed") and rejection is None
 
     # halusinasi evidence: ID yang dipakai agen tetapi tidak ada di manifest/daftar yang dikirim
     available = ag["available"]
@@ -222,6 +230,8 @@ def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
         applied = execution.get("applied") is True or execution.get("status") in ("applied", "succeeded", "success")
     else:
         applied = False
+    if rejection and (applied or (isinstance(execution, dict) and execution.get('attempted') is True)):
+        raise ValueError('Rejected API proposal cannot have been executed')
     recovered = _get(run, "recovered", "verification.recovered", "verify.recovered", "verification.passed",
                      default=False) is True
     reverted = (_get(run, "fallback_revert.performed", default=False) is True or run.get("reverted") is True
@@ -253,12 +263,18 @@ def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
         "rca_ok": bool(gt and pred_router == gt.router and pred_class == gt.fault_class),
         "confidence": ag["confidence"],
         "has_commands": bool(commands),
+        "proposal_rejected": rejection is not None,
+        "proposal_rejection_stage": rejection['stage'] if rejection else None,
+        "proposal_rejection_code": rejection['code'] if rejection else None,
+        "candidate_commands_count": rejection['candidate_count'] if rejection else len(commands),
+        "rejected_candidate_hallucination_unassessed": rejection is not None,
+        "command_approved": bool(commands) and lint_passed,
         "lint_passed": lint_passed,
         "applied": applied,
         "recovered": recovered,
         "fallback_revert": reverted,
         "agent_recovered": agent_recovered,
-        "cmd_ok": lint_passed and agent_recovered,
+        "cmd_ok": bool(commands) and lint_passed and agent_recovered,
         "halluc_evidence": len(bad_ev) > 0,
         "halluc_evidence_ids": ",".join(sorted(set(bad_ev))),
         "evidence_scope": ag["evidence_scope"],
@@ -314,6 +330,10 @@ def metrics_by_variant(df: pd.DataFrame) -> pd.DataFrame:
             "router_accuracy": g["router_ok"].mean(),
             "class_accuracy": g["class_ok"].mean(),
             "lint_pass_rate": g["lint_passed"].mean(),
+            "command_approval_rate": g["command_approved"].mean(),
+            "proposal_rejection_rate": g["proposal_rejected"].mean(),
+            "proposal_lint_rejection_rate": (g['proposal_rejection_stage'] == 'lint').mean(),
+            "proposal_guard_rejection_rate": (g['proposal_rejection_stage'] == 'guard').mean(),
             "command_correctness": g["cmd_ok"].mean(),
             "fix_success_rate": applied["agent_recovered"].mean() if len(applied) else math.nan,
             "applied_rate": g["applied"].mean(),
@@ -436,6 +456,15 @@ def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topolog
                   "untuk respons itu hanya memakai manifest, bukan bukti input model.", ""]
     lines += ["Halusinasi di sini adalah proxy ID evidence dan topologi perintah; "
               "kebenaran faktual penjelasan tetap dinilai melalui rubrik dengan isi evidence.", ""]
+    lines += ["Diagnosis yang didukung tetap dinilai ketika proposal ditolak API. "
+              "command_approval_rate menghitung perintah diekspor yang lolos linter client, bukan bukti pemulihan. "
+              "proposal_rejection_rate dipisahkan menurut lint/guard. Kandidat yang ditahan API tidak tersedia "
+              "untuk audit halusinasi perintah dari JSONL saja; hash kandidat bukan isi kandidat.", "",
+              "## Proposal dan validasi perintah", "",
+              _md_table(m[['variant','command_approval_rate','proposal_rejection_rate',
+                           'proposal_lint_rejection_rate','proposal_guard_rejection_rate']],
+                        {'command_approval_rate','proposal_rejection_rate','proposal_lint_rejection_rate',
+                         'proposal_guard_rejection_rate'},set()), ""]
     lines += ["## Ringkasan per varian", "",
               _md_table(head, {HEADLINE[p] for p in pct}, set()), "",
               "Akurasi = router dan kelas akar masalah cocok dengan ground truth. Ketepatan perintah = lolos linter "

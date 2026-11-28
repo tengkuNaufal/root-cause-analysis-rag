@@ -24,6 +24,7 @@ from pathlib import Path
 from rca.evaluation_inputs import ATTEMPT_POLICIES, checked_catalog, identity, select_attempts
 from rca.evaluator import VARIANT_ORDER, _agent_view, _order, load_runs
 from rca.rubric_evidence import bundle, canonical, digest
+from scripts.proposal_outcome import read_rejection
 
 DIMENSIONS = ["grounding", "kausal", "konsistensi", "perbaikan", "kejelasan"]
 
@@ -63,6 +64,7 @@ def sample(results: Path, out: Path, raters: list[str], seed: int, overlap: int,
         if gt is None:
             raise ValueError(f"Unknown catalog fault: {r['fault_id']}")
         agent = _agent_view(r)
+        rejection = read_rejection(r.get('diagnosis') or {})
         fragments, hashes = bundle(r, agent["evidence_ids"], evidence_root)
         packet = canonical({"item_id": item_id, "evidence": fragments}) + "\n"
         bundles[item_id] = packet
@@ -82,6 +84,9 @@ def sample(results: Path, out: Path, raters: list[str], seed: int, overlap: int,
             "evidence_ids": " ".join(agent.get("evidence_ids") or []),
             "evidence_bundle": f"evidence/{item_id}.json",
             "commands": json.dumps(agent.get("commands") or [], ensure_ascii=False),
+            "proposal_status": 'rejected' if rejection else ('available' if agent['commands'] else 'not_proposed'),
+            "proposal_rejection_stage": rejection['stage'] if rejection else '',
+            "proposal_rejection_code": rejection['code'] if rejection else '',
             "explanation": agent["explanation"] or "",
             **{d: "" for d in DIMENSIONS}, "catatan": "",
         })

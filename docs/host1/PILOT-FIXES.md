@@ -1,5 +1,8 @@
 # Perbaikan offline sesudah pilot pertama
 
+Perilaku lanjutan untuk mempertahankan diagnosis ketika proposal ditolak dijelaskan di
+[diagnosis dan penolakan proposal](PROPOSAL-OUTCOME.md); kriteria dukungan diagnosis/evidence tetap ketat.
+
 Pilot pertama berisi 120 run unik. Pada 90 run agen terdapat 58 job failed: 40 diagnosis
 tidak didukung observasi, 9 usulan ditolak linter, 3 batas konteks, dan 6 pemeriksaan waktu
 capture. Delapan usulan OSPF area gagal karena tidak menghapus konfigurasi area lama.

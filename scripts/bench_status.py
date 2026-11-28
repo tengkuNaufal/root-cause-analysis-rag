@@ -81,12 +81,13 @@ def summary(out, faults, plan_total):
               f"{fmt(statistics.median(heal) if heal else None):>11}")
     print("(kelas/router = cocok dengan katalog, cuma cek cepat; angka resmi tetap dari evaluator)")
 
-    bad = [r for r in rows if r["status"] != "completed" or r.get("recovered") is not True]
+    bad = [r for r in rows if r["status"] != "completed" or r.get("recovered") is not True
+           or (r.get('proposal') or {}).get('status') == 'rejected']
     if bad:
         print("\nBaris yang perlu dicek:")
         for r in bad[-10:]:
             print(f"  [{r['plan_order']}] {r['fault_id']} {r['variant']} status={r['status']} "
-                  f"pulih={r.get('recovered')} {(r.get('error') or '')[:80]}")
+                  f"pulih={r.get('recovered')} {(r.get('error') or (r.get('proposal') or {}).get('code') or '')[:80]}")
 
     print("\nRun terakhir:")
     for r in rows[-5:]:
@@ -119,6 +120,10 @@ def show(out, faults, which):
           f"confidence {'-' if a.get('confidence') is None else a['confidence']}")
     if a.get("explanation"):
         print(f"Penjelasan          : {a['explanation']}")
+    proposal=rec.get('proposal') or {}
+    if proposal.get('status')=='rejected':
+        print(f"Proposal ditolak API: {proposal.get('stage')} / {proposal.get('code')} "
+              f"({proposal.get('candidate_count')} kandidat; diagnosis tetap tersedia)")
     print(f"Evidence dipakai    : {', '.join(a.get('evidence_ids') or []) or '-'}")
     print("Perintah perbaikan  :")
     for c in a.get("commands") or []:
