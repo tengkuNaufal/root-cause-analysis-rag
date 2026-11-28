@@ -35,3 +35,15 @@ pada runs_scored.csv dan diberi peringatan pada laporan. Varian regex memakai ma
 bentuk legacy memakai daftar evidence tersedia. `halluc_evidence_ids` mencatat sitasi bermasalah.
 Metrik halusinasi adalah proxy ID dan topologi perintah, bukan pemeriksaan seluruh fakta teks.
 Kontrak API dan proses layanan tidak berubah oleh audit offline ini.
+
+## Penilaian penjelasan
+
+[Sampler rubrik](rubrik-explainability.md) memakai `checked_catalog` dan `select_attempts` yang
+sama, termasuk pemeriksaan hash attempt yang dikecualikan. Bundle evidence diverifikasi dari
+arsip lokal dan diberi nama anonim; kunci privat menghubungkan sampel dengan run asli dan hash
+input. Default scope tiga agen dapat diperluas ke regex secara eksplisit.
+
+Tidak ada perubahan runner, katalog, prompt, kontrak wire API atau konfigurasi lab dalam perbaikan
+ini. Untuk evaluasi resmi tetap bekukan kode/model/options, policy linter, katalog, topologi dan
+jadwal; pisahkan data pilot dari benchmark. Pemilihan first/last adalah keputusan analisis yang
+harus dilaporkan, bukan bukti kegagalan attempt lain boleh dihapus.
