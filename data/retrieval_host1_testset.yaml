@@ -1,0 +1,451 @@
+version: 1
+catalog_sha256: e3b0ca1955439c057604a0d2eb6c20a5dcc937866999ca640601867e2927116b
+scope: Offline retrieval evaluation only; keyword relevance proxy, not independent
+  human relevance or agent accuracy.
+questions:
+- query_id: F01-id
+  fault_id: F01
+  language: id
+  fault_class: mtu_mismatch
+  question: OSPF tetap ExStart pada L12, kedua interface UP. Pemeriksaan apa yang
+    dijelaskan dokumentasi?
+  relevance_groups: &id001
+  - - mtu
+    - exstart
+  - - mtu
+    - mismatch
+- query_id: F01-en
+  fault_id: F01
+  language: en
+  fault_class: mtu_mismatch
+  question: OSPF stays in ExStart on L12 while interfaces are UP. Which checks are
+    documented?
+  relevance_groups: *id001
+- query_id: F02-id
+  fault_id: F02
+  language: id
+  fault_class: mtu_mismatch
+  question: OSPF tetap ExStart pada L34, kedua interface UP. Pemeriksaan apa yang
+    dijelaskan dokumentasi?
+  relevance_groups: *id001
+- query_id: F02-en
+  fault_id: F02
+  language: en
+  fault_class: mtu_mismatch
+  question: OSPF stays in ExStart on L34 while interfaces are UP. Which checks are
+    documented?
+  relevance_groups: *id001
+- query_id: F03-id
+  fault_id: F03
+  language: id
+  fault_class: mtu_mismatch
+  question: OSPF tetap ExStart pada L23, kedua interface UP. Pemeriksaan apa yang
+    dijelaskan dokumentasi?
+  relevance_groups: *id001
+- query_id: F03-en
+  fault_id: F03
+  language: en
+  fault_class: mtu_mismatch
+  question: OSPF stays in ExStart on L23 while interfaces are UP. Which checks are
+    documented?
+  relevance_groups: *id001
+- query_id: F04-id
+  fault_id: F04
+  language: id
+  fault_class: link_down
+  question: Interface pada L13 berstatus administratively DOWN dan peer terputus.
+    Bagaimana memeriksa interface?
+  relevance_groups: &id002
+  - - shutdown
+  - - interface
+    - link
+- query_id: F04-en
+  fault_id: F04
+  language: en
+  fault_class: link_down
+  question: An interface on L13 is administratively DOWN and its peer disconnects.
+    How should the interface be checked?
+  relevance_groups: *id002
+- query_id: F05-id
+  fault_id: F05
+  language: id
+  fault_class: link_down
+  question: Interface pada L35 berstatus administratively DOWN dan peer terputus.
+    Bagaimana memeriksa interface?
+  relevance_groups: *id002
+- query_id: F05-en
+  fault_id: F05
+  language: en
+  fault_class: link_down
+  question: An interface on L35 is administratively DOWN and its peer disconnects.
+    How should the interface be checked?
+  relevance_groups: *id002
+- query_id: F06-id
+  fault_id: F06
+  language: id
+  fault_class: link_down
+  question: Interface pada L56 berstatus administratively DOWN dan peer terputus.
+    Bagaimana memeriksa interface?
+  relevance_groups: *id002
+- query_id: F06-en
+  fault_id: F06
+  language: en
+  fault_class: link_down
+  question: An interface on L56 is administratively DOWN and its peer disconnects.
+    How should the interface be checked?
+  relevance_groups: *id002
+- query_id: F07-id
+  fault_id: F07
+  language: id
+  fault_class: ospf_hello_mismatch
+  question: Pada L12, log OSPF melaporkan hello interval tidak cocok dan neighbor
+    hilang. Bagaimana memeriksanya?
+  relevance_groups: &id003
+  - - hello-interval
+  - - hello
+    - interval
+- query_id: F07-en
+  fault_id: F07
+  language: en
+  fault_class: ospf_hello_mismatch
+  question: On L12, OSPF reports incompatible hello intervals and loses its neighbor.
+    What should be checked?
+  relevance_groups: *id003
+- query_id: F08-id
+  fault_id: F08
+  language: id
+  fault_class: ospf_hello_mismatch
+  question: Pada L24, log OSPF melaporkan hello interval tidak cocok dan neighbor
+    hilang. Bagaimana memeriksanya?
+  relevance_groups: *id003
+- query_id: F08-en
+  fault_id: F08
+  language: en
+  fault_class: ospf_hello_mismatch
+  question: On L24, OSPF reports incompatible hello intervals and loses its neighbor.
+    What should be checked?
+  relevance_groups: *id003
+- query_id: F09-id
+  fault_id: F09
+  language: id
+  fault_class: ospf_hello_mismatch
+  question: Pada L34, log OSPF melaporkan hello interval tidak cocok dan neighbor
+    hilang. Bagaimana memeriksanya?
+  relevance_groups: *id003
+- query_id: F09-en
+  fault_id: F09
+  language: en
+  fault_class: ospf_hello_mismatch
+  question: On L34, OSPF reports incompatible hello intervals and loses its neighbor.
+    What should be checked?
+  relevance_groups: *id003
+- query_id: F10-id
+  fault_id: F10
+  language: id
+  fault_class: ospf_area_mismatch
+  question: Pada L13, OSPF menolak paket karena area ID berbeda. Konfigurasi apa yang
+    perlu diperiksa?
+  relevance_groups: &id004
+  - - area
+    - interface
+- query_id: F10-en
+  fault_id: F10
+  language: en
+  fault_class: ospf_area_mismatch
+  question: OSPF rejects packets on L13 because area IDs differ. Which configuration
+    should be checked?
+  relevance_groups: *id004
+- query_id: F11-id
+  fault_id: F11
+  language: id
+  fault_class: ospf_area_mismatch
+  question: Pada L24, OSPF menolak paket karena area ID berbeda. Konfigurasi apa yang
+    perlu diperiksa?
+  relevance_groups: *id004
+- query_id: F11-en
+  fault_id: F11
+  language: en
+  fault_class: ospf_area_mismatch
+  question: OSPF rejects packets on L24 because area IDs differ. Which configuration
+    should be checked?
+  relevance_groups: *id004
+- query_id: F12-id
+  fault_id: F12
+  language: id
+  fault_class: ospf_area_mismatch
+  question: Pada L23, OSPF menolak paket karena area ID berbeda. Konfigurasi apa yang
+    perlu diperiksa?
+  relevance_groups: *id004
+- query_id: F12-en
+  fault_id: F12
+  language: en
+  fault_class: ospf_area_mismatch
+  question: OSPF rejects packets on L23 because area IDs differ. Which configuration
+    should be checked?
+  relevance_groups: *id004
+- query_id: F13-id
+  fault_id: F13
+  language: id
+  fault_class: ospf_auth_mismatch
+  question: OSPF pada L12 melaporkan authentication mismatch. Bagaimana memeriksa
+    konfigurasi autentikasi?
+  relevance_groups: &id005
+  - - authentication
+  - - message-digest
+- query_id: F13-en
+  fault_id: F13
+  language: en
+  fault_class: ospf_auth_mismatch
+  question: OSPF on L12 reports authentication mismatch. How is authentication configuration
+    checked?
+  relevance_groups: *id005
+- query_id: F14-id
+  fault_id: F14
+  language: id
+  fault_class: ospf_auth_mismatch
+  question: OSPF pada L13 melaporkan authentication mismatch. Bagaimana memeriksa
+    konfigurasi autentikasi?
+  relevance_groups: *id005
+- query_id: F14-en
+  fault_id: F14
+  language: en
+  fault_class: ospf_auth_mismatch
+  question: OSPF on L13 reports authentication mismatch. How is authentication configuration
+    checked?
+  relevance_groups: *id005
+- query_id: F15-id
+  fault_id: F15
+  language: id
+  fault_class: ospf_auth_mismatch
+  question: OSPF pada L23 melaporkan authentication mismatch. Bagaimana memeriksa
+    konfigurasi autentikasi?
+  relevance_groups: *id005
+- query_id: F15-en
+  fault_id: F15
+  language: en
+  fault_class: ospf_auth_mismatch
+  question: OSPF on L23 reports authentication mismatch. How is authentication configuration
+    checked?
+  relevance_groups: *id005
+- query_id: F16-id
+  fault_id: F16
+  language: id
+  fault_class: bgp_neighbor_shutdown
+  question: Peer BGP pada iBGP r1-r4 berada Idle (Admin), sementara interface UP.
+    Apa arti state itu?
+  relevance_groups: &id006
+  - - neighbor
+    - shutdown
+- query_id: F16-en
+  fault_id: F16
+  language: en
+  fault_class: bgp_neighbor_shutdown
+  question: The BGP peer on iBGP r1-r4 is Idle (Admin) while its interface is UP.
+    What does this state indicate?
+  relevance_groups: *id006
+- query_id: F17-id
+  fault_id: F17
+  language: id
+  fault_class: bgp_neighbor_shutdown
+  question: Peer BGP pada L35 berada Idle (Admin), sementara interface UP. Apa arti
+    state itu?
+  relevance_groups: *id006
+- query_id: F17-en
+  fault_id: F17
+  language: en
+  fault_class: bgp_neighbor_shutdown
+  question: The BGP peer on L35 is Idle (Admin) while its interface is UP. What does
+    this state indicate?
+  relevance_groups: *id006
+- query_id: F18-id
+  fault_id: F18
+  language: id
+  fault_class: bgp_neighbor_shutdown
+  question: Peer BGP pada L56 berada Idle (Admin), sementara interface UP. Apa arti
+    state itu?
+  relevance_groups: *id006
+- query_id: F18-en
+  fault_id: F18
+  language: en
+  fault_class: bgp_neighbor_shutdown
+  question: The BGP peer on L56 is Idle (Admin) while its interface is UP. What does
+    this state indicate?
+  relevance_groups: *id006
+- query_id: F19-id
+  fault_id: F19
+  language: id
+  fault_class: bgp_wrong_remote_as
+  question: BGP OPEN pada iBGP r2-r3 ditolak dengan Bad Peer AS. Parameter peer apa
+    yang harus dibandingkan?
+  relevance_groups: &id007
+  - - remote-as
+  - - remote
+    - as
+- query_id: F19-en
+  fault_id: F19
+  language: en
+  fault_class: bgp_wrong_remote_as
+  question: The BGP OPEN on iBGP r2-r3 is rejected with Bad Peer AS. Which peer parameter
+    should be compared?
+  relevance_groups: *id007
+- query_id: F20-id
+  fault_id: F20
+  language: id
+  fault_class: bgp_wrong_remote_as
+  question: BGP OPEN pada L46 ditolak dengan Bad Peer AS. Parameter peer apa yang
+    harus dibandingkan?
+  relevance_groups: *id007
+- query_id: F20-en
+  fault_id: F20
+  language: en
+  fault_class: bgp_wrong_remote_as
+  question: The BGP OPEN on L46 is rejected with Bad Peer AS. Which peer parameter
+    should be compared?
+  relevance_groups: *id007
+- query_id: F21-id
+  fault_id: F21
+  language: id
+  fault_class: bgp_wrong_remote_as
+  question: BGP OPEN pada L56 ditolak dengan Bad Peer AS. Parameter peer apa yang
+    harus dibandingkan?
+  relevance_groups: *id007
+- query_id: F21-en
+  fault_id: F21
+  language: en
+  fault_class: bgp_wrong_remote_as
+  question: The BGP OPEN on L56 is rejected with Bad Peer AS. Which peer parameter
+    should be compared?
+  relevance_groups: *id007
+- query_id: F22-id
+  fault_id: F22
+  language: id
+  fault_class: bgp_inbound_filter
+  question: Sesi BGP pada L35 Established tetapi prefix service tidak diterima melalui
+    peer ini. Bagaimana memeriksa kebijakan inbound?
+  relevance_groups: &id008
+  - - route-map
+  - - prefix-list
+- query_id: F22-en
+  fault_id: F22
+  language: en
+  fault_class: bgp_inbound_filter
+  question: BGP on L35 is Established but a service prefix is not received through
+    this peer. How is inbound policy inspected?
+  relevance_groups: *id008
+- query_id: F23-id
+  fault_id: F23
+  language: id
+  fault_class: bgp_inbound_filter
+  question: Sesi BGP pada L46 Established tetapi prefix service tidak diterima melalui
+    peer ini. Bagaimana memeriksa kebijakan inbound?
+  relevance_groups: *id008
+- query_id: F23-en
+  fault_id: F23
+  language: en
+  fault_class: bgp_inbound_filter
+  question: BGP on L46 is Established but a service prefix is not received through
+    this peer. How is inbound policy inspected?
+  relevance_groups: *id008
+- query_id: F24-id
+  fault_id: F24
+  language: id
+  fault_class: bgp_inbound_filter
+  question: Sesi BGP pada L56 Established tetapi prefix service tidak diterima melalui
+    peer ini. Bagaimana memeriksa kebijakan inbound?
+  relevance_groups: *id008
+- query_id: F24-en
+  fault_id: F24
+  language: en
+  fault_class: bgp_inbound_filter
+  question: BGP on L56 is Established but a service prefix is not received through
+    this peer. How is inbound policy inspected?
+  relevance_groups: *id008
+- query_id: F25-id
+  fault_id: F25
+  language: id
+  fault_class: bgp_missing_network
+  question: Prefix service lokal pada r1 ada di tabel connected tetapi tidak diiklankan
+    BGP. Bagaimana memeriksa originasi prefix?
+  relevance_groups: &id009
+  - - network
+    - bgp
+- query_id: F25-en
+  fault_id: F25
+  language: en
+  fault_class: bgp_missing_network
+  question: A local service prefix at r1 is connected but not advertised by BGP. How
+    is prefix origination checked?
+  relevance_groups: *id009
+- query_id: F26-id
+  fault_id: F26
+  language: id
+  fault_class: bgp_missing_network
+  question: Prefix service lokal pada r5 ada di tabel connected tetapi tidak diiklankan
+    BGP. Bagaimana memeriksa originasi prefix?
+  relevance_groups: *id009
+- query_id: F26-en
+  fault_id: F26
+  language: en
+  fault_class: bgp_missing_network
+  question: A local service prefix at r5 is connected but not advertised by BGP. How
+    is prefix origination checked?
+  relevance_groups: *id009
+- query_id: F27-id
+  fault_id: F27
+  language: id
+  fault_class: bgp_missing_network
+  question: Prefix service lokal pada r6 ada di tabel connected tetapi tidak diiklankan
+    BGP. Bagaimana memeriksa originasi prefix?
+  relevance_groups: *id009
+- query_id: F27-en
+  fault_id: F27
+  language: en
+  fault_class: bgp_missing_network
+  question: A local service prefix at r6 is connected but not advertised by BGP. How
+    is prefix origination checked?
+  relevance_groups: *id009
+- query_id: F28-id
+  fault_id: F28
+  language: id
+  fault_class: wrong_ip_address
+  question: Interface pada L12 UP tetapi alamat IPv4 tidak berada dalam subnet peer
+    yang dirancang. Bagaimana memeriksa alamat?
+  relevance_groups: &id010
+  - - ip address
+  - - interface
+    - address
+- query_id: F28-en
+  fault_id: F28
+  language: en
+  fault_class: wrong_ip_address
+  question: An interface on L12 is UP but its IPv4 address is outside the designed
+    peer subnet. How should addressing be inspected?
+  relevance_groups: *id010
+- query_id: F29-id
+  fault_id: F29
+  language: id
+  fault_class: wrong_ip_address
+  question: Interface pada L35 UP tetapi alamat IPv4 tidak berada dalam subnet peer
+    yang dirancang. Bagaimana memeriksa alamat?
+  relevance_groups: *id010
+- query_id: F29-en
+  fault_id: F29
+  language: en
+  fault_class: wrong_ip_address
+  question: An interface on L35 is UP but its IPv4 address is outside the designed
+    peer subnet. How should addressing be inspected?
+  relevance_groups: *id010
+- query_id: F30-id
+  fault_id: F30
+  language: id
+  fault_class: wrong_ip_address
+  question: Interface pada L46 UP tetapi alamat IPv4 tidak berada dalam subnet peer
+    yang dirancang. Bagaimana memeriksa alamat?
+  relevance_groups: *id010
+- query_id: F30-en
+  fault_id: F30
+  language: en
+  fault_class: wrong_ip_address
+  question: An interface on L46 is UP but its IPv4 address is outside the designed
+    peer subnet. How should addressing be inspected?
+  relevance_groups: *id010

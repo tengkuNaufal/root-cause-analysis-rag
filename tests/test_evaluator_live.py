@@ -3,6 +3,7 @@
 Respons diagnosis diambil dari contoh resmi host1/live_api/examples.json (F01, r1, mtu_mismatch).
 """
 import copy
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -20,7 +21,7 @@ def host2_row(diagnosis="hypothesis", **kw):
     """Baris read-only: tidak ada eksekusi, jaringan dipulihkan fallback revert katalog."""
     row = {
         "plan_order": 1, "fault_id": "F01", "variant": "graph_rag", "trial": 1,
-        "catalog_sha256": "0" * 64, "request_id": "req-1", "job_id": "job-1",
+        "catalog_sha256": hashlib.sha256((EXAMPLES.parents[2] / "faults" / "host1.yaml").read_bytes()).hexdigest(), "request_id": "req-1", "job_id": "job-1",
         "timing": {"t_inject": 0.0, "t_symptom": 12.5, "t_request": 12.7, "t_diagnosis_done": 18.0,
                    "t_lint_done": 18.2, "t_apply_done": None, "t_verified": 30.0},
         "symptoms": [],
@@ -112,3 +113,18 @@ def test_simulation_flagged_and_end_to_end(tmp_path):
     assert m.loc["graph_rag", "fallback_revert_rate"] == 1.0
     assert m.loc["zero_shot", "abstain_rate"] == 1.0
     assert "data sintetis" in (tmp_path / "out" / "report.md").read_text(encoding="utf-8")
+
+
+def test_catalog_hash_mismatch_rejected(tmp_path):
+    row = host2_row(catalog_sha256="0" * 64)
+    path = tmp_path / "bad.jsonl"
+    path.write_text(json.dumps(row))
+    with pytest.raises(ValueError, match="catalog_sha256"):
+        evaluate(path, tmp_path / "out")
+
+
+def test_partial_execution_error_is_not_agent_success(catalog, linter):
+    row = host2_row(applied=True, execution={"status": "execution_error", "error": "partial failure"},
+                    fallback_revert={"performed": False})
+    scored = score_run(row, catalog, linter)
+    assert not scored["agent_recovered"] and not scored["cmd_ok"]

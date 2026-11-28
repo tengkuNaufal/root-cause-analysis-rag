@@ -346,3 +346,42 @@ class Capabilities(Strict):
     freshness_policy: FreshnessPolicy
     readiness: Readiness
     note: str
+
+class LiveHealth(Strict):
+    status: Literal['ok']
+    mode: Literal['live']
+    simulation: Literal[False]
+    active: bool
+    ready: bool
+    reasons: list[str]
+    execution_allowed: Literal[False]
+
+class LiveReadiness(Strict):
+    baseline: bool
+    collector: bool
+    model: bool
+    retrieval: bool
+    graph: bool
+    linter: Literal[False]
+    executor: Literal[False]
+
+class LiveCapabilities(Strict):
+    contract_version: Literal['live.v1-draft2']
+    mode: Literal['live']
+    simulation: Literal[False]
+    lab: Literal['rca']
+    variants: list[Variant]
+    real_variants_available: list[Variant]
+    model_profile: str
+    model_digest: Sha
+    inventory_sha256: Sha
+    max_body_bytes: Literal[4096]
+    client_timeout_seconds: Literal[180]
+    poll_seconds: Literal[1]
+    server_deadline_seconds: Seconds
+    retention_seconds: Literal[604800]
+    freshness_policy: FreshnessPolicy
+    readiness: LiveReadiness
+    supported_causes: list[Cause]
+    execution_allowed: Literal[False]
+    note: str

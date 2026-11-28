@@ -4,7 +4,21 @@ Dokumen ini menjelaskan **setiap file kandidat Git** satu per satu. File dengan 
 
 ## Cara membaca alur proyek
 
-`lab/` menyediakan konfigurasi router. `scripts/` dan `faults/` menyediakan cek serta eksperimen replika. Pada Host 1, `telemetry/` membaca state dan `log_ingestion/` mengumpulkan log; `graph_indexer/` menyusun relasi dan `knowledge/` mengikat fakta ke dokumentasi serta gate. `reasoning_agent/` memanggil model untuk lingkup yang didukung, lalu `agent_contract/` memvalidasi input/output. API saat ini hanya replay, belum executor perbaikan jaringan.
+`lab/` menyediakan konfigurasi router. `scripts/` dan `faults/` menyediakan cek serta eksperimen kelompok. Pada Host 1, `telemetry/` membaca state dan `log_ingestion/` mengumpulkan log; `graph_indexer/` menyusun relasi dan `knowledge/` mengikat fakta ke dokumentasi serta gate. `reasoning_agent/` melayani replay dengan `agent_contract/`. `live_api/` menyediakan capture terbaru, tiga varian diagnosis, API read-only serta executor/workflow lokal berotorisasi. Executor terpisah dari API; belum diuji apply ke router nyata.
+
+### Tambahan komponen pra-smoke Host 1
+
+| File | Fungsi |
+|---|---|
+| `host1/live_api/capture.py`, `settings.py` | Capture read-only dan perbedaan runtime dengan konfigurasi baseline, termasuk sanitasi material autentikasi. |
+| `host1/live_api/agent.py`, `server.py` | Diagnosis tiga varian, validasi label/citation/proposal serta layanan job live ber-token. |
+| `host1/live_api/retrieval.py` | Query observasi dan ekspansi konteks dari sumber primer berhash tanpa mengubah Chroma bersama. |
+| `host1/live_api/executor.py` | Preview/apply lokal dengan lint, otorisasi hash, precondition, ledger dan verifier. |
+| `host1/live_api/workflow.py` | Satu diagnosis sampai evidence, preview/optional apply dan verifikasi; tidak inject fault. |
+| `host1/live_api/evaluate_retrieval.py` | Membuat dan mengukur set retrieval Host 1 secara offline, terpisah dari runtime agen. |
+| `host1/live_api/test_agent.py`, `test_executor.py`, `test_workflow.py`, `test_retrieval_host1.py` | Regresi capture/model/API/execution tiruan, resume dan sumber retrieval. |
+| `data/retrieval_host1_testset.yaml` | Pertanyaan pengembangan retrieval dan metadata relevansi/hash katalog untuk evaluator offline. |
+| `tests/test_evaluator_live.py` | Regresi hasil runner live, fallback, waktu, catalog binding dan partial execution. |
 
 `data/host1/` adalah input pengujian terpilih, bukan seluruh hasil eksperimen. `docs/` menjelaskan cara kerja, status dan batas pengujian. `laptop/` adalah jalur SSH dari laptop menuju host lab. Konfigurasi replika dan Host 1 berbeda dan harus disesuaikan sebelum integrasi benchmark.
 
@@ -251,6 +265,10 @@ Panduan endpoint, negatif/history parsial dan penjelasan sudah digabung ke `host
 | `host1/live_api/mock.py` | Simulator HTTP loopback, job async, SQLite, idempotensi dan outcome sintetis tanpa model/router. |
 | `host1/live_api/test_mock.py` | Tes schema, HTTP, concurrency, evidence dan restart pada output/port sementara. |
 | `host1/live_api/test_diagnosis.py` | Tes label kelas/router live, binding assessment, diagnosis tanpa patch dan kompatibilitas replay/linter. |
+| `host1/live_api/capture.py` | Capture read-only, filter material autentikasi, observasi network dan proyeksi evidence terbaru. |
+| `host1/live_api/agent.py` | Agen berbasis evidence dengan tiga jalur konteks, guard fakta/citation/budget dan model pin; tanpa perintah perbaikan. |
+| `host1/live_api/server.py` | Listener loopback live terpisah, baseline/readiness, persistent job dan pengambilan evidence beku. |
+| `host1/live_api/test_agent.py` | Tes collector/model simulasi, freshness, variasi konteks, isolation replay, integrity dan HTTP live. |
 
 ### host1/agent_contract/
 

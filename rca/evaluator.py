@@ -33,6 +33,7 @@ Metrik per varian:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 from datetime import datetime
@@ -40,7 +41,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from rca.catalog import load_catalog
+from rca.catalog import load_catalog, catalog_path as default_catalog_path
 from rca.linter import CommandLinter
 from rca.topology import Topology
 
@@ -208,7 +209,8 @@ def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
                      default=False) is True
     reverted = (_get(run, "fallback_revert.performed", default=False) is True or run.get("reverted") is True
                 or _get(run, "verification.source", default=None) in ("fallback_revert", "catalog_revert"))
-    agent_recovered = applied and recovered and not reverted
+    execution_error = isinstance(execution, dict) and (execution.get('status') in ('execution_error','verification_failed','executing') or bool(execution.get('error')))
+    agent_recovered = applied and recovered and not reverted and not execution_error
 
     t_diag = _num(_get(run, "t_diagnosis_s", "timing.diagnosis_s", "diagnosis_time_s"))
     if t_diag is None:
@@ -382,9 +384,14 @@ def boxplot(df: pd.DataFrame, col: str, title: str, path: Path) -> None:
 
 
 def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topology_path: Path | None = None) -> dict:
-    catalog = load_catalog(catalog_path)
+    selected_catalog = catalog_path or default_catalog_path()
+    catalog = load_catalog(selected_catalog)
+    catalog_sha = hashlib.sha256(Path(selected_catalog).read_bytes()).hexdigest()
     linter = CommandLinter(Topology.load(topology_path))
     runs = load_runs(results)
+    for run in runs:
+        if run.get("catalog_sha256") is not None and run["catalog_sha256"] != catalog_sha:
+            raise ValueError("catalog_sha256 does not match evaluator catalog")
     if not runs:
         raise SystemExit(f"{results}: tidak ada run")
     df = pd.DataFrame([score_run(r, catalog, linter) for r in runs])

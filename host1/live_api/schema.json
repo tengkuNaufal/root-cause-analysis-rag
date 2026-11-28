@@ -882,6 +882,249 @@
       "title": "LintOutput",
       "type": "object"
     },
+    "LiveCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "live.v1-draft2",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "mode": {
+          "const": "live",
+          "title": "Mode",
+          "type": "string"
+        },
+        "simulation": {
+          "const": false,
+          "title": "Simulation",
+          "type": "boolean"
+        },
+        "lab": {
+          "const": "rca",
+          "title": "Lab",
+          "type": "string"
+        },
+        "variants": {
+          "items": {
+            "enum": [
+              "zero_shot",
+              "text_rag",
+              "graph_rag"
+            ],
+            "type": "string"
+          },
+          "title": "Variants",
+          "type": "array"
+        },
+        "real_variants_available": {
+          "items": {
+            "enum": [
+              "zero_shot",
+              "text_rag",
+              "graph_rag"
+            ],
+            "type": "string"
+          },
+          "title": "Real Variants Available",
+          "type": "array"
+        },
+        "model_profile": {
+          "title": "Model Profile",
+          "type": "string"
+        },
+        "model_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Model Digest",
+          "type": "string"
+        },
+        "inventory_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Inventory Sha256",
+          "type": "string"
+        },
+        "max_body_bytes": {
+          "const": 4096,
+          "title": "Max Body Bytes",
+          "type": "integer"
+        },
+        "client_timeout_seconds": {
+          "const": 180,
+          "title": "Client Timeout Seconds",
+          "type": "integer"
+        },
+        "poll_seconds": {
+          "const": 1,
+          "title": "Poll Seconds",
+          "type": "integer"
+        },
+        "server_deadline_seconds": {
+          "minimum": 0,
+          "title": "Server Deadline Seconds",
+          "type": "number"
+        },
+        "retention_seconds": {
+          "const": 604800,
+          "title": "Retention Seconds",
+          "type": "integer"
+        },
+        "freshness_policy": {
+          "$ref": "#/$defs/FreshnessPolicy"
+        },
+        "readiness": {
+          "$ref": "#/$defs/LiveReadiness"
+        },
+        "supported_causes": {
+          "items": {
+            "enum": [
+              "mtu_mismatch",
+              "link_down",
+              "ospf_hello_mismatch",
+              "ospf_area_mismatch",
+              "ospf_auth_mismatch",
+              "bgp_neighbor_shutdown",
+              "bgp_wrong_remote_as",
+              "bgp_inbound_filter",
+              "bgp_missing_network",
+              "wrong_ip_address",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "title": "Supported Causes",
+          "type": "array"
+        },
+        "execution_allowed": {
+          "const": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract_version",
+        "mode",
+        "simulation",
+        "lab",
+        "variants",
+        "real_variants_available",
+        "model_profile",
+        "model_digest",
+        "inventory_sha256",
+        "max_body_bytes",
+        "client_timeout_seconds",
+        "poll_seconds",
+        "server_deadline_seconds",
+        "retention_seconds",
+        "freshness_policy",
+        "readiness",
+        "supported_causes",
+        "execution_allowed",
+        "note"
+      ],
+      "title": "LiveCapabilities",
+      "type": "object"
+    },
+    "LiveHealth": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "ok",
+          "title": "Status",
+          "type": "string"
+        },
+        "mode": {
+          "const": "live",
+          "title": "Mode",
+          "type": "string"
+        },
+        "simulation": {
+          "const": false,
+          "title": "Simulation",
+          "type": "boolean"
+        },
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "ready": {
+          "title": "Ready",
+          "type": "boolean"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "execution_allowed": {
+          "const": false,
+          "title": "Execution Allowed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "mode",
+        "simulation",
+        "active",
+        "ready",
+        "reasons",
+        "execution_allowed"
+      ],
+      "title": "LiveHealth",
+      "type": "object"
+    },
+    "LiveReadiness": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {
+          "title": "Baseline",
+          "type": "boolean"
+        },
+        "collector": {
+          "title": "Collector",
+          "type": "boolean"
+        },
+        "model": {
+          "title": "Model",
+          "type": "boolean"
+        },
+        "retrieval": {
+          "title": "Retrieval",
+          "type": "boolean"
+        },
+        "graph": {
+          "title": "Graph",
+          "type": "boolean"
+        },
+        "linter": {
+          "const": false,
+          "title": "Linter",
+          "type": "boolean"
+        },
+        "executor": {
+          "const": false,
+          "title": "Executor",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "baseline",
+        "collector",
+        "model",
+        "retrieval",
+        "graph",
+        "linter",
+        "executor"
+      ],
+      "title": "LiveReadiness",
+      "type": "object"
+    },
     "Pending": {
       "additionalProperties": false,
       "properties": {
@@ -1420,6 +1663,12 @@
     },
     "Capabilities": {
       "$ref": "#/$defs/Capabilities"
+    },
+    "LiveHealth": {
+      "$ref": "#/$defs/LiveHealth"
+    },
+    "LiveCapabilities": {
+      "$ref": "#/$defs/LiveCapabilities"
     }
   }
 }

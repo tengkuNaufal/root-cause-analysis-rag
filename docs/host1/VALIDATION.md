@@ -1,6 +1,30 @@
 # Hasil validasi dan batas kesimpulan
 
-Ringkasan ini menggabungkan laporan Host 1 tanggal 19–21 November 2026. Angka berasal dari pengujian yang sudah dilakukan; konsolidasi dokumen tidak menjalankan benchmark baru atau memeriksa ulang jaringan live. Laporan lengkap dan seluruh percobaan tetap tersedia lokal di `private/docs-history/host1/` dan arsip data yang di-ignore.
+Dokumen ini membedakan validasi terbaru dan laporan historis. Laporan lengkap serta artefak mesin tetap lokal di `private/` yang di-ignore.
+
+## Penyelesaian komponen sebelum smoke MTU — 28 November 2026
+
+Setelah scope diperluas pengguna, lab dipulihkan dari konfigurasi Host 1 di repositori baru. Enam router dan Vector berjalan, restart count 0. Baseline lulus: 8 link/16 endpoint MTU 1500, 5 OSPF FULL, 9 BGP Established, 6 prefix service per router, ping 30/30 arah dan 120/120 paket. Vector menerima 10/10 marker dari enam router. Capture aktual 1,795 detik tidak menemukan anomali. Bukti: `private/pre-mtu-setup/20261128T045119Z/` dan direktori capture pada folder yang sama.
+
+Model lokal terpin llama3.1:8b dipakai untuk baseline sehat melalui ketiga varian: zero-shot, text RAG dan graph RAG semuanya completed/abstain. Ini memverifikasi jalur inferensi dan abstention; bukan akurasi diagnosis fault. API loopback 8766 memakai token privat, evidence berhash, penyimpanan job dan pencarian request_id. Replay 8765 sudah tidak aktif sejak awal tahap ini dan tidak dinyalakan atau diubah. Model live tidak dipakai bersamaan dengan replay.
+
+Tes akhir: 282 tes repo dan 80 tes Host 1/kontrak/agen/executor/workflow/regresi replay lulus, total 362. Router, model dan dispatch pada unit test adalah tiruan. Dukungan observasi sepuluh kelas diuji dari perbedaan konfigurasi/physical facts, tanpa membaca ground truth di runtime. Executor default preview; apply lokal memerlukan otorisasi dan hash diagnosis, lint, policy fingerprint, evidence/precondition serta ledger idempotensi. Verifier baseline nyata lulus. Belum ada command repair dikirim ke router nyata.
+
+Commissioning workflow nyata pada kode terakhir lulus: graph RAG completed/abstain, 4/4 evidence terverifikasi, executor not_requested/applied=false. Bukti: `private/pre-mtu-setup/workflow-8f65e1e8446d44f29db32158ef25ace5/`. Percobaan sebelumnya ditolak karena model mengisi confidence=0 ketika abstain; grammar kini mewajibkan null, ditambah regresi schema. Kegagalan awal tetap tersimpan privat dan tidak dihitung sebagai run sukses.
+
+Set retrieval Host 1 berisi 60 pertanyaan ID/EN untuk 30 lokasi fault. Pengukuran full chunks: dense 43/60, hybrid 46/60, hybrid dengan verified expansion 58/60 hit@5 menggunakan keyword proxy. Ekspansi dikembangkan setelah hasil awal; ini hasil pengembangan, bukan evaluasi held-out atau penilaian manusia. Skor excerpt awal 46/60 tidak dibandingkan langsung dengan baseline full chunks. Skor full chunks tidak membuktikan kualitas excerpt prompt atau akurasi agen. Artefak: `private/pre-mtu-setup/retrieval-host1-evaluation/` dan `retrieval-host1-expanded-full/`.
+
+Linter memiliki POLICY_VERSION dan fingerprint source. Evaluator branch Naufal 40e5f97 disalin ke working tree untuk integrasi; format assessment/evidence/lint/timing, default applied=false, fallback dan partial execution dijaga oleh tes. Runner PR #8 tetap utuh. Tidak ada commit, push, fault injection, apply nyata, smoke MTU <10 detik, pilot atau benchmark 450 run pada tahap ini.
+
+## Riwayat tahap read-only sebelum perluasan scope — 28 November 2026
+
+Implementasi capture/agent/server tersedia, terbatas pada interface administratively down dan MTU unequal yang didukung observasi dan inventory. Tiga jalur konteks memakai observasi, observasi+dokumentasi, serta observasi+dokumentasi+graf. Proposal perbaikan selalu kosong. Model/fault catalog/ground truth runner tidak digunakan sebagai sumber pengganti telemetry. Belum ada klaim dukungan sepuluh kelas, akurasi atau perbaikan jaringan live.
+
+Sebanyak 60 tes agen/mock/kontrak/replay lulus, termasuk 17 tes baru dengan transport capture/model sintetis. Sebanyak 265 tes repo juga lulus, termasuk regresi runner terbaru pada main 99f6f0d: total 325 tes. Dependency NetworkX untuk sesi ini dipasang ke private/live-agent-deps, tidak mengubah venv replay. Tes memakai port sementara dan data sementara; tidak ada inferensi Ollama asli atau perintah router nyata pada tes tersebut. Main diambil melalui fast-forward tanpa membuat commit baru; perubahan agen berada pada branch codex/host1-live-readonly-agent.
+
+Preflight aktual mendapati keenam router dan Vector exited; port replay 8765 dan model 11434 tidak merespons sejak awal pekerjaan. CLI live dijalankan sementara di loopback port OS terpilih untuk negative-admission smoke: health ready=false (lab_unavailable/baseline_not_confirmed/model_session_not_reserved), POST ditolak HTTP 503 dan tidak membuat inferensi. Listener baru dihentikan. Status/start/restart/hash konfigurasi container dan kondisi kedua port lama sama sebelum/sesudah. Bukti privat: private/live-agent-preflight/75a95f8bf31d4d6eb8256ffab6923c1f/summary.json.
+
+Baseline sehat belum dapat dibuktikan; pengguna melarang perubahan router sehingga tidak dilakukan pemulihan, deploy/reconfigure, fault, startup model atau startup replay. Validasi sumber/model nyata harus dilakukan setelah lab/model dipulihkan dengan izin terpisah. Hasil negative-admission dan simulasi bukan hasil diagnosis live nyata.
 
 ## Lab dan telemetry
 

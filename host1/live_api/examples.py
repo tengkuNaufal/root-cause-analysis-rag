@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic.json_schema import models_json_schema
 from .models import (VERSION, DiagnosisRequest, Job, EvidencePayload, LintInput,
                      LintOutput, ErrorResponse, Health, Capabilities, WireResponse,
-                     validate_live_pair, digest, project)
+                     LiveHealth, LiveCapabilities, validate_live_pair, digest, project)
 
 STAMP = '2026-11-21T00:00:00Z'
 RID = '00000000-0000-4000-8000-000000000001'
@@ -85,7 +85,7 @@ def examples():
                            error=dict(code='invalid_request',message='Synthetic example.',retryable=False)))
 
 def schema():
-    types=[DiagnosisRequest,WireResponse,Job,EvidencePayload,LintInput,LintOutput,ErrorResponse,Health,Capabilities]
+    types=[DiagnosisRequest,WireResponse,Job,EvidencePayload,LintInput,LintOutput,ErrorResponse,Health,Capabilities,LiveHealth,LiveCapabilities]
     refs, shared=models_json_schema([(t,'validation') for t in types])
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             'title':'Live API draft 2 payload definitions', **shared,

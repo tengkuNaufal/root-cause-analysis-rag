@@ -1,3 +1,5 @@
 # Minimal runtime + JSON Schema test dependency, matching the existing Host 1 lock.
 pydantic==2.14.3
 jsonschema==4.26.0
+networkx==3.4.2
+PyYAML==6.0.4
