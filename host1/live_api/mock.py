@@ -27,6 +27,18 @@ class ApiError(Exception):
         self.status, self.code, self.retryable = status, code, retryable
 
 class Service:
+    simulation = True
+
+    def _new_pending(self, req, jid):
+        return pending(req, jid, utc())
+
+    def _initial_source(self):
+        return canonical(SOURCE).decode()
+
+    def _check_readiness(self):
+        if not self.ready or self.stop.is_set():
+            raise ApiError(503, 'live_not_ready', True)
+
     def __init__(self, output, token, outcome='hypothesis', delay=1.0, deadline=600.0,
                  ready=True, variants=('zero_shot','text_rag','graph_rag'), clock=time.time):
         if not token or any(c.isspace() for c in token):
@@ -60,8 +72,12 @@ class Service:
             with self.db:
                 for jid,raw in self.db.execute('SELECT job_id,response FROM jobs').fetchall():
                     value=Job.model_validate_json(raw).model_dump()
+                    if value['simulation'] is not self.simulation:
+                        raise ValueError('Output contains jobs from a different service mode')
                     if value['state'] not in TERMINAL:
-                        value.update(state='interrupted',updated_at=utc(),error=dict(code='mock_restart',message='Mock restarted; job not resumed.',retryable=False))
+                        value.update(state='interrupted',updated_at=utc(),error=dict(
+                            code='mock_restart' if self.simulation else 'live_restart',
+                            message='Service restarted; job not resumed.',retryable=False))
                         self.db.execute('UPDATE jobs SET response=?,expires=? WHERE job_id=?',
                                         (canonical(value).decode(),self.clock()+604800,jid))
         except Exception:
@@ -107,12 +123,12 @@ class Service:
                 response=json.loads(row[2])
                 return (200 if response['state'] in TERMINAL else 202),response
             if req['variant'] not in self.variants:raise ApiError(422,'unsupported_variant')
-            if not self.ready or self.stop.is_set():raise ApiError(503,'live_not_ready',True)
             if self.active is not None:raise ApiError(503,'agent_busy',True)
-            jid=str(uuid.uuid4());value=pending(req,jid,utc());Job.model_validate(value)
+            self._check_readiness()
+            jid=str(uuid.uuid4());value=self._new_pending(req,jid);Job.model_validate(value)
             with self.db:
                 self.db.execute('INSERT INTO jobs VALUES (?,?,?,?,?,NULL)',
-                    (jid,req['request_id'],payload,canonical(value).decode(),canonical(SOURCE).decode()))
+                    (jid,req['request_id'],payload,canonical(value).decode(),self._initial_source()))
             self.active=jid
             worker=threading.Thread(target=self._work,args=(jid,),daemon=True)
             self.workers.append(worker)
@@ -198,7 +214,7 @@ def handler(service):
             self.send_header('Content-Length',str(len(body)))
             self.send_header('Cache-Control','no-store')
             self.send_header('Connection','close')
-            self.send_header('X-Live-API-Simulation','true')
+            self.send_header('X-Live-API-Simulation','true' if service.simulation else 'false')
             for k,v in (headers or {}).items():self.send_header(k,v)
             self.end_headers();self.close_connection=True
             try:self.wfile.write(body)

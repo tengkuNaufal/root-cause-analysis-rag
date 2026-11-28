@@ -1,39 +1,27 @@
-# Status dan pekerjaan berikutnya
+# Status Host 1 sebelum smoke test MTU
 
-Pembaruan 21 November 2026. Hasil berikut berasal dari pengujian tersimpan pada 19–21 November, bukan pemeriksaan bahwa layanan sedang aktif saat dokumen dibaca.
+Pembaruan 28 November 2026. Scope pekerjaan berakhir sebelum smoke test MTU di bawah 10 detik, pilot dan benchmark. Tidak ada commit/push pada penyelesaian ini.
 
-## Kemampuan yang tersedia
-
-| Bagian | Status dan batas |
+| Bagian | Status dan bukti |
 |---|---|
-| Lab Host 1 | Enam FRR, delapan link, lima adjacency OSPF dan sembilan sesi BGP pernah lulus baseline serta failover L12/L35 |
-| Telemetry dan log | Collector, Vector, graf NetworkX dan korelasi per router/window tersedia dan pernah diuji live |
-| Retrieval | Chroma dengan embedding lokal, hybrid dense/BM25, provenance, ekspansi YANG dan gate klaim terbatas tersedia |
-| Kontrak | Input/output Pydantic dan JSON Schema, pemeriksaan evidence/citation serta flag eksekusi tersedia |
-| Ollama | Instalasi lokal dan profil llama3.1:8b sudah diuji; belum ada perbandingan model yang memenuhi rencana kelompok |
-| Reasoning | Adapter dokumentasi, replay administratif DOWN, temporal bound dan observasi MTU tersedia; bukan diagnosis umum |
-| API | Enam belas skenario replay terdaftar, loopback, satu inferensi aktif, tanpa collector live atau executor |
-| Mock API live | Schema draft2, bundle contoh sintetis, job async/SQLite, pencarian request ID dan mock loopback tersedia; 27 tes live/mock lulus, tanpa collector/model/router |
-| Label diagnosis live | root_cause_class dan root_cause_router wajib pada WireResponse; assessment terikat konsisten; 27 tes live/mock dan 16 regresi replay lulus |
-| Client Host 2 | Client PowerShell 5.1/7 menjalankan 16 skenario berurutan dan menyimpan JSONL; delapan tes pada tiap runtime lulus, serta smoke API nyata 16/16 dari Host 1; belum runner benchmark live |
-| Migrasi | Kode dan data dipindahkan ke repo kelompok; path, import dan storage privat disesuaikan; 179 eksekusi tes lulus |
-| Kerapian repositori | Fixture dibatasi ke manifest; panduan temporal digabung dan artefak historis di-ignore; peta fungsi file tersedia; hasil client Host 2 di data/host2/ juga di-ignore |
-| Privasi sebelum commit | Path mesin dan login pribadi dibersihkan; fixture memakai MAC/IPv6 link-local sintetis dengan rantai hash baru; evidence asli tetap privat; 179 tes dan 16 replay simulasi lulus |
+| Lab enam FRR | Dipulihkan dari folder baru; enam router dan Vector berjalan. Baseline: 8 link, 5 OSPF FULL, 9 BGP Established, ping 30/30 arah dan 120/120 paket. |
+| Telemetry, log, graf | Capture terbaru dan 10/10 marker Vector lulus. Graph RAG membangun neighborhood NetworkX dari snapshot yang sama. |
+| Retrieval | Chroma Host 1 tetap utuh; konteks live memakai query setting yang dinormalisasi dan ekspansi sumber primer berhash. Set Host 1 60 pertanyaan ID/EN sudah dibekukan dan diukur; hasil proxy/batasnya di VALIDATION.md. |
+| Katalog dan runner | Tetap memakai 30 fault/10 kelas pada faults/host1.yaml. Runner PR #8 menjaga held/reconcile/Ctrl+C; tidak ada fault nyata dijalankan pada tahap ini. Daftar final belum dibekukan untuk benchmark. |
+| Linter | Format internal/steps/wire didukung; POLICY_VERSION=host1-policy-v1 dan hash source dicatat. Executor menolak policy yang berubah setelah dimuat. |
+| Evaluator | File branch Naufal 40e5f97 diintegrasikan ke working tree, bukan merge commit. Membaca assessment/manifest/status lint/timing, applied default false, dan fallback/partial execution tidak dihitung sukses agen. Hash katalog diperiksa. |
+| Ollama/model | Model lokal llama3.1:8b yang dipin dipakai untuk commissioning ketiga varian. Profil live sama: context 8192/output 768/seed 42/temperature 0/num_gpu 20. Bukan studi pemilihan model komparatif. |
+| Agen live tiga varian | Zero-shot, text RAG dan graph RAG memiliki jalur konteks berbeda, label/router eksplisit dan proposal unvalidated. Dukungan observasi sepuluh kelas diuji dengan konfigurasi/model tiruan. Model nyata berhasil pada baseline sehat (3 completed/abstain), belum akurasi diagnosis fault live. |
+| API/client | API live 127.0.0.1:8766 memakai token privat, persistent jobs, idempotensi dan evidence terverifikasi. HTTP graph RAG nyata lulus. Replay tidak diubah dan tidak dipakai paralel untuk inferensi. |
+| Executor/verifier/workflow | Implementasi lokal tersedia: diagnose → evidence → lint → preview/apply berotorisasi → verifier. Apply default mati; hash/precondition/policy/ledger diperiksa. Dispatch diuji dengan router tiruan; verifier baseline nyata lulus. Belum ada apply repair ke router nyata. |
 
-Semua jalur replay mempertahankan patch kosong dan eksekusi dinonaktifkan. Perbedaan MTU sintetis belum membuktikan dampak routing, penyebab awal gangguan atau keberhasilan repair. Angka validasi dan keterbatasannya ada di [VALIDATION.md](VALIDATION.md).
+Panduan operasional: [API/agen/executor](../../host1/live_api/README.md). Bukti terperinci dan batas klaim: [VALIDATION.md](VALIDATION.md). Artefak mesin, token, log dan hasil tetap di private/ yang di-ignore.
 
-## Pembagian pekerjaan kelompok
+## Tahap berikutnya, belum dijalankan
 
-Jalur Host 1 menangani agen dan lab, eksekusi terkontrol serta verifikasi jaringan. Jalur Host 2 menangani akses, adaptasi katalog dan runner, pilot serta benchmark. Jalur retrieval/linter/evaluasi menangani relevansi dokumentasi, pemeriksaan perintah dan metrik. Kontrak pada titik sambung dibahas bersama sebelum diubah; ground truth katalog hanya untuk runner/evaluator.
+1. Smoke MTU end-to-end secara terkontrol, termasuk diagnosis, lint, apply dan verifikasi, baru ukur target di bawah 10 detik. Belum ada klaim target tersebut tercapai.
+2. Setelah smoke lulus, selaraskan pemakaian receipt executor pada runner dan jalankan pilot yang disepakati sebelum benchmark.
+3. Bekukan katalog/model/versi policy dan jadwal; putuskan apakah perlu pembanding regex. Perbandingan model dan pilihan kelas pengganti tetap keputusan kelompok.
+4. Benchmark 450 run, analisis hasil, laporan akhir dan demo berada di luar pekerjaan ini.
 
-## Urutan pekerjaan berikutnya
-
-1. Pemulihan runtime setelah migrasi lulus pada 21 November 2026: enam router dan Vector memakai mount baru; baseline routing/ping, telemetry dan ingestion sehat. Periksa kembali state aktual sebelum sesi live melalui [catatan operasional](OPERATIONS.md#pemulihan-runtime-setelah-migrasi).
-2. [Draf kontrak API live revisi 2](LIVE-API-DRAFT.md) sudah memiliki [schema/contoh/mock](../../host1/live_api/README.md) untuk tes client Host 2. Linter terbaru mendukung format command; binding hash/versi policy dan pembacaan envelope evaluator masih perlu diselaraskan. Diagnosis live nyata belum diimplementasikan; API replay tetap memakai kontrak lama.
-3. Lengkapi evidence dampak protokol MTU dan negatif baru sebelum menyatakan hubungan sebab terhadap kegagalan OSPF/BGP.
-4. Bangun varian zero-shot, text RAG dan graph RAG serta pemilihan model berdasarkan eksperimen yang disepakati.
-5. Integrasikan linter, executor dan verifikasi. Perintah hanya diterapkan jika pemeriksaan linter lolos; keputusan allowlist adalah komponen terpisah dari gate evidence.
-6. PR #2 sudah tersedia lokal setelah fast-forward ke `main` (`a8ba75d`); audit target katalog dan cek baseline read-only dari runner lulus. Sebelum validasi fault di lab asli, selesaikan cleanup pada exception, exit code kegagalan dan transport SSH yang belum siap; temuan ada pada [review runner](LIVE-API-DRAFT.md#review-branch-terbaru-sebelum-pilot-lab-asli). Tidak perlu mengulang adaptasi katalog. Uji fault dan smoke MTU tetap memerlukan koordinasi/izin gangguan; target pemulihan di bawah 10 detik belum terbukti.
-7. Jalankan pilot dan evaluator sebelum benchmark 450 run. Katalog final, kemungkinan pembanding regex, model bersama dan tenggat tetap perlu keputusan kelompok.
-
-Kode dikerjakan pada branch masing-masing dan digabung melalui PR yang dibaca minimal satu anggota lain. Pengaturan SSH/firewall, fault injection, deploy dan perbaikan jaringan tidak dijalankan hanya karena disebut sebagai langkah berikutnya.
+Sukses baseline/abstain, unit test, dan hit@5 retrieval tidak boleh disebut sukses repair atau akurasi fault live. Eksekusi tidak pernah diaktifkan oleh model, hasil lint saja atau token API diagnosis.

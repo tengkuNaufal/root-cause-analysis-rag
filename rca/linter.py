@@ -20,6 +20,7 @@ dicoba di mode induknya (mis. `router ospf` boleh dari dalam mode interface).
 from __future__ import annotations
 
 import argparse
+import hashlib
 import ipaddress
 import json
 import re
@@ -30,6 +31,10 @@ from pathlib import Path
 from typing import Callable
 
 from rca.topology import Topology
+
+# Bump on any policy/allowlist semantic change; source digest is recorded separately.
+POLICY_VERSION = 'host1-policy-v1'
+POLICY_SOURCE_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 # ------------------------------------------------------------------ hasil
 

@@ -4,6 +4,8 @@ Status: **revisi 2 setelah masukan Host 2, 21 November 2026; belum diimplementas
 
 ## Ruang lingkup dan pemisahan layanan
 
+Pembaruan implementasi 28 November: jalur capture/settings/agent/server kini mencakup observasi konfigurasi sepuluh kelas dan proposal unvalidated pada tiga varian. Lab/Ollama dipulihkan atas instruksi lanjutan pengguna; commissioning baseline sehat dengan model nyata lulus. Executor/workflow lokal berotorisasi diintegrasikan, sedangkan API diagnosis tetap tanpa endpoint apply. Dispatch executor diuji dengan router tiruan dan verifier baseline dengan router nyata; belum ada repair fault nyata, smoke MTU/pilot/benchmark. Rincian terkini ada pada README modul dan STATUS.md.
+
 Schema dan [mock API lokal](../../host1/live_api/README.md) kini tersedia sesuai permintaan pengguna untuk menyiapkan client. Yang belum diimplementasikan/diaktifkan adalah diagnosis live nyata. Mock menambahkan field wajib `simulation: true` pada envelope job, health/capabilities `mode: mock_live`, serta header `X-Live-API-Simulation: true`. Bentuk schema aktif replay tetap tidak berubah. Format linter pada schema baru adalah draf untuk pengujian, belum konfirmasi policy Naufal.
 
 Usulan tahap integrasi awal adalah diagnosis live read-only: Host 1 mengambil evidence sendiri, menjalankan varian yang diminta dan mengembalikan usulan perbaikan. Linter, executor dan verifikasi memiliki artefak terpisah. `execution_allowed` tetap `false`; lulus linter tidak mengaktifkan eksekusi.
@@ -27,7 +29,9 @@ Urutan: baseline sehat → runner inject → runner mendeteksi gejala → POST d
 
 Pembaruan koordinasi: PR #2 sudah diverifikasi pada riwayat Git dan checkout disinkronkan ke `origin/main` (`a8ba75d`) melalui fast-forward tanpa commit baru. `faults/host1.yaml` dan cek berbasis `design-plan.json` sudah tersedia; 30/30 baris hasil lab tiruan mencatat observable dan recovered. Pemeriksaan read-only `check_lab.py` lulus pada lab asli, tetapi fault belum dijalankan di sana. Usulan transport adalah SSH untuk orkestrasi runner/inject/revert dan API live untuk diagnosis; keduanya melayani fungsi berbeda. Ini belum keputusan kelompok atau izin mengganggu lab. API replay tidak dapat dipakai untuk injeksi maupun diagnosis live.
 
-### Review branch terbaru sebelum pilot lab asli
+### Catatan review historis sebelum perbaikan runner PR 8
+
+Catatan berikut merekam temuan pada commit lama; runner 235fd05/PR 8 sudah memperbaiki held/404/Ctrl+C, evaluator 40e5f97 kini diintegrasikan lokal, dan POLICY_VERSION sudah tersedia. Bukti review lama tetap disimpan.
 
 Review ini memakai runner `origin/fayyaz/host1-faults` pada `4536517` dan linter/evaluator `origin/naufal/retrieval-linter-eval` pada `cc38e2b` (sudah ada di main `af9840f`). Branch runner belum digabung ke checkout kerja. Salinan review, reproduksi stub dan JSONL mock berada privat di `private/branch-review-4536517/`. Tidak ada inject/revert/read router dari runner selama review.
 

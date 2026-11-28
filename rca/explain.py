@@ -21,7 +21,7 @@ from itertools import combinations
 from pathlib import Path
 
 from rca.catalog import load_catalog
-from rca.evaluator import _order, load_runs
+from rca.evaluator import _agent_view, _order, load_runs
 
 DIMENSIONS = ["grounding", "kausal", "konsistensi", "perbaikan", "kejelasan"]
 
@@ -41,16 +41,16 @@ def sample(results: Path, out: Path, raters: list[str], seed: int, overlap: int)
     for i, r in enumerate(picked, start=1):
         item_id = f"X{i:03d}"
         gt = catalog.get(str(r["fault_id"]))
-        agent = r.get("agent") or {}
+        agent = _agent_view(r)
         key_rows.append({"item_id": item_id, "run_id": r.get("run_id"), "fault_id": r["fault_id"],
                          "variant": r["variant"], "trial": r.get("trial")})
         items.append({
             "item_id": item_id,
             "gt_router": gt.router if gt else "", "gt_class": gt.fault_class if gt else "",
-            "pred_router": agent.get("router", ""), "pred_root_cause": agent.get("root_cause", ""),
+            "pred_router": agent["router"] or "", "pred_root_cause": agent["root_cause"] or "",
             "evidence_ids": " ".join(agent.get("evidence_ids") or []),
             "commands": json.dumps(agent.get("commands") or [], ensure_ascii=False),
-            "explanation": agent.get("explanation", ""),
+            "explanation": agent["explanation"] or "",
             **{d: "" for d in DIMENSIONS}, "catatan": "",
         })
     shared = items[:overlap]

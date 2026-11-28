@@ -1,6 +1,6 @@
 # Dokumentasi Host 1
 
-Host 1 menyediakan lab FRR, pengumpulan evidence, retrieval dokumentasi, reasoning terbatas, dan API replay lokal. Implementasi saat ini belum mengeksekusi perbaikan jaringan. Dokumen ini merangkum pekerjaan sampai 21 November 2026; status layanan yang sedang berjalan harus diperiksa kembali.
+Host 1 menyediakan lab FRR, telemetry/Vector/NetworkX, retrieval Chroma, agen tiga varian, API diagnosis live dan executor lokal berotorisasi. Komponen pra-smoke sudah diintegrasikan pada 28 November 2026. Baseline dan commissioning tiga varian dengan model nyata lulus; diagnosis/perbaikan fault live serta target MTU di bawah 10 detik belum diuji. Status aktual ada pada [STATUS.md](STATUS.md).
 
 | Dokumen | Kegunaan |
 |---|---|
@@ -25,6 +25,8 @@ Lab replika, katalog fault dan runner kelompok dijelaskan di [fault harness](../
 
 Client HTTP untuk menjalankan 16 replay dari Host 2 tersedia pada [panduan replay dan JSONL](../host2-replay.md); client ini tidak memerlukan SSH atau instalasi model di Host 2.
 
-Rencana integrasi berikutnya ada di [draf kontrak API live](LIVE-API-DRAFT.md). [Schema, contoh payload dan mock lokal](../../host1/live_api/README.md) sudah tersedia untuk pengembangan client Host 2 tanpa router/model. Endpoint live nyata belum diaktifkan dan kontrak replay tetap berlaku.
+Rencana integrasi berikutnya ada di [draf kontrak API live](LIVE-API-DRAFT.md). [Schema, contoh payload dan mock lokal](../../host1/live_api/README.md) sudah tersedia untuk pengembangan client Host 2 tanpa router/model. API live loopback sudah aktif untuk commissioning; kontrak replay tetap berlaku.
+
+Pembaruan 28 November: [jalur diagnosis live read-only](../../host1/live_api/README.md#agen-diagnosis-live-read-only) sudah diimplementasikan dengan capture baru, evidence beku dan tiga jalur konteks, dengan observasi konfigurasi sepuluh kelas serta proposal yang diperiksa linter. Cakupan pengujian dipisahkan antara unit/simulasi, commissioning model pada baseline sehat, dan fault live yang belum dijalankan.
 
 Laporan per tahap, catatan progres berulang dan panduan migrasi lama digabung menjadi dokumen di atas. Salinan lengkapnya tetap disimpan lokal di `private/docs-history/host1/`, yang diabaikan Git. Data yang dibagikan mengikuti [kebijakan fixture](../../data/host1/README.md).
