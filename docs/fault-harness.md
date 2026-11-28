@@ -68,7 +68,22 @@ Alur satu baris jadwal:
 3. Polling tiap 1 detik dengan batas 180 detik sejak sebelum POST. Kalau respons POST hilang, job dicari lewat `request_id`.
 4. Kalau job selesai, cek dulu jawabannya terikat ke request yang dikirim (`request_id`, `job_id`, varian, lab), `execution_allowed` tetap false, dan label `result.root_cause_class`/`root_cause_router` sama dengan `assessment`. Kalau model pydantic Host 1 bisa di-import, job juga divalidasi ke schema. Gagal di sini dicatat `invalid_response`.
 5. Cek setiap evidence di manifest. Kalau ada yang tidak cocok, baris dicatat `evidence_error` dan perintah agen tidak di-lint. Kalau cocok, jalankan linter Naufal (`rca.linter`) ke `assessment.commands` dan simpan hash perintahnya. Patch kosong dicatat `not_requested`.
-6. Revert katalog dan pastikan lab pulih. Selama tahap read-only perintah usulan agen tidak pernah diterapkan, jadi `applied` selalu `false` dan `agent_recovery_s` selalu `null`.
+6. Tanpa `--execute`, perintah agen tidak pernah diterapkan (`applied: false`). Dengan `--execute`, perintah yang lolos linter diterapkan, lalu runner menunggu lab pulih sampai `--agent-verify-timeout` (default 60 detik).
+7. Kalau agen tidak memulihkan lab atau perintahnya tidak diterapkan, runner menjalankan revert katalog, lalu me-reset router yang konfigurasi FRR-nya beda dari baseline. Kalau lab masih belum sehat, semua router di-reset.
+
+### Eksekusi perintah agen (`--execute`)
+
+```bash
+python3 scripts/bench.py --api http://127.0.0.1:8766 --out data/host2/smoke --execute --faults F01 --variants graph_rag --trials 1
+```
+
+Sebelum menerapkan, runner memastikan hash perintah masih sama dengan yang di-lint dan gejala fault masih ada. Kalau tidak, perintah dilewati (`precondition_changed` atau `commands_changed_after_lint`). Perintah `ip` dijalankan sebagai `docker exec <router> ip <args>` dan perintah `vtysh` sebagai `vtysh -c <baris>` per baris, tanpa shell. Perintah berhenti di kegagalan pertama.
+
+Kalau lab pulih setelah perintah agen, hasilnya `verification.source: agent`, `fallback_revert.performed: false`, dan `timing.agent_recovery_s` diisi (gejala terdeteksi sampai lab terverifikasi pulih). Sisa perubahan agen yang membuat konfigurasi beda dari baseline dibersihkan di `cleanup` dan tidak dihitung sebagai fallback. Kalau agen gagal, `fallback_revert.reason` berisi `agent_fix_failed`.
+
+Baseline konfigurasi diambil di awal sesi sebagai hash `show running-config` tiap router (`<out>/baseline_configs.json`). Reset router memakai `ip link set <iface> mtu 1500 up` dan `frr-reload.py --reload /etc/frr/frr.conf`, jadi `/etc/frr/frr.conf` di container harus tetap sama dengan startup-config (jangan `write memory` selama benchmark).
+
+Di lab tiruan dengan agen tiruan yang langsung memberi perbaikan benar, `agent_recovery_s` berkisar 5 sampai 11 detik untuk F01, F07, F16, F25, dan F28. Angka ini belum termasuk waktu diagnosis model, jadi target di bawah 10 detik sulit tercapai untuk fault OSPF dan alamat IP yang butuh adjacency terbentuk ulang.
 
 Sejak POST dikirim sampai job jelas terminal, runner tidak menyentuh lab. Satu-satunya kondisi yang dianggap penolakan pasti adalah respons POST pertama berupa 4xx atau kode admission (`agent_busy`, `live_not_ready`, `replay_session_reserved`). Job berarti tidak pernah dibuat, jadi fault langsung di-revert. Error transport, 5xx, atau 404 saat mencari job lewat `request_id` belum berarti ditolak, karena request mungkin masih diproses. Runner terus mencari job tanpa POST ulang sampai batas `--reconcile`.
 
