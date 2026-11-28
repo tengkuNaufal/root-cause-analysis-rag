@@ -6,6 +6,7 @@ import itertools
 import json
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -74,15 +75,22 @@ def check(lab):
     snapshot = {"lab": lab, "taken_at_utc": datetime.now(timezone.utc).isoformat(), "routers": {}, "ping": {}}
     failures = []
 
-    for r, exp in expected.items():
+    def collect(r):
         c = f"clab-{lab}-{r}"
         _, link_out, _ = run(c, "ip", "-j", "link", "show")
-        links = {l["ifname"]: l for l in json.loads(link_out or "[]")}
         # Melewati query OSPF di router yang gak jalanin ospfd (r5/r6 di lab rca).
-        ospf = vtysh_json(c, "show ip ospf neighbor json").get("neighbors", {}) if exp["ospf"] else {}
-        bgp = vtysh_json(c, "show bgp summary json").get("ipv4Unicast", {}).get("peers", {})
-        routes = vtysh_json(c, "show ip route json")
-        snapshot["routers"][r] = {"links": links, "ospf_neighbors": ospf, "bgp_peers": bgp, "routes": routes}
+        ospf = vtysh_json(c, "show ip ospf neighbor json").get("neighbors", {}) if expected[r]["ospf"] else {}
+        return {"links": {l["ifname"]: l for l in json.loads(link_out or "[]")}, "ospf_neighbors": ospf,
+                "bgp_peers": vtysh_json(c, "show bgp summary json").get("ipv4Unicast", {}).get("peers", {}),
+                "routes": vtysh_json(c, "show ip route json")}
+
+    with ThreadPoolExecutor(max_workers=len(expected)) as pool:
+        snapshot["routers"] = dict(zip(expected, pool.map(collect, expected)))
+
+    for r, exp in expected.items():
+        links = snapshot["routers"][r]["links"]
+        ospf = snapshot["routers"][r]["ospf_neighbors"]
+        bgp = snapshot["routers"][r]["bgp_peers"]
 
         for ifc in exp["ifaces"]:
             l = links.get(ifc)
@@ -104,12 +112,21 @@ def check(lab):
             if state != "Established":
                 failures.append(f"{r}: BGP ke {peer} {state}")
 
-    for src, dst in itertools.permutations(expected, 2):
-        a, b = expected[src]["addr"], expected[dst]["addr"]
-        code, _, _ = run(f"clab-{lab}-{src}", "ping", "-c", "1", "-W", "1", "-I", a, b)
+    # Menjalankan 30 ping paralel, biar satu cek gak makan 1 detik per ping yang gagal. Ini penting
+    # buat ngukur waktu pemulihan, karena durasi cek ikut kehitung.
+    pairs = list(itertools.permutations(expected, 2))
+
+    def ping(pair):
+        src, dst = pair
+        return run(f"clab-{lab}-{src}", "ping", "-c", "1", "-W", "1", "-I", expected[src]["addr"],
+                   expected[dst]["addr"])[0]
+
+    with ThreadPoolExecutor(max_workers=len(pairs)) as pool:
+        codes = list(pool.map(ping, pairs))
+    for (src, dst), code in zip(pairs, codes):
         snapshot["ping"][f"{src}->{dst}"] = code == 0
         if code != 0:
-            failures.append(f"ping {src} ({a}) -> {dst} ({b}) gagal")
+            failures.append(f"ping {src} ({expected[src]['addr']}) -> {dst} ({expected[dst]['addr']}) gagal")
 
     snapshot["failures"] = failures
     return snapshot

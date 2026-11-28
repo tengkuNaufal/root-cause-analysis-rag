@@ -68,7 +68,17 @@ def lab(monkeypatch):
         events.append(("revert", fault["id"]))
         return {"revert_error": None, "recovered": True}
 
+    def run_argv(router, argv):
+        events.append(("exec", router, " ".join(argv)))
+        if "gagal" in argv:
+            raise RuntimeError("perintah gagal")
+        return ""
+
     monkeypatch.setattr(fr, "apply_steps", apply_steps)
+    monkeypatch.setattr(fr, "run_argv", run_argv)
+    monkeypatch.setattr(fr, "symptoms", lambda base: ({}, ["gejala tiruan"]))
+    monkeypatch.setattr(fr, "config_digests", lambda: {"r1": "a"})
+    monkeypatch.setattr(fr, "reset_router", lambda r: events.append(("reset", r)))
     monkeypatch.setattr(fr, "revert_and_verify", revert_and_verify)
     monkeypatch.setattr(fr, "wait_for", lambda fn, timeout, interval=1.0: (["gejala tiruan"], 0.0))
     monkeypatch.setattr(fr, "loopback_routes", lambda: {})
@@ -81,7 +91,8 @@ def lab(monkeypatch):
 
 def make(tmp_path, api, **over):
     args = types.SimpleNamespace(no_lab=False, budget=5, reconcile=0.05, lookup_interval=0, symptom_timeout=5,
-                                 recover_timeout=5, out=str(tmp_path), retry=[], release=[])
+                                 recover_timeout=5, out=str(tmp_path), retry=[], release=[], execute=False,
+                                 agent_verify_timeout=5)
     for k, v in over.items():
         setattr(args, k, v)
     return bench.Bench(args, api, FAULTS, "sha")
@@ -184,3 +195,54 @@ def test_normal_rows_complete_in_order(tmp_path, lab):
     make(tmp_path, FakeApi()).run(ROWS)
     assert lab == [("inject", "F01"), ("revert", "F01"), ("inject", "F25"), ("revert", "F25")]
     assert [r["status"] for r in results(tmp_path)] == ["completed", "completed"]
+
+
+def with_commands(commands):
+    def make_job(request):
+        job = live_job(request)
+        job["assessment"]["commands"] = commands
+        return job
+    return make_job
+
+
+def test_execute_applies_linted_commands_and_skips_fallback(tmp_path, lab, monkeypatch):
+    monkeypatch.setattr(bench, "run_lint", lambda c: {"status": "passed", "violations": [],
+                                                      "commands_sha256": lc.canonical_sha256(c)})
+    fix = [{"router": "r1", "interpreter": "ip", "args": ["link", "set", "eth1", "mtu", "1500"]}]
+    api = FakeApi(submit=with_commands(fix))
+    make(tmp_path, api, execute=True).run(ROWS[:1])
+    assert lab == [("inject", "F01"), ("exec", "r1", "ip link set eth1 mtu 1500")]
+    rec = results(tmp_path)[0]
+    assert rec["applied"] is True and rec["execution"]["agent_recovered"] is True
+    assert rec["verification"]["source"] == "agent" and rec["fallback_revert"]["performed"] is False
+    assert rec["timing"]["agent_recovery_s"] is not None
+
+
+def test_rejected_lint_is_never_executed(tmp_path, lab, monkeypatch):
+    monkeypatch.setattr(bench, "run_lint", lambda c: {"status": "rejected", "violations": ["x"],
+                                                      "commands_sha256": lc.canonical_sha256(c)})
+    fix = [{"router": "r1", "interpreter": "ip", "args": ["link", "set", "eth1", "mtu", "1500"]}]
+    make(tmp_path, FakeApi(submit=with_commands(fix)), execute=True).run(ROWS[:1])
+    assert lab == [("inject", "F01"), ("revert", "F01")]
+    rec = results(tmp_path)[0]
+    assert rec["applied"] is False and rec["fallback_revert"]["reason"] == "read_only_phase"
+
+
+def test_failed_agent_command_falls_back_to_catalog_revert(tmp_path, lab, monkeypatch):
+    monkeypatch.setattr(bench, "run_lint", lambda c: {"status": "passed", "violations": [],
+                                                      "commands_sha256": lc.canonical_sha256(c)})
+    bad = [{"router": "r1", "interpreter": "vtysh", "args": ["configure terminal", "gagal"]}]
+    make(tmp_path, FakeApi(submit=with_commands(bad)), execute=True).run(ROWS[:1])
+    assert lab[-1] == ("revert", "F01")
+    rec = results(tmp_path)[0]
+    assert rec["applied"] is True and rec["execution"]["agent_recovered"] is False
+    assert rec["fallback_revert"]["reason"] == "agent_fix_failed"
+
+
+def test_without_execute_flag_nothing_is_applied(tmp_path, lab, monkeypatch):
+    monkeypatch.setattr(bench, "run_lint", lambda c: {"status": "passed", "violations": [],
+                                                      "commands_sha256": lc.canonical_sha256(c)})
+    fix = [{"router": "r1", "interpreter": "ip", "args": ["link", "set", "eth1", "mtu", "1500"]}]
+    make(tmp_path, FakeApi(submit=with_commands(fix))).run(ROWS[:1])
+    assert not [e for e in lab if e[0] == "exec"]
+    assert results(tmp_path)[0]["applied"] is False

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # Menjalankan jadwal benchmark: inject fault, tunggu gejala, minta diagnosis ke API live Host 1,
 # cek evidence dan linter, lalu revert katalog dan pastikan lab balik normal.
-# Tahap sekarang masih read-only: perintah usulan agen gak pernah diterapkan (applied selalu false).
+# Default-nya read-only (applied false). Dengan --execute, perintah agen yang lolos linter diterapkan lalu
+# diverifikasi; kalau lab gak pulih, runner fallback ke revert katalog dan reset konfigurasi ke baseline.
 #
 #   export LIVE_API_TOKEN=...       # token dari environment, jangan ditulis ke file
 #   python3 scripts/bench.py --api http://127.0.0.1:8766 --out data/host2/pilot --faults F01,F16,F22 --trials 1
+#   python3 scripts/bench.py --api ... --out data/host2/smoke --execute --faults F01 --variants graph_rag --trials 1
 #   python3 scripts/bench.py --api ... --out data/host2/pilot --retry 12     # ulang baris jadwal 12 secara eksplisit
 #   python3 scripts/bench.py --api ... --out data/host2/mock-test --no-lab --limit 5   # uji client ke mock saja
 #   python3 scripts/bench.py --api ... --out data/host2/pilot --release 12   # lepas baris 12 setelah dipastikan job-nya gak ada
@@ -50,7 +52,7 @@ def append_jsonl(path, value):
         os.fsync(fh.fileno())
 
 
-def load_plan(path, faults, trials, limit):
+def load_plan(path, faults, trials, limit, variants=None):
     with open(path, newline="") as fh:
         rows = [{"order": int(r["order"]), "fault_id": r["fault_id"], "variant": r["variant"], "trial": int(r["trial"])}
                 for r in csv.DictReader(fh)]
@@ -58,6 +60,8 @@ def load_plan(path, faults, trials, limit):
         rows = [r for r in rows if r["fault_id"] in faults]
     if trials:
         rows = [r for r in rows if r["trial"] <= trials]
+    if variants:
+        rows = [r for r in rows if r["variant"] in variants]
     return rows[:limit] if limit else rows
 
 
@@ -88,12 +92,76 @@ class Bench:
         self.results = self.out / "results.jsonl"
         self.journal = self.out / "journal.jsonl"
         self.baseline_file = self.out / "baseline_routes.json"
+        self.config_file = self.out / "baseline_configs.json"
         self.base_routes = None
+        self.base_configs = None
 
     def baseline_ok(self):
         snap = check(fr.LAB)
         diff = fr.route_diff(self.base_routes, fr.loopback_routes()) if self.base_routes else []
-        return snap["failures"] + diff
+        return snap["failures"] + diff + [f"{r}: konfigurasi FRR beda dengan baseline" for r in self.config_drift()]
+
+    def config_drift(self):
+        if not self.base_configs:
+            return []
+        now = fr.config_digests()
+        return sorted(r for r in self.base_configs if now.get(r) != self.base_configs[r])
+
+    # Mengembalikan lab ke baseline: revert katalog, lalu router yang konfigurasinya beda (atau semua
+    # router kalau lab masih belum sehat) di-reset ke startup-config. Perubahan dari agen yang salah
+    # sasaran ikut kebersihkan di sini, jadi baris berikutnya mulai dari kondisi yang sama.
+    def restore(self, fault, reason):
+        res = fr.revert_and_verify(fault, self.base_routes, self.args.recover_timeout)
+        out = {"performed": True, "reason": reason, "error": res["revert_error"], "reset_routers": []}
+        drift = self.config_drift()
+        # Mereset router yang konfigurasinya beda dulu, baru semua router kalau lab masih belum sehat.
+        for routers in (drift, sorted(fr.EXPECTED[fr.LAB])):
+            if res["recovered"] and not self.config_drift():
+                break
+            if not routers:
+                continue
+            out["reset_routers"] = routers
+            for r in routers:
+                try:
+                    fr.reset_router(r)
+                except Exception as e:
+                    out["error"] = f"reset {r}: {e}"
+            healthy, _ = fr.wait_for(lambda: not fr.symptoms(self.base_routes)[1], self.args.recover_timeout,
+                                     interval=2)
+            res["recovered"] = bool(healthy)
+        out["recovered"] = res["recovered"] and not self.config_drift()
+        return out
+
+    # Menerapkan perintah agen yang lolos linter. Sebelum jalan, hash perintah dicek sama dengan yang
+    # di-lint dan gejala fault harus masih ada; kalau lab udah berubah, perintah gak diterapkan.
+    def execute(self, rec, job, mark):
+        commands = job["assessment"]["commands"]
+        ex = {"attempted": False, "skipped_reason": None, "commands_sha256": rec["lint"]["commands_sha256"],
+              "results": [], "agent_recovered": False}
+        rec["execution"] = ex
+        if lc.canonical_sha256(commands) != rec["lint"]["commands_sha256"]:
+            ex["skipped_reason"] = "commands_changed_after_lint"
+            return
+        if not fr.symptoms(self.base_routes)[1]:
+            ex["skipped_reason"] = "precondition_changed"
+            return
+        ex["attempted"] = True
+        for i, c in enumerate(commands):
+            argv = ["ip", *c["args"]] if c["interpreter"] == "ip" else fr.vtysh_argv(c["args"])
+            try:
+                fr.run_argv(c["router"], argv)
+                ex["results"].append({"index": i, "ok": True})
+            except Exception as e:
+                ex["results"].append({"index": i, "ok": False, "error": str(e)[:300]})
+                break
+        rec["applied"] = True
+        mark("t_apply_done")
+        if all(r["ok"] for r in ex["results"]):
+            healthy, _ = fr.wait_for(lambda: not fr.symptoms(self.base_routes)[1],
+                                     self.args.agent_verify_timeout, interval=1)
+            if healthy:
+                mark("t_verified")
+                ex["agent_recovered"] = True
 
     # Mengecek API siap dan gak ada job lain sebelum inject, biar fault gak dipasang percuma.
     def wait_idle(self):
@@ -144,8 +212,8 @@ class Bench:
                        error=ev.get("reason", "runner berhenti di tengah baris ini"))
             fault = self.faults.get(ev.get("fault_id"))
             if fault and not self.args.no_lab:
-                res = fr.revert_and_verify(fault, self.base_routes or {}, self.args.recover_timeout)
-                rec["fallback_revert"] = {"performed": True, "reason": "reconcile", "error": res["revert_error"]}
+                res = self.restore(fault, "reconcile")
+                rec["fallback_revert"] = res
                 rec["recovered"] = res["recovered"]
                 rec["verification"] = {"source": "catalog_revert", "checks_passed": res["recovered"]}
             else:
@@ -223,6 +291,8 @@ class Bench:
                 return rec
             rec["lint"] = run_lint(job["assessment"]["commands"])
             mark("t_lint_done")
+            if self.args.execute and rec["lint"]["status"] == "passed":
+                self.execute(rec, job, mark)
             return rec
         except BaseException as e:
             if post_sent and not terminal:
@@ -246,13 +316,23 @@ class Bench:
         if self.args.no_lab:
             rec["fallback_revert"] = {"performed": False, "reason": "no_lab"}
             rec["recovered"] = None
+        elif (rec["execution"] or {}).get("agent_recovered"):
+            rec["recovered"] = True
+            rec["verification"] = {"source": "agent", "checks_passed": True}
+            rec["fallback_revert"] = {"performed": False, "reason": "agent_recovered"}
+            # Membersihkan sisa perubahan agen yang beda dari baseline, gak dihitung sebagai fallback.
+            if self.config_drift():
+                rec["cleanup"] = self.restore(fault, "cleanup_after_agent")
+                if not rec["cleanup"]["recovered"]:
+                    rec["recovered"] = False
         else:
             mark("t_revert")
-            res = fr.revert_and_verify(fault, self.base_routes, self.args.recover_timeout)
-            rec["fallback_revert"] = {"performed": True, "reason": "read_only_phase", "error": res["revert_error"]}
+            reason = "agent_fix_failed" if (rec["execution"] or {}).get("attempted") else "read_only_phase"
+            res = self.restore(fault, reason)
+            rec["fallback_revert"] = res
             rec["recovered"] = res["recovered"]
             if res["recovered"]:
-                mark("t_verified")
+                mark("t_fallback_verified")
             rec["verification"] = {"source": "catalog_revert", "checks_passed": res["recovered"]}
         rec["timing"] = timing(points)
 
@@ -284,6 +364,8 @@ class Bench:
         # gak membandingkan dengan kondisi lab yang mungkin masih rusak.
         if self.baseline_file.exists():
             self.base_routes = json.loads(self.baseline_file.read_text())
+        if self.config_file.exists():
+            self.base_configs = json.loads(self.config_file.read_text())
         self.reconcile()
         if not self.args.no_lab:
             problems = self.baseline_ok()
@@ -292,6 +374,9 @@ class Bench:
             if self.base_routes is None:
                 self.base_routes = fr.loopback_routes()
                 self.baseline_file.write_text(json.dumps(self.base_routes))
+            if self.base_configs is None:
+                self.base_configs = fr.config_digests()
+                self.config_file.write_text(json.dumps(self.base_configs))
 
         attempts = {}
         for r in read_jsonl(self.results):
@@ -316,7 +401,7 @@ class Bench:
             lint = (rec["lint"] or {}).get("status")
             print(f"[{row['order']}] {row['fault_id']} {row['variant']:<9} {rec['status']:<16} "
                   f"hasil={result or '-'} lint={lint or '-'} diagnosis={fmt(rec['timing'].get('diagnosis_s'))} "
-                  f"pulih={rec['recovered']}", flush=True)
+                  f"agen_pulihkan={fmt(rec['timing'].get('agent_recovery_s'))} pulih={rec['recovered']}", flush=True)
             if rec["error"]:
                 print(f"    error: {rec['error']}")
             if rec["status"] in STOP_STATUS or rec["recovered"] is False:
@@ -343,6 +428,7 @@ def new_record(order, attempt, fault_id, variant, trial, catalog_sha):
     return {"plan_order": order, "attempt": attempt, "fault_id": fault_id, "variant": variant, "trial": trial,
             "catalog_sha256": catalog_sha, "request_id": None, "job_id": None, "status": None, "symptoms": [],
             "diagnosis": None, "evidence_check": None, "lint": None, "applied": False, "execution": None,
+            "cleanup": None,
             "verification": None, "fallback_revert": {"performed": False, "reason": None}, "recovered": False,
             "completion_unknown": False, "error": None, "timing": None}
 
@@ -351,11 +437,12 @@ def new_record(order, attempt, fault_id, variant, trial, catalog_sha):
 def timing(points):
     def span(a, b):
         return round(points[b]["elapsed_s"] - points[a]["elapsed_s"], 3) if a in points and b in points else None
-    names = ("t_inject", "t_symptom", "t_request", "t_diagnosis_done", "t_lint_done", "t_apply_done", "t_revert",
-             "t_verified")
+    names = ("t_inject", "t_symptom", "t_request", "t_diagnosis_done", "t_lint_done", "t_apply_done", "t_verified",
+             "t_revert", "t_fallback_verified")
     return {**{n: points.get(n) for n in names}, "detection_s": span("t_inject", "t_symptom"),
             "diagnosis_s": span("t_symptom", "t_diagnosis_done"), "job_wait_s": span("t_request", "t_diagnosis_done"),
-            "fallback_recovery_s": span("t_revert", "t_verified"), "agent_recovery_s": None}
+            "fallback_recovery_s": span("t_revert", "t_fallback_verified"),
+            "agent_recovery_s": span("t_symptom", "t_verified")}
 
 
 def fmt(v):
@@ -377,6 +464,11 @@ def main():
     ap.add_argument("--budget", type=float, default=180, help="batas tunggu diagnosis per job, detik")
     ap.add_argument("--reconcile", type=float, default=600, help="batas tunggu tambahan untuk job yang telat")
     ap.add_argument("--lookup-interval", type=float, default=2, help=argparse.SUPPRESS)
+    ap.add_argument("--execute", action="store_true",
+                    help="terapkan perintah agen yang lolos linter, lalu verifikasi; tanpa ini runner read-only")
+    ap.add_argument("--agent-verify-timeout", type=float, default=60,
+                    help="batas tunggu lab pulih setelah perintah agen diterapkan, detik")
+    ap.add_argument("--variants", type=lambda s: set(s.split(",")), default=None)
     ap.add_argument("--no-lab", action="store_true",
                     help="uji client ke mock tanpa inject/revert dan tanpa menyentuh lab")
     ap.add_argument("--symptom-timeout", type=float, default=70)
@@ -385,7 +477,9 @@ def main():
 
     faults = {f["id"]: f for f in fr.load_catalog(args.catalog)}
     catalog_sha = hashlib.sha256(Path(args.catalog).read_bytes()).hexdigest()
-    rows = load_plan(args.plan, args.faults, args.trials, args.limit)
+    if args.execute and args.no_lab:
+        sys.exit("--execute gak bisa dipakai bareng --no-lab")
+    rows = load_plan(args.plan, args.faults, args.trials, args.limit, args.variants)
     unknown = {r["fault_id"] for r in rows} - set(faults)
     if unknown:
         sys.exit(f"Fault di jadwal gak ada di katalog: {', '.join(sorted(unknown))}")
