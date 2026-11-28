@@ -6,9 +6,13 @@
 #   .\laptop\lab.ps1 check
 #   .\laptop\lab.ps1 faults F01 F16
 #   .\laptop\lab.ps1 faults --all
+#   .\laptop\lab.ps1 status            # progres benchmark di data/host2/bench
+#   .\laptop\lab.ps1 status 12         # detail baris jadwal 12 (atau last)
+#   .\laptop\lab.ps1 watch             # nonton tmux benchmark read-only, keluar pakai Ctrl+B lalu D
+#   .\laptop\lab.ps1 demo F01 graph_rag
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet('doctor', 'reach', 'check', 'faults')]
+    [ValidateSet('doctor', 'reach', 'check', 'faults', 'status', 'watch', 'demo')]
     [string]$Action,
     [Parameter(Position = 1, ValueFromRemainingArguments = $true)]
     [string[]]$Rest
@@ -60,23 +64,42 @@ if ($Action -eq 'reach') {
 $remoteArgs = @{
     'check'  = 'python3 scripts/check_lab.py --lab rca'
     'faults' = 'python3 scripts/fault_runner.py run'
+    'status' = 'python3 scripts/bench_status.py data/host2/bench'
+    'watch'  = 'tmux attach -r -t bench'
+    'demo'   = 'bash scripts/demo.sh'
 }
-if ($Action -eq 'faults' -and -not $Rest) {
-    Write-Host 'Sebutkan ID fault (misalnya F01 F16) atau --all.'
+# Membatasi argumen per aksi karena string ini dieksekusi di host utama.
+$allowed = @{
+    'check'  = @{ Pattern = '^$'; Max = 0 }
+    'faults' = @{ Pattern = '^(F\d{2}|--all)$'; Max = 30 }
+    'status' = @{ Pattern = '^(\d{1,3}|last)$'; Max = 1 }
+    'watch'  = @{ Pattern = '^$'; Max = 0 }
+    'demo'   = @{ Pattern = '^(F\d{2}|zero_shot|text_rag|graph_rag)$'; Max = 2 }
+}
+if (($Action -eq 'faults' -or $Action -eq 'demo') -and -not $Rest) {
+    Write-Host 'Sebutkan ID fault, misalnya F01 (faults juga bisa --all).'
     exit 2
 }
-# Membatasi argumen ke ID fault atau --all karena string ini dieksekusi di host utama.
+if ($Rest.Count -gt $allowed[$Action].Max) {
+    Write-Host "Argumen kebanyakan untuk $Action"
+    exit 2
+}
 foreach ($arg in $Rest) {
-    if ($arg -notmatch '^(F\d{2}|--all)$') {
+    if ($arg -notmatch $allowed[$Action].Pattern) {
         Write-Host "Argumen tidak dikenal: $arg"
         exit 2
     }
 }
 $remote = "wsl -d $Distro -u $LinuxUser --cd `"$RepoPath`" -- " + $remoteArgs[$Action]
-if ($Rest) { $remote += ' ' + ($Rest -join ' ') }
+if ($Action -eq 'status' -and $Rest) { $remote += ' --show ' + $Rest[0] }
+elseif ($Rest) { $remote += ' ' + ($Rest -join ' ') }
+
+# Memakai -t buat aksi interaktif: demo minta token, watch nampilin tmux.
+$sshArgs = @()
+if ($Action -eq 'demo' -or $Action -eq 'watch') { $sshArgs += '-t' }
 
 $sw = [Diagnostics.Stopwatch]::StartNew()
-ssh "$WinUser@$HostIp" $remote
+ssh @sshArgs "$WinUser@$HostIp" $remote
 $code = $LASTEXITCODE
 $sw.Stop()
 Write-Host ('[laptop] perintah selesai dalam {0:N1} s, exit code {1}' -f $sw.Elapsed.TotalSeconds, $code)

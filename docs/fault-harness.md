@@ -12,6 +12,8 @@ Bagian ini dipakai untuk menyuntikkan gangguan ke lab, menunggu gejalanya muncul
 | `scripts/fault_runner.py` | jalankan fault dari katalog, revert manual, dan buat jadwal benchmark |
 | `scripts/bench.py` | jalankan jadwal benchmark: inject, minta diagnosis ke API live Host 1, cek evidence dan linter, revert |
 | `scripts/live_client.py` | client HTTP untuk API live (kontrak `live.v1-draft2`) |
+| `scripts/bench_status.py` | ringkasan progres sesi benchmark dan detail satu run, cuma baca file hasil |
+| `scripts/demo.sh` | satu run live lengkap untuk demo, hasilnya di `data/host2/demo/` |
 | `lab/replica/` | lab replika enam router yang dipakai sebelum topologi Host 1 tersedia |
 | `data/rca-sim/` | hasil uji 30 fault Host 1 di lab tiruan topologi `rca` |
 | `data/replica/` | hasil uji 30 fault di lab replika |
@@ -96,6 +98,18 @@ Tes regresi untuk perilaku ini ada di `tests/test_bench_runner.py` (lab dan API 
 Setiap titik waktu di `timing` (`t_inject`, `t_symptom`, `t_request`, `t_diagnosis_done`, `t_lint_done`, `t_apply_done`, `t_revert`, `t_verified`) berbentuk `{"utc": ..., "elapsed_s": ...}`. `elapsed_s` diukur monotonic dari awal baris, UTC hanya untuk korelasi. Durasi turunannya ikut ditulis: `detection_s`, `diagnosis_s`, `job_wait_s`, `fallback_recovery_s`, dan `agent_recovery_s` (selalu null selama read-only).
 
 Kalau API melapor `simulation` atau mode selain `live`, runner menolak jalan sebelum menyentuh lab, kecuali dengan `--no-lab`. Mode itu hanya untuk menguji client ke mock: tidak ada inject, revert, atau cek lab.
+
+Satu lab cuma boleh dipakai satu proses `bench.py`. Runner memegang lock `/tmp/bench-<lab>.lock` selama jalan, jadi demo atau benchmark kedua langsung ditolak dengan exit code 1 tanpa menyentuh lab.
+
+Progres sesi bisa dicek kapan saja tanpa mengganggu runner:
+
+```bash
+python3 scripts/bench_status.py data/host2/bench            # progres per varian, baris bermasalah, 5 run terakhir
+python3 scripts/bench_status.py data/host2/bench --show 12  # detail baris jadwal 12
+bash scripts/demo.sh F01 graph_rag                          # satu run live untuk demo
+```
+
+Dari laptop, perintah yang sama tersedia lewat `laptop\lab.ps1 status`, `watch`, dan `demo` (lihat [akses-dari-laptop.md](akses-dari-laptop.md)).
 
 ## Katalog Host 1
 
