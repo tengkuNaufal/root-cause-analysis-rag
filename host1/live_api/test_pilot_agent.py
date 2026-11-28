@@ -117,15 +117,19 @@ class PilotAgentTests(unittest.TestCase):
         fact=next(f for f in differences('r1',baseline,observed) if f['key']=='prefix_list/TEMP/seq/5')
         self.assertEqual(fact['configuration_context']['baseline_policy_entries'],['prefix_list/TEMP/seq/10'])
 
-    def test_engine_rejects_pilot_style_semantic_error_after_lint(self):
+    def test_engine_preserves_diagnosis_but_withholds_pilot_style_semantic_error_after_lint(self):
         class Model:
             def generate(self,payload):
                 value=['link_down','r1',.8,'Synthetic down interface.',['e1'],
                     [['r1','ip',['link','set','dev','eth1','mtu','1500']]]]
                 return dict(done=True,done_reason='stop',prompt_eval_count=10,eval_count=20,response=json.dumps(value))
         eng=DiagnosisEngine(capture=FixtureCapture(fault='down'),model=Model())
-        with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(DiagnosisError,'restore_observed_baseline'):
-            run_engine(eng,tmp)
+        with tempfile.TemporaryDirectory() as tmp:
+            job=run_engine(eng,tmp)
+        from scripts.proposal_outcome import read_rejection
+        self.assertEqual(job['state'],'completed');self.assertEqual(job['result']['root_cause_class'],'link_down')
+        self.assertEqual(job['assessment']['commands'],[])
+        self.assertEqual(read_rejection(job)['code'],'proposal_does_not_restore_observed_baseline')
 
     def test_all_ten_classes_complete_pipeline_with_synthetic_model_and_capture(self):
         for cause,facts,tool,args in cases():

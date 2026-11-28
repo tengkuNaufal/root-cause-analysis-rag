@@ -12,6 +12,7 @@ from .models import (Cause, Router, Job, VERSION, canonical, digest, validate_li
 from .settings import supports
 from .repair_policy import validate_repair, RepairError
 from .context import select_observations, model_documents, compact_graph
+from scripts.proposal_outcome import rejection_note
 
 CONTEXT=8192
 OUTPUT=768
@@ -317,18 +318,36 @@ class DiagnosisEngine:
         if result.status=='abstain' and (result.claims or not result.missing_evidence):
             raise DiagnosisError('invalid_model_abstention')
         self._supported(capture,result,refs)
-        if result.root_cause_class=='mtu_mismatch' and any('mtu-ignore' in a for cmd in result.proposed_patch for a in cmd.arguments):
-            raise DiagnosisError('mtu_check_bypass_is_not_baseline_repair')
-        if result.proposed_patch:
-            if any(cmd.interpreter=='vtysh_commands' and cmd.arguments[0]!='configure terminal' for cmd in result.proposed_patch):
-                raise DiagnosisError('vtysh_configuration_mode_required')
-            from rca.linter import lint
-            if not lint(result.model_dump())['passed']:raise DiagnosisError('proposed_patch_rejected_by_linter')
-            try:validate_repair(capture,result)
-            except RepairError as exc:raise DiagnosisError(str(exc)) from exc
         if result.status=='hypothesis':
             network={r['payload']['id'] for r in refs if r['payload']['kind']=='telemetry'}
             if any(not set(c.evidence_ids)&network for c in result.claims):raise DiagnosisError('claim_without_network_observation')
+        # Diagnosis/evidence integrity is checked before deciding whether a proposal is exportable.
+        rejected=None;validation={'status':'not_requested'}
+        if result.proposed_patch:
+            from rca.linter import lint, POLICY_VERSION
+            original=result.model_dump()
+            commands=[c.model_dump() for c in project(result.proposed_patch)]
+            if result.root_cause_class=='mtu_mismatch' and any('mtu-ignore' in a for cmd in result.proposed_patch for a in cmd.arguments):
+                rejected=('guard','mtu_check_bypass_is_not_baseline_repair')
+            elif any(cmd.interpreter=='vtysh_commands' and cmd.arguments[0]!='configure terminal' for cmd in result.proposed_patch):
+                rejected=('guard','vtysh_configuration_mode_required')
+            else:
+                validation=lint(original)
+                if not validation['passed']:rejected=('lint','proposed_patch_rejected_by_linter')
+                else:
+                    try:validate_repair(capture,result)
+                    except RepairError as exc:
+                        if str(exc)!='proposal_does_not_restore_observed_baseline':raise
+                        rejected=('guard',str(exc))
+            if rejected:
+                note=rejection_note(*rejected,commands,POLICY_VERSION)
+                # Keep rejected candidates private. Export only validated diagnosis/claims, with no patch.
+                write(directory/'proposal-validation.json',dict(status='rejected',stage=rejected[0],code=rejected[1],
+                    candidate=original,lint=validation,wire_note=note))
+                result=validate_live_pair(agent_req,{**original,'proposed_patch':[],
+                    'missing_evidence':[*original['missing_evidence'],note]})
+            else:write(directory/'proposal-validation.json',dict(status='passed',lint=validation))
+        else:write(directory/'proposal-validation.json',validation)
         self._verify_sources(directory,refs)
         used=sorted({i for c in [*result.claims,*result.proposed_patch] for i in c.evidence_ids})
         for r in refs:r['manifest']['url']=f"/v1/diagnoses/{jid}/evidence/{r['payload']['id']}"
@@ -338,7 +357,7 @@ class DiagnosisEngine:
                 evidence_ids=used,commands=[c.model_dump() for c in project(result.proposed_patch)],explanation=result.root_cause_hypothesis or '; '.join(result.missing_evidence)),
             evidence=[r['manifest'] for r in refs],timing=dict(collection_seconds=meta['completed_monotonic']-meta['started_monotonic'],
                 retrieval_seconds=max(0,after_context-meta['completed_monotonic']),reasoning_seconds=reasoning_seconds,validation_seconds=max(0,end-after_context-reasoning_seconds),total_seconds=end-tick),
-            provenance=dict(synthetic=False,inventory_sha256=meta['inventory_sha256'],capture_sha256=meta['facts_sha256'],agent_version='live-bounded-1',
+            provenance=dict(synthetic=False,inventory_sha256=meta['inventory_sha256'],capture_sha256=meta['facts_sha256'],agent_version='live-bounded-2-diagnosis-preserved',
                 gate_version='live-bounded-1',prompt_version='live-7-focused-physical' if physical_only else 'live-7-focused-named',retriever_version='none' if req['variant']=='zero_shot' or not called else 'host1-hybrid-3',
                 model_profile=self.profile['model'],model_digest=self.profile['expected_digest'],model_options={**self.profile['options'],'num_ctx':CONTEXT,'num_predict':OUTPUT},
                 actual_variant=req['variant'],model_evidence_ids=called,selection_notes=[reason] if reason else [
