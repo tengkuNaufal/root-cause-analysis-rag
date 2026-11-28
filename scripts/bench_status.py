@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+# Menampilkan progres sesi bench.py dan detail satu run, buat monitoring dan demo. Cuma baca file
+# hasil, gak nyentuh lab atau API, jadi aman dijalankan pas benchmark lagi jalan.
+#
+#   python3 scripts/bench_status.py data/host2/bench
+#   python3 scripts/bench_status.py data/host2/bench --show 12      # detail baris jadwal 12
+#   python3 scripts/bench_status.py data/host2/demo --show last
+#   python3 scripts/bench_status.py data/host2/smoke-mtu/... --target 10   # cek target waktu pulih smoke test
+import argparse
+import json
+import statistics
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import fault_runner as fr  # noqa: E402
+
+
+def read_jsonl(path):
+    if not path.exists():
+        return []
+    rows = []
+    for line in path.read_text().splitlines():
+        try:
+            rows.append(json.loads(line))
+        except ValueError:
+            pass  # baris terakhir bisa setengah ketulis kalau dibaca pas runner lagi nulis
+    return rows
+
+
+def fmt(v):
+    return "-" if v is None else f"{v:.1f}s"
+
+
+def assessment(rec):
+    return ((rec.get("diagnosis") or {}).get("assessment")) or {}
+
+
+def latest(results):
+    # Mengambil attempt terakhir per baris jadwal biar retry gak dihitung dobel.
+    out = {}
+    for r in results:
+        if r["plan_order"] not in out or r["attempt"] >= out[r["plan_order"]]["attempt"]:
+            out[r["plan_order"]] = r
+    return [out[k] for k in sorted(out)]
+
+
+def summary(out, faults, plan_total):
+    rows = latest(read_jsonl(out / "results.jsonl"))
+    journal = read_jsonl(out / "journal.jsonl")
+    print(f"Sesi {out}: {len(rows)} baris selesai" + (f" dari {plan_total} jadwal penuh" if plan_total else ""))
+    if not rows:
+        return
+    print(f"\n{'varian':<10}{'run':>5}{'kelas':>7}{'router':>8}{'lint ok':>9}{'agen':>6}{'pulih':>7}"
+          f"{'diag med':>10}{'pulih med':>11}")
+    for variant in sorted({r["variant"] for r in rows}):
+        part = [r for r in rows if r["variant"] == variant]
+        cls = sum(assessment(r).get("root_cause") == faults.get(r["fault_id"], {}).get("class") for r in part)
+        rtr = sum(assessment(r).get("router") == faults.get(r["fault_id"], {}).get("ground_truth", {}).get("router")
+                  for r in part)
+        lint = sum((r.get("lint") or {}).get("status") == "passed" for r in part)
+        agent = sum(bool((r.get("execution") or {}).get("agent_recovered")) for r in part)
+        rec = sum(r.get("recovered") is True for r in part)
+        diag = [r["timing"]["diagnosis_s"] for r in part if (r.get("timing") or {}).get("diagnosis_s") is not None]
+        heal = [r["timing"]["agent_recovery_s"] for r in part
+                if (r.get("timing") or {}).get("agent_recovery_s") is not None]
+        print(f"{variant:<10}{len(part):>5}{cls:>7}{rtr:>8}{lint:>9}{agent:>6}{rec:>7}"
+              f"{fmt(statistics.median(diag) if diag else None):>10}"
+              f"{fmt(statistics.median(heal) if heal else None):>11}")
+    print("(kelas/router = cocok dengan katalog, cuma cek cepat; angka resmi tetap dari evaluator)")
+
+    bad = [r for r in rows if r["status"] != "completed" or r.get("recovered") is not True]
+    if bad:
+        print("\nBaris yang perlu dicek:")
+        for r in bad[-10:]:
+            print(f"  [{r['plan_order']}] {r['fault_id']} {r['variant']} status={r['status']} "
+                  f"pulih={r.get('recovered')} {(r.get('error') or '')[:80]}")
+
+    done = {r["plan_order"] for r in rows}
+    held = [e for e in journal if e.get("event") == "held" and e.get("order") not in done]
+    if held:
+        e = held[-1]
+        print(f"\nPERINGATAN: baris {e.get('order')} ditahan (fault masih terpasang), jalankan ulang perintah "
+              f"bench yang sama untuk rekonsiliasi")
+
+    print("\nRun terakhir:")
+    for r in rows[-5:]:
+        a = assessment(r)
+        print(f"  [{r['plan_order']}] {r['fault_id']} {r['variant']:<9} {r['status']:<12} "
+              f"diagnosis={a.get('root_cause', '-')}@{a.get('router', '-')} "
+              f"lint={(r.get('lint') or {}).get('status', '-')} applied={r.get('applied')} "
+              f"agen_pulihkan={fmt((r.get('timing') or {}).get('agent_recovery_s'))} pulih={r.get('recovered')}")
+
+
+def show(out, faults, which):
+    rows = latest(read_jsonl(out / "results.jsonl"))
+    if not rows:
+        sys.exit(f"Belum ada hasil di {out}")
+    rec = rows[-1] if which == "last" else next((r for r in rows if str(r["plan_order"]) == which), None)
+    if rec is None:
+        sys.exit(f"Baris {which} gak ada di {out}")
+    fault = faults.get(rec["fault_id"], {})
+    a, t = assessment(rec), rec.get("timing") or {}
+    lint = rec.get("lint") or {}
+    print(f"Baris {rec['plan_order']} attempt {rec['attempt']}: {rec['fault_id']} varian {rec['variant']} "
+          f"trial {rec['trial']}, status {rec['status']}")
+    truth = fault.get("ground_truth", {})
+    print(f"\nFault yang disuntik : {fault.get('class')} di {fault.get('link') or truth.get('router')} "
+          f"({truth.get('root_cause', '-')})")
+    print("Gejala terdeteksi   :")
+    for s in (rec.get("symptoms") or [])[:6]:
+        print(f"  - {s}")
+    print(f"\nDiagnosis agen      : {a.get('root_cause', '-')} di {a.get('router', '-')}, "
+          f"confidence {'-' if a.get('confidence') is None else a['confidence']}")
+    if a.get("explanation"):
+        print(f"Penjelasan          : {a['explanation']}")
+    print(f"Evidence dipakai    : {', '.join(a.get('evidence_ids') or []) or '-'}")
+    print("Perintah perbaikan  :")
+    for c in a.get("commands") or []:
+        args = c.get("args") or []
+        if c.get("interpreter") == "ip":
+            line = "ip " + " ".join(args)
+        else:
+            line = "vtysh " + " ".join(f'-c "{a}"' for a in args)
+        print(f"  {c.get('router')}: {line}")
+    print(f"Linter              : {lint.get('status', '-')}" +
+          (f" ({'; '.join(map(str, lint.get('violations') or []))})" if lint.get("violations") else ""))
+    print(f"Diterapkan          : {rec.get('applied')}")
+    ex = rec.get("execution") or {}
+    if ex:
+        print(f"Agen memulihkan lab : {ex.get('agent_recovered')}")
+    fb = rec.get("fallback_revert") or {}
+    if fb.get("performed"):
+        print(f"Fallback revert     : ya ({fb.get('reason')})")
+    print(f"Lab pulih           : {rec.get('recovered')}")
+    print(f"\nWaktu: deteksi {fmt(t.get('detection_s'))}, diagnosis {fmt(t.get('diagnosis_s'))}, "
+          f"pemulihan oleh agen {fmt(t.get('agent_recovery_s'))}, fallback {fmt(t.get('fallback_recovery_s'))}")
+    if rec.get("error"):
+        print(f"Error: {rec['error']}")
+
+
+def elapsed(t, name):
+    return (t.get(name) or {}).get("elapsed_s")
+
+
+def span(t, a, b):
+    x, y = elapsed(t, a), elapsed(t, b)
+    return None if x is None or y is None else y - x
+
+
+# Menilai smoke test: total dihitung dari gejala terdeteksi sampai lab terverifikasi pulih oleh perintah
+# agen (agent_recovery_s), lalu dipecah per tahap biar kelihatan bagian mana yang makan waktu.
+def smoke(out, target):
+    rows = latest(read_jsonl(out / "results.jsonl"))
+    if not rows:
+        sys.exit(f"Belum ada hasil di {out}")
+    print(f"Smoke test {out}, target pemulihan < {target:g} detik sejak gejala terdeteksi\n")
+    print(f"{'fault':<6}{'varian':<11}{'deteksi':>9}{'diagnosis':>11}{'lint+apply':>12}{'konvergensi':>13}"
+          f"{'total':>8}  hasil")
+    passed = 0
+    for r in rows:
+        t = r.get("timing") or {}
+        total = t.get("agent_recovery_s")
+        ok = total is not None and total < target
+        passed += ok
+        if ok or total is not None:
+            verdict = "LULUS" if ok else "GAGAL"
+        else:
+            verdict = f"GAGAL ({r['status']}, agen gak memulihkan lab)"
+        print(f"{r['fault_id']:<6}{r['variant']:<11}{fmt(t.get('detection_s')):>9}{fmt(t.get('diagnosis_s')):>11}"
+              f"{fmt(span(t, 't_diagnosis_done', 't_apply_done')):>12}{fmt(span(t, 't_apply_done', 't_verified')):>13}"
+              f"{fmt(total):>8}  {verdict}")
+    print(f"\n{passed}/{len(rows)} run memenuhi target")
+    return passed == len(rows)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("out", help="folder sesi bench.py, misalnya data/host2/bench")
+    ap.add_argument("--show", help="nomor baris jadwal atau 'last' untuk detail satu run")
+    ap.add_argument("--target", type=float, help="nilai smoke test terhadap batas waktu pulih ini (detik)")
+    ap.add_argument("--catalog", default=str(fr.ROOT / "faults" / "host1.yaml"))
+    ap.add_argument("--plan", default=str(fr.ROOT / "data" / "benchmark_plan.csv"))
+    args = ap.parse_args()
+    out = Path(args.out)
+    if args.target:
+        sys.exit(0 if smoke(out, args.target) else 1)
+    faults = {f["id"]: f for f in fr.load_catalog(args.catalog)}
+    if args.show:
+        show(out, faults, args.show)
+        return
+    plan = Path(args.plan)
+    total = max(len(plan.read_text().splitlines()) - 1, 0) if plan.exists() else None
+    summary(out, faults, total)
+
+
+if __name__ == "__main__":
+    main()

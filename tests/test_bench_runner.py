@@ -246,3 +246,20 @@ def test_without_execute_flag_nothing_is_applied(tmp_path, lab, monkeypatch):
     make(tmp_path, FakeApi(submit=with_commands(fix))).run(ROWS[:1])
     assert not [e for e in lab if e[0] == "exec"]
     assert results(tmp_path)[0]["applied"] is False
+
+
+def test_rule_based_runs_locally_without_api(tmp_path, lab, monkeypatch):
+    import gzip
+    import regex_baseline as rb
+    snaps = json.loads(gzip.decompress((ROOT / "data" / "rca-sim" / "regex_snapshots.json.gz").read_bytes()))
+    monkeypatch.setattr(rb, "collect", lambda routers, since=None: snaps["F01"])
+    monkeypatch.setattr(bench, "run_lint", lambda c: {"status": "passed", "violations": [],
+                                                      "commands_sha256": lc.canonical_sha256(c)})
+    api = FakeApi()
+    row = [{"order": 451, "fault_id": "F01", "variant": "rule_based", "trial": 1}]
+    make(tmp_path, api, execute=True).run(row)
+    assert api.requests == []
+    assert lab == [("inject", "F01"), ("exec", "r1", "ip link set eth1 mtu 1500")]
+    rec = results(tmp_path)[0]
+    assert rec["status"] == "completed" and rec["diagnosis"]["assessment"]["root_cause"] == "mtu_mismatch"
+    assert rec["execution"]["agent_recovered"] is True and rec["timing"]["diagnosis_s"] is not None
