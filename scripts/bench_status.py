@@ -134,6 +134,11 @@ def show(out, faults, which):
     ex = rec.get("execution") or {}
     if ex:
         print(f"Agen memulihkan lab : {ex.get('agent_recovered')}")
+        if ex.get("skipped_reason"):
+            print(f"Perintah dilewati   : {ex['skipped_reason']}")
+        for res in ex.get("results") or []:
+            if not res.get("ok"):
+                print(f"Perintah ke-{res.get('index')} gagal : {res.get('error')}")
     fb = rec.get("fallback_revert") or {}
     if fb.get("performed"):
         print(f"Fallback revert     : ya ({fb.get('reason')})")
@@ -142,6 +147,10 @@ def show(out, faults, which):
           f"pemulihan oleh agen {fmt(t.get('agent_recovery_s'))}, fallback {fmt(t.get('fallback_recovery_s'))}")
     if rec.get("error"):
         print(f"Error: {rec['error']}")
+    # Menampilkan alasan dari server kalau job gagal atau terputus, biar gak perlu buka log Host 1.
+    job_error = (rec.get("diagnosis") or {}).get("error")
+    if job_error:
+        print(f"Error dari API: {job_error.get('code')}: {job_error.get('message')}")
 
 
 def elapsed(t, name):
