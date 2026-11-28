@@ -44,6 +44,7 @@ class ExtendedTests(unittest.TestCase):
                 eng=DiagnosisEngine(capture=cap,model=FixtureModel(cause=cause,router=router))
                 with tempfile.TemporaryDirectory() as tmp:
                     job=run_engine(eng,tmp)
+                self.assertEqual(eng.model.calls[0]['format']['type'],'object')
                 self.assertEqual(job['result']['root_cause_class'],cause)
                 self.assertEqual(job['result']['root_cause_router'],router)
 
@@ -62,7 +63,7 @@ class ExtendedTests(unittest.TestCase):
 class ProposingModel(FixtureModel):
     def generate(self,payload):
         raw=super().generate(payload);value=json.loads(raw['response'])
-        value['commands']=[dict(router='r1',interpreter='ip',args=['link','set','eth1','mtu','1500'])]
+        value[5]=[['r1','ip',['link','set','eth1','mtu','1500']]]
         raw['response']=json.dumps(value);return raw
 
 class ExecutorTests(unittest.TestCase):

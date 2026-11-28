@@ -54,8 +54,10 @@ class FixtureModel:
     def generate(self,payload):
         self.calls.append(payload)
         if self.error:raise self.error
-        draft=dict(root_cause_class=self.cause,root_cause_router=self.router,confidence=.5,
-            explanation='Synthetic observed condition.',evidence_ids=self.ids,commands=[])
+        draft=[self.cause,self.router,.5,'Synthetic observed condition.',self.ids,[]]
+        if payload['format'].get('type')=='object':
+            draft=dict(root_cause_class=self.cause,root_cause_router=self.router,confidence=.5,
+                explanation='Synthetic observed condition.',evidence_ids=self.ids,commands=[])
         return dict(done=True,done_reason='stop',prompt_eval_count=10,eval_count=20,response=json.dumps(draft))
 
 def engine(fault='mtu',model=None,**kwargs):
@@ -67,6 +69,36 @@ def run_engine(eng,tmp,variant='zero_shot'):
     return eng.run(req,str(uuid.uuid4()),Path(tmp)/uuid.uuid4().hex)
 
 class EngineTests(unittest.TestCase):
+    def test_parallel_configuration_reads_preserve_inventory_fact_order(self):
+        cap=FixtureCapture();original=cap.runner
+        barrier=threading.Barrier(6);second_finished=threading.Event()
+        def command(args,**kwargs):
+            p=original(args,**kwargs)
+            if args[:2]==['docker','exec']:
+                barrier.wait(timeout=2)
+                router=args[2].removeprefix('clab-rca-')
+                if router=='r1':self.assertTrue(second_finished.wait(timeout=2))
+                if router in ('r1','r2'):
+                    p=subprocess.CompletedProcess(args,0,p.stdout.replace('ip ospf hello-interval 1','ip ospf hello-interval 2',1),'')
+                if router=='r2':second_finished.set()
+            return p
+        cap.runner=command
+        with tempfile.TemporaryDirectory() as tmp:
+            captured=cap.capture(Path(tmp)/'capture')
+        changes=[f['router'] for f in captured['facts']['observations'] if f['type']=='setting']
+        self.assertEqual(changes,['r1','r2'])
+
+    def test_failed_parallel_configuration_read_never_calls_model(self):
+        cap=FixtureCapture(fault='mtu');original=cap.runner;model=FixtureModel()
+        def command(args,**kwargs):
+            if args[:3]==['docker','exec','clab-rca-r4']:
+                return subprocess.CompletedProcess(args,1,'','synthetic read failure')
+            return original(args,**kwargs)
+        cap.runner=command
+        with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(CaptureError,'configuration_capture_failed'):
+            run_engine(DiagnosisEngine(capture=cap,model=model),tmp)
+        self.assertEqual(model.calls,[])
+
     def test_baseline_abstains_without_model_and_capture_has_only_reads(self):
         eng=engine(None)
         with tempfile.TemporaryDirectory() as tmp:job=run_engine(eng,tmp)
@@ -156,7 +188,7 @@ class EngineTests(unittest.TestCase):
     def test_response_grammar_forbids_execution_flags(self):
         eng=engine();original=eng.model.generate
         def generate(payload):
-            value=original(payload);draft=json.loads(value['response']);draft['execution_allowed']=True;value['response']=json.dumps(draft);return value
+            value=original(payload);draft=json.loads(value['response']);draft.append(True);value['response']=json.dumps(draft);return value
         eng.model.generate=generate
         with tempfile.TemporaryDirectory() as tmp,self.assertRaises(ValueError):run_engine(eng,tmp)
 
@@ -166,6 +198,7 @@ class EngineTests(unittest.TestCase):
         prompt=eng.model.calls[0]['prompt']
         body=prompt.split('<|start_header_id|>user<|end_header_id|>\n\n',1)[1].split('<|eot_id|>',1)[0]
         content=json.loads(body)['evidence'][0]['content']
+        self.assertEqual(eng.model.calls[0]['format']['type'],'array')
         self.assertIsInstance(content,dict)
         self.assertEqual(content['expected_mtu'],1500)
         self.assertEqual(content['endpoints'][0]['observed']['mtu'],1400)
@@ -174,7 +207,7 @@ class EngineTests(unittest.TestCase):
         eng=engine();original=eng.model.generate
         def generate(payload):
             raw=original(payload);value=json.loads(raw['response'])
-            value['commands']=[dict(router='r1',interpreter='vtysh',args=['interface eth1','mtu 1500'])]
+            value[5]=[['r1','vtysh',['interface eth1','mtu 1500']]]
             raw['response']=json.dumps(value);return raw
         eng.model.generate=generate
         with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(DiagnosisError,'configuration_mode_required'):
@@ -189,15 +222,46 @@ class EngineTests(unittest.TestCase):
         value['confidence']=.5
         with self.assertRaises(DiagnosisError):decision_to_draft(value)
 
+    def test_array_transport_preserves_every_semantic_field_and_command(self):
+        from .agent import decode_model_array,decision_to_draft
+        args=['link','set','dev','eth1','mtu','1500']
+        value=['mtu_mismatch','r1',.8,'Observed MTU differs from baseline',['e1'],[['r1','ip',args]]]
+        named=decode_model_array(value)
+        self.assertEqual(named,dict(root_cause_class='mtu_mismatch',root_cause_router='r1',confidence=.8,
+            explanation=value[3],evidence_ids=['e1'],commands=[dict(router='r1',interpreter='ip',args=args)]))
+        draft=decision_to_draft(named)
+        self.assertEqual(draft['claims'][0]['evidence_ids'],['e1'])
+        self.assertEqual(draft['proposed_patch'][0]['arguments'],['ip',*args])
+        self.assertEqual(draft['proposed_patch'][0]['validation_status'],'unvalidated')
+
+    def test_array_transport_rejects_shifted_fields_extra_values_and_type_coercion(self):
+        from .agent import decode_model_array
+        value=['mtu_mismatch','r1',.8,'Observed deviation',['e1'],[]]
+        invalid=[value+[True],value[:-1],['r1','mtu_mismatch',.8,'text',['e1'],[]],
+                 ['mtu_mismatch','r1','0.8','text',['e1'],[]],
+                 ['mtu_mismatch','r1',.8,'text','e1',[]],
+                 ['mtu_mismatch','r1',.8,'text',['e1'],[['r1','ip',['link'],True]]]]
+        for case in invalid:
+            with self.subTest(case=case),self.assertRaises(ValueError):decode_model_array(case)
+
+    def test_model_grammar_allows_only_available_evidence_identifiers(self):
+        import jsonschema
+        from .agent import generation_schema
+        value=['mtu_mismatch','r1',.8,'Observed deviation',['e1'],[]]
+        schema=generation_schema(True,['e1','e2'])
+        jsonschema.validate(value,schema)
+        value[4]=['invented']
+        with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(value,schema)
+        with self.assertRaises(ValueError):generation_schema(True,[])
+
     def test_tool_grammar_requires_vtysh_lines_and_kernel_argv(self):
         import jsonschema
         from .agent import generation_schema
-        value=dict(root_cause_class='bgp_neighbor_shutdown',root_cause_router='r1',confidence=.8,
-            explanation='Observed shutdown',evidence_ids=['e1'],commands=[dict(router='r1',interpreter='vtysh',
-            args=['configure terminal','router bgp 65001','no neighbor 10.255.0.4 shutdown'])])
+        value=['bgp_neighbor_shutdown','r1',.8,'Observed shutdown',['e1'],[['r1','vtysh',
+            ['configure terminal','router bgp 65001','no neighbor 10.255.0.4 shutdown']]]]
         jsonschema.validate(value,generation_schema())
         with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(value,generation_schema(True))
-        value['commands'][0]['args']=['neighbor','10.255.0.4','shutdown']
+        value[5][0][2]=['neighbor','10.255.0.4','shutdown']
         with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(value,generation_schema())
 
 class LiveHttpTests(unittest.TestCase):

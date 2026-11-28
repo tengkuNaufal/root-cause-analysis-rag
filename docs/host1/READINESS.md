@@ -2,6 +2,10 @@
 
 Pembaruan 28 November 2026. Kode dan baseline lokal siap untuk uji integrasi terkontrol. Target pemulihan agen <10 detik belum lulus. Login Tailscale ditunda pengguna, Windows Update tetap aktif, dan akses layar langsung dihentikan sesuai permintaan pengguna.
 
+## Pembaruan optimasi agen
+
+Putaran maksimal 30 menit menurunkan median pemulihan MTU menjadi 10,056 / 9,566 / 11,428 detik untuk zero-shot / text RAG / graph RAG. Sembilan MTU dan satu BGP pulih tanpa fallback; target <10 detik agen lulus 3/9. Total 452 tes lulus. Rincian perubahan, pembandingan dan batas klaim: [AGENT-OPTIMIZATION.md](AGENT-OPTIMIZATION.md). Tabel smoke di bawah merekam kondisi sebelum putaran optimasi ini.
+
 ## Kondisi akhir yang diperiksa
 
 - Enam FRR dan Vector berjalan; delapan link, lima adjacency OSPF FULL, sembilan sesi BGP Established. Verifier baseline lulus termasuk ping 30/30 arah, 120/120 paket; capture akhir tidak menemukan anomali.
