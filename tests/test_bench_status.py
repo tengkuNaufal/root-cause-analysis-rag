@@ -72,3 +72,15 @@ def test_smoke_rejects_missing_faults_even_when_available_run_passes(tmp_path):
     write(tmp_path,[rec])
     assert not bench_status.smoke(tmp_path,10,['F01','F02','F03'])
     assert bench_status.smoke(tmp_path,10,['F01'])
+
+
+def test_show_prints_api_error_and_failed_command(tmp_path, capsys):
+    failed = row(3, 1, recovered=False, status="job_failed")
+    failed["diagnosis"] = {"state": "failed", "error": {"code": "model_timeout", "message": "deadline lewat",
+                                                       "retryable": False}}
+    failed["execution"] = {"agent_recovered": False, "results": [{"index": 0, "ok": False, "error": "% gagal"}]}
+    write(tmp_path, [failed])
+    bench_status.show(tmp_path, FAULTS, "3")
+    out = capsys.readouterr().out
+    assert "Error dari API: model_timeout: deadline lewat" in out
+    assert "Perintah ke-0 gagal : % gagal" in out
