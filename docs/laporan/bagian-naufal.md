@@ -98,11 +98,11 @@ agen), lalu menghitung per varian:
 | Metrik | Definisi |
 |---|---|
 | Akurasi akar masalah | router **dan** kelas fault cocok dengan katalog; disertai interval kepercayaan Wilson 95% |
-| Ketepatan perintah | perintah lolos linter **dan** jaringan terverifikasi pulih, dibagi semua run |
-| Keberhasilan perbaikan | jaringan pulih di antara run yang perintahnya dijalankan |
-| Waktu diagnosis | median dan persentil 90, sejak gejala terdeteksi sampai jawaban agen |
-| Waktu pemulihan | median dan p90 sejak gejala terdeteksi sampai verifikasi pulih, plus proporsi < 10 s |
-| Halusinasi | run dengan `evidence_ids` yang tidak dikirim ke agen, atau perintah ke router/interface/neighbor yang tidak ada di topologi |
+| Ketepatan perintah | perintah lolos linter **dan** jaringan terverifikasi pulih oleh perintah agen, dibagi semua run |
+| Keberhasilan perbaikan | jaringan pulih oleh perintah agen di antara run yang perintahnya benar-benar dijalankan (`applied` default false); pemulihan lewat fallback revert katalog tidak dihitung, dan metrik kosong selama tahap read-only |
+| Waktu diagnosis | `t_diagnosis_done − t_symptom` dari timing runner; median dan persentil 90 |
+| Waktu pemulihan | `t_verified − t_symptom`, hanya run yang dipulihkan agen; median, p90, dan proporsi < 10 s |
+| Halusinasi | run dengan `evidence_ids` di luar manifest evidence respons diagnosis, atau perintah ke router/interface/neighbor yang tidak ada di topologi |
 
 Keluaran: `report.md`, `metrics_by_variant.csv`, `accuracy_by_class.csv`, `runs_scored.csv`, serta
 boxplot waktu diagnosis dan waktu pemulihan per varian (dengan garis target 10 detik).

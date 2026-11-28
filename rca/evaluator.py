@@ -1,34 +1,41 @@
 """Evaluator: membaca file hasil run (JSON Lines) dan katalog, lalu menghitung metrik per varian.
 
-    python -m rca.evaluator results/runs/pilot.jsonl --out results/eval/pilot
+    python -m rca.evaluator data/host2/<hasil>.jsonl --out results/eval/pilot
 
-Satu baris hasil run (usulan kontrak dengan runner; nama field alternatif juga diterima):
+Bentuk baris utama mengikuti "Catatan JSONL milik Host 2" di docs/host1/LIVE-API-DRAFT.md:
 {
-  "run_id": "F01-text_rag-1", "fault_id": "F01", "variant": "text_rag", "trial": 1,
-  "agent": {"router": "r1", "root_cause": "mtu_mismatch", "confidence": 0.86,
-            "evidence_ids": ["ev-..."], "commands": [{"router": "r1", "commands": ["..."]}],
-            "explanation": "..."},
-  "evidence_ids_available": ["ev-...", ...],   # ID evidence yang benar-benar dikirim ke agen
-  "lint": {"passed": true, "violations": []},
-  "applied": true, "recovered": true, "reverted": false,
-  "t_diagnosis_s": 4.2,     # gejala terdeteksi -> jawaban agen keluar
-  "t_recovery_s": 7.9,      # gejala terdeteksi -> jaringan terverifikasi pulih (null jika tidak pulih)
-  "error": null
+  "plan_order": 1, "fault_id": "F01", "variant": "graph_rag", "trial": 1, "request_id": "...", "job_id": "...",
+  "timing": {"t_inject": ..., "t_symptom": ..., "t_request": ..., "t_diagnosis_done": ...,
+             "t_lint_done": ..., "t_apply_done": null, "t_verified": ...},
+  "diagnosis": {...respons API utuh: state, result, assessment{router, root_cause, confidence,
+                evidence_ids, commands, explanation}, evidence[manifest], timing, provenance...},
+  "lint": {"status": "passed|rejected|error|not_requested", "violations": [...], ...},
+  "execution": null,                      # null / applied=false selama tahap read-only
+  "verification": {...}, "fallback_revert": {"performed": true, "reason": "..."},
+  "recovered": true, "error": null, "status": "..."
 }
+Titik waktu `timing.t_*` boleh berupa angka elapsed monotonic (detik), objek {"utc", "elapsed_s"},
+field `t_*_elapsed_s` / `t_*_utc`, atau string UTC. Bentuk lama (`agent{...}`, `t_diagnosis_s`,
+`t_recovery_s`, `lint.passed`) tetap diterima.
 
 Metrik per varian:
-  rca_accuracy        router DAN kelas akar masalah cocok dengan ground truth katalog
-  command_correctness perintah lolos linter DAN jaringan pulih (dibagi semua run)
-  fix_success_rate    jaringan pulih di antara run yang perintahnya dijalankan
-  t_diagnosis median / p90, t_recovery median / p90 (hanya run yang pulih)
-  hallucination_rate  run dengan evidence_ids yang tidak ada, ATAU perintah ke
+  rca_accuracy        router DAN kelas akar masalah (assessment) cocok dengan ground truth katalog
+  command_correctness perintah lolos linter DAN jaringan pulih OLEH PERINTAH AGEN (dibagi semua run)
+  fix_success_rate    pulih oleh perintah agen di antara run yang perintahnya benar-benar dijalankan;
+                      kosong (–) selama read-only. `applied` default false; pemulihan lewat fallback
+                      revert katalog tidak pernah dihitung sebagai keberhasilan agen.
+  t_diagnosis         t_diagnosis_done - t_symptom (median, p90)
+  t_recovery          t_verified - t_symptom, hanya run yang dipulihkan agen (median, p90)
+  hallucination_rate  run dengan evidence_ids di luar manifest evidence, ATAU perintah ke
                       router/interface/neighbor yang tidak ada di topologi
+  abstain_rate, incomplete_rate (router null / kelas unknown), agent_error_rate dicatat terpisah.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import math
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -70,35 +77,153 @@ def load_runs(path: str | Path) -> list[dict]:
     return runs
 
 
+def _agent_view(run: dict) -> dict:
+    """Ambil jawaban agen dari berbagai bentuk baris JSONL.
+
+    Bentuk live API (docs/host1/LIVE-API-DRAFT.md): `diagnosis` = respons API utuh, jawaban terstruktur di
+    `diagnosis.assessment`, manifest evidence di `diagnosis.evidence`, respons internal di `diagnosis.result`.
+    Bentuk lama: `agent` / `answer` berisi router, root_cause, commands, ... langsung.
+    """
+    diag = run.get("diagnosis")
+    if isinstance(diag, dict) and ({"assessment", "state", "result", "job_id"} & set(diag)):
+        a = diag.get("assessment") or {}
+        res = diag.get("result") or {}
+        manifest = diag.get("evidence")
+        claims = res.get("claims") or []
+        return {
+            "router": a.get("router"),
+            "root_cause": a.get("root_cause"),
+            "confidence": a.get("confidence", res.get("confidence")),
+            "evidence_ids": list(a.get("evidence_ids") or []),
+            "commands": a.get("commands") or res.get("proposed_patch") or [],
+            "explanation": a.get("explanation") or " ".join(
+                [str(res.get("root_cause_hypothesis") or "")] + [c.get("statement", "") for c in claims]).strip(),
+            "available": [e.get("id") for e in manifest if isinstance(e, dict)] if isinstance(manifest, list) else None,
+            "state": diag.get("state"),
+            "status": res.get("status"),
+            "variant": diag.get("variant"),
+            "simulation": bool(diag.get("simulation")),
+            "present": bool(a or res),
+        }
+    agent = _get(run, "agent", "answer", "diagnosis", default={}) or {}
+    patch = _get(agent, "proposed_patch", default=[]) or []
+    used = list(_get(agent, "evidence_ids", default=[]) or [])
+    for item in (_get(agent, "claims", default=[]) or []) + patch:  # kontrak agen: ID ada di claims/patch
+        used += [e for e in item.get("evidence_ids", []) if e not in used]
+    return {
+        "router": _get(agent, "router", "target_router") or (patch[0].get("router") if patch else None),
+        "root_cause": _get(agent, "root_cause", "root_cause_class", "fault_class", "class"),
+        "confidence": _get(agent, "confidence"),
+        "evidence_ids": used,
+        "commands": _get(agent, "commands", "remediation", default=None) or patch,
+        "explanation": _get(agent, "explanation", default="") or " ".join(
+            [str(_get(agent, "root_cause_hypothesis", default="") or "")]
+            + [c.get("statement", "") for c in (_get(agent, "claims", default=[]) or [])]).strip(),
+        "available": _get(run, "evidence_ids_available", "evidence.ids", "available_evidence_ids"),
+        "state": None,
+        "status": _get(agent, "status"),
+        "variant": None,
+        "simulation": False,
+        "present": bool(agent),
+    }
+
+
+def _num(v) -> float | None:
+    return float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+
+
+def _elapsed(v) -> float | None:
+    if isinstance(v, dict):
+        for k in ("elapsed_s", "elapsed_seconds", "elapsed", "monotonic_s", "monotonic"):
+            if _num(v.get(k)) is not None:
+                return _num(v[k])
+        return None
+    return _num(v)
+
+
+def _utc(v) -> datetime | None:
+    if isinstance(v, dict):
+        v = v.get("utc")
+    if not isinstance(v, str):
+        return None
+    try:
+        return datetime.fromisoformat(v.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def _duration(run: dict, start: str, end: str) -> float | None:
+    """Selisih dua titik waktu runner (timing.t_symptom, t_diagnosis_done, t_verified, ...).
+
+    Nilai titik waktu boleh angka (elapsed monotonic, detik), objek {utc, elapsed_s}, field terpisah
+    `<nama>_elapsed_s` / `<nama>_utc`, atau string UTC. Elapsed monotonic diutamakan; UTC hanya cadangan.
+    """
+    t = run.get("timing") or {}
+
+    def pick(name, conv, suffixes):
+        for s in suffixes:
+            x = conv(t.get(name + s))
+            if x is not None:
+                return x
+        return None
+
+    a = pick(start, _elapsed, ("", "_elapsed_s", "_s"))
+    b = pick(end, _elapsed, ("", "_elapsed_s", "_s"))
+    if a is not None and b is not None:
+        return round(b - a, 3)
+    ua, ub = pick(start, _utc, ("", "_utc")), pick(end, _utc, ("", "_utc"))
+    if ua and ub:
+        return round((ub - ua).total_seconds(), 3)
+    return None
+
+
 def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
     fault_id = str(_get(run, "fault_id", "fault.id"))
     gt = catalog.get(fault_id)
-    agent = _get(run, "agent", "answer", "diagnosis", default={}) or {}
-    patch = _get(agent, "proposed_patch", default=[]) or []
-    pred_router = _get(agent, "router", "target_router") or (patch[0].get("router") if patch else None)
-    pred_class = _get(agent, "root_cause", "root_cause_class", "fault_class", "class")
-    commands = _get(agent, "commands", "remediation", default=None) or patch
+    ag = _agent_view(run)
+    pred_router, pred_class, commands = ag["router"], ag["root_cause"], ag["commands"]
 
     lint = _get(run, "lint", "linter", default=None)
     if lint is None:  # runner belum menyimpan hasil linter: hitung ulang
         lint = linter.lint(commands).to_dict()
-    lint_passed = bool(lint.get("passed"))
+    # bentuk lama {"passed": bool}; bentuk live {"status": passed|rejected|error|not_requested}
+    lint_passed = lint.get("passed") is True or lint.get("status") == "passed"
 
-    # halusinasi evidence
-    used = list(_get(agent, "evidence_ids", default=[]) or [])
-    for item in (_get(agent, "claims", default=[]) or []) + patch:  # kontrak agen: ID ada di claims/patch
-        used += [e for e in item.get("evidence_ids", []) if e not in used]
-    available = _get(run, "evidence_ids_available", "evidence.ids", "available_evidence_ids")
-    bad_ev = [e for e in used if available is not None and e not in set(available)]
+    # halusinasi evidence: ID yang dipakai agen tetapi tidak ada di manifest/daftar yang dikirim
+    available = ag["available"]
+    bad_ev = [e for e in ag["evidence_ids"] if available is not None and e not in set(available)]
     # halusinasi perintah: selalu dicek ulang terhadap topologi
     topo_viol = [v for v in linter.lint(commands).violations if v.rule in TOPO_RULES] if commands else []
 
-    recovered = bool(_get(run, "recovered", "verify.recovered", "verification.passed", default=False))
-    applied = bool(_get(run, "applied", "executed", default=lint_passed and bool(commands)))
+    # Eksekusi: default TIDAK dijalankan. Selama tahap read-only runner menulis applied=false /
+    # execution=null, dan pemulihan lewat revert katalog tidak dihitung sebagai keberhasilan agen.
+    execution = run.get("execution")
+    if "applied" in run:
+        applied = run["applied"] is True
+    elif isinstance(execution, dict):
+        applied = execution.get("applied") is True or execution.get("status") in ("applied", "succeeded", "success")
+    else:
+        applied = False
+    recovered = _get(run, "recovered", "verification.recovered", "verify.recovered", "verification.passed",
+                     default=False) is True
+    reverted = (_get(run, "fallback_revert.performed", default=False) is True or run.get("reverted") is True
+                or _get(run, "verification.source", default=None) in ("fallback_revert", "catalog_revert"))
+    agent_recovered = applied and recovered and not reverted
+
+    t_diag = _num(_get(run, "t_diagnosis_s", "timing.diagnosis_s", "diagnosis_time_s"))
+    if t_diag is None:
+        t_diag = _duration(run, "t_symptom", "t_diagnosis_done")
+    t_rec = _num(_get(run, "t_recovery_s", "timing.recovery_s", "mttr_s"))
+    if t_rec is None:
+        t_rec = _duration(run, "t_symptom", "t_verified")
+
+    diag_failed = (bool(run.get("error")) or ag["state"] in ("failed", "interrupted") or not ag["present"]
+                   or run.get("status") in ("timeout", "error"))
+    sched_variant = _get(run, "variant")
     return {
-        "run_id": _get(run, "run_id", default=f"{fault_id}-{_get(run, 'variant')}-{_get(run, 'trial')}"),
+        "run_id": _get(run, "run_id", "request_id", default=f"{fault_id}-{sched_variant}-{_get(run, 'trial')}"),
         "fault_id": fault_id,
-        "variant": _get(run, "variant"),
+        "variant": sched_variant or ag["variant"],
         "trial": _get(run, "trial"),
         "gt_router": gt.router if gt else None,
         "gt_class": gt.fault_class if gt else None,
@@ -107,22 +232,26 @@ def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
         "router_ok": bool(gt and pred_router == gt.router),
         "class_ok": bool(gt and pred_class == gt.fault_class),
         "rca_ok": bool(gt and pred_router == gt.router and pred_class == gt.fault_class),
-        "confidence": _get(agent, "confidence"),
+        "confidence": ag["confidence"],
+        "has_commands": bool(commands),
         "lint_passed": lint_passed,
         "applied": applied,
         "recovered": recovered,
-        "cmd_ok": lint_passed and recovered,
+        "fallback_revert": reverted,
+        "agent_recovered": agent_recovered,
+        "cmd_ok": lint_passed and agent_recovered,
         "halluc_evidence": len(bad_ev) > 0,
         "halluc_command": len(topo_viol) > 0,
         "halluc": len(bad_ev) > 0 or len(topo_viol) > 0,
-        "agent_error": bool(_get(run, "error")) or not agent,
-        "t_diagnosis_s": _get(run, "t_diagnosis_s", "timing.diagnosis_s", "diagnosis_time_s"),
-        "t_recovery_s": _get(run, "t_recovery_s", "timing.recovery_s", "mttr_s") if recovered else None,
-        "explanation": _get(agent, "explanation", default="") or " ".join(
-            [str(_get(agent, "root_cause_hypothesis", default="") or "")]
-            + [c.get("statement", "") for c in (_get(agent, "claims", default=[]) or [])]).strip(),
+        "agent_error": diag_failed,
+        "abstain": ag["status"] == "abstain",
+        "incomplete_prediction": pred_router is None or pred_class in (None, "", "unknown"),
+        "variant_mismatch": bool(ag["variant"] and sched_variant and ag["variant"] != sched_variant),
+        "t_diagnosis_s": t_diag,
+        "t_recovery_s": t_rec if agent_recovered else None,
+        "explanation": ag["explanation"] or "",
         "unknown_fault": gt is None,
-        "synthetic": bool(run.get("synthetic")),
+        "synthetic": bool(run.get("synthetic")) or ag["simulation"],
     }
 
 
@@ -165,8 +294,10 @@ def metrics_by_variant(df: pd.DataFrame) -> pd.DataFrame:
             "class_accuracy": g["class_ok"].mean(),
             "lint_pass_rate": g["lint_passed"].mean(),
             "command_correctness": g["cmd_ok"].mean(),
-            "fix_success_rate": applied["recovered"].mean() if len(applied) else math.nan,
-            "recovered_rate": g["recovered"].mean(),
+            "fix_success_rate": applied["agent_recovered"].mean() if len(applied) else math.nan,
+            "applied_rate": g["applied"].mean(),
+            "recovered_any_rate": g["recovered"].mean(),
+            "fallback_revert_rate": g["fallback_revert"].mean(),
             "t_diag_median_s": td.median() if len(td) else math.nan,
             "t_diag_p90_s": td.quantile(0.9) if len(td) else math.nan,
             "t_recovery_median_s": tr.median() if len(tr) else math.nan,
@@ -176,6 +307,8 @@ def metrics_by_variant(df: pd.DataFrame) -> pd.DataFrame:
             "halluc_evidence_rate": g["halluc_evidence"].mean(),
             "halluc_command_rate": g["halluc_command"].mean(),
             "agent_error_rate": g["agent_error"].mean(),
+            "abstain_rate": g["abstain"].mean(),
+            "incomplete_rate": g["incomplete_prediction"].mean(),
             "conf_when_correct": conf[g["rca_ok"]].mean(),
             "conf_when_wrong": conf[~g["rca_ok"]].mean(),
         })
@@ -273,15 +406,19 @@ def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topolog
     lines += ["## Ringkasan per varian", "",
               _md_table(head, {HEADLINE[p] for p in pct}, set()), "",
               "Akurasi = router dan kelas akar masalah cocok dengan ground truth. Ketepatan perintah = lolos linter "
-              "dan jaringan pulih. Keberhasilan perbaikan = pulih di antara run yang perintahnya dijalankan. "
-              "Waktu pemulihan dihitung sejak gejala terdeteksi, hanya untuk run yang pulih.", "",
+              "dan jaringan pulih oleh perintah agen. Keberhasilan perbaikan = pulih oleh perintah agen di antara run "
+              "yang perintahnya dijalankan (– bila belum ada eksekusi). Pemulihan lewat fallback revert katalog tidak "
+              "dihitung. Waktu diagnosis = t_diagnosis_done − t_symptom; waktu pemulihan = t_verified − t_symptom, "
+              "hanya untuk run yang dipulihkan agen.", "",
               "## Akurasi per kelas fault", "", _md_table(c.reset_index(), set(c.columns), set()), "",
               "## Detail", "",
               _md_table(m[["variant", "rca_ci95_low", "rca_ci95_high", "router_accuracy", "class_accuracy",
                            "lint_pass_rate", "recovery_under_10s", "halluc_evidence_rate", "halluc_command_rate",
-                           "agent_error_rate", "conf_when_correct", "conf_when_wrong"]],
+                           "agent_error_rate", "abstain_rate", "incomplete_rate", "applied_rate",
+                           "fallback_revert_rate", "conf_when_correct", "conf_when_wrong"]],
                         {"rca_ci95_low", "rca_ci95_high", "router_accuracy", "class_accuracy", "lint_pass_rate",
-                         "recovery_under_10s", "halluc_evidence_rate", "halluc_command_rate", "agent_error_rate"},
+                         "recovery_under_10s", "halluc_evidence_rate", "halluc_command_rate", "agent_error_rate",
+                         "abstain_rate", "incomplete_rate", "applied_rate", "fallback_revert_rate"},
                         set()), "",
               "![Waktu diagnosis](boxplot_diagnosis_time.png)", "", "![Waktu pemulihan](boxplot_recovery_time.png)"]
     (out / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

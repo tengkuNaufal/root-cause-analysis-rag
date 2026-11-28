@@ -50,7 +50,7 @@ def test_lint_recomputed_when_missing(catalog, linter):
 def test_alias_fields_accepted(catalog, linter):
     run = {"fault_id": "F13", "variant": "graph_rag", "trial": 2,
            "answer": {"router": "r1", "root_cause": "ospf_auth_mismatch", "commands": []},
-           "verification": {"passed": True}, "timing": {"diagnosis_s": 2.0, "recovery_s": 5.0}}
+           "applied": True, "verification": {"passed": True}, "timing": {"diagnosis_s": 2.0, "recovery_s": 5.0}}
     s = score_run(run, catalog, linter)
     assert s["rca_ok"] and s["recovered"] and s["t_diagnosis_s"] == 2.0 and s["t_recovery_s"] == 5.0
 
@@ -78,7 +78,7 @@ def test_end_to_end(tmp_path):
 
 def test_agent_contract_response(catalog, linter):
     """Respons host1/agent_contract: commands dari proposed_patch, evidence dari claims + patch."""
-    run = {"fault_id": "F01", "variant": "text_rag", "trial": 1, "recovered": True,
+    run = {"fault_id": "F01", "variant": "text_rag", "trial": 1, "recovered": True, "applied": True,
            "evidence_ids_available": ["e1", "e2"],
            "agent": {"status": "hypothesis", "root_cause_hypothesis": "MTU r1 eth1 1400",
                      "root_cause_class": "mtu_mismatch",
