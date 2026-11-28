@@ -103,7 +103,7 @@ def test_failed_jobs_are_errors(catalog, linter, name):
 
 
 def test_simulation_flagged_and_end_to_end(tmp_path):
-    rows = [host2_row(), host2_row("abstain", fault_id="F04", variant="zero_shot")]
+    rows = [host2_row(), host2_row("abstain", fault_id="F04", variant="zero_shot", plan_order=2)]
     p = tmp_path / "pilot.jsonl"
     p.write_text("\n".join(json.dumps(r) for r in rows), encoding="utf-8")
     res = evaluate(p, tmp_path / "out")

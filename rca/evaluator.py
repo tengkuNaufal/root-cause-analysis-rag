@@ -41,7 +41,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from rca.catalog import load_catalog, catalog_path as default_catalog_path
+from rca.evaluation_inputs import ATTEMPT_POLICIES, checked_catalog, select_attempts
 from rca.linter import CommandLinter
 from rca.topology import Topology
 
@@ -383,19 +383,18 @@ def boxplot(df: pd.DataFrame, col: str, title: str, path: Path) -> None:
     plt.close(fig)
 
 
-def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topology_path: Path | None = None) -> dict:
-    selected_catalog = catalog_path or default_catalog_path()
-    catalog = load_catalog(selected_catalog)
-    catalog_sha = hashlib.sha256(Path(selected_catalog).read_bytes()).hexdigest()
+def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topology_path: Path | None = None,
+             *, attempt_policy: str = "reject") -> dict:
     linter = CommandLinter(Topology.load(topology_path))
     runs = load_runs(results)
-    for run in runs:
-        if run.get("catalog_sha256") is not None and run["catalog_sha256"] != catalog_sha:
-            raise ValueError("catalog_sha256 does not match evaluator catalog")
+    catalog, catalog_sha = checked_catalog(runs, catalog_path)
     if not runs:
         raise SystemExit(f"{results}: tidak ada run")
+    runs, selection = select_attempts(runs, attempt_policy)
+    selection.update(source_sha256=hashlib.sha256(results.read_bytes()).hexdigest(), catalog_sha256=catalog_sha)
     df = pd.DataFrame([score_run(r, catalog, linter) for r in runs])
     out.mkdir(parents=True, exist_ok=True)
+    (out / "selection.json").write_text(json.dumps(selection, indent=2) + "\n", encoding="utf-8")
 
     m = metrics_by_variant(df)
     c = accuracy_by_class(df)
@@ -405,7 +404,10 @@ def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topolog
 
     pct = {"rca_accuracy", "command_correctness", "fix_success_rate", "hallucination_rate"}
     head = m[list(HEADLINE)].rename(columns=HEADLINE)
-    lines = [f"# Hasil evaluasi: {results.name}", ""]
+    lines = [f"# Hasil evaluasi: {results.name}", "",
+             f"Kebijakan attempt: **{attempt_policy}**; {selection['selected_rows']} cell dari "
+             f"{selection['input_rows']} baris, {selection['excluded_rows']} attempt tidak disertakan. "
+             "Audit pemilihan dan hash sumber: `selection.json`.", ""]
     if df["synthetic"].any():
         lines += ["> **PERINGATAN: data sintetis** — hanya untuk menguji evaluator, bukan hasil eksperimen.", ""]
     if df["unknown_fault"].any():
@@ -441,9 +443,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--catalog", type=Path, default=None)
     ap.add_argument("--topology", type=Path, default=None)
+    ap.add_argument("--attempt-policy", choices=ATTEMPT_POLICIES, default="reject")
     args = ap.parse_args(argv)
     out = args.out or Path("results") / "eval" / args.results.stem
-    res = evaluate(args.results, out, args.catalog, args.topology)
+    res = evaluate(args.results, out, args.catalog, args.topology, attempt_policy=args.attempt_policy)
     pd.set_option("display.width", 160)
     print(res["metrics"][["variant", "runs", "rca_accuracy", "command_correctness", "fix_success_rate",
                           "t_diag_median_s", "t_diag_p90_s", "t_recovery_median_s", "hallucination_rate"]]
