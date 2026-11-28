@@ -2,6 +2,10 @@
 
 Dokumen ini membedakan validasi terbaru dan laporan historis. Laporan lengkap serta artefak mesin tetap lokal di `private/` yang di-ignore.
 
+## Putaran optimasi berbatas 30 menit — 28 November 2026
+
+[AGENT-OPTIMIZATION.md](AGENT-OPTIMIZATION.md) memisahkan A/B prompt beku dan smoke live. Kandidat akhir mempertahankan format bernama untuk konfigurasi, memakai array ketat untuk physical-only dan membaca konfigurasi paralel dengan urutan fakta tetap. Seluruh 9 MTU + 1 BGP smoke akhir pulih tanpa fallback. Median pemulihan MTU turun teramati 19–30%; target <10 lulus 3/9, belum konsisten. Total 452 tes lulus. Hasil development bukan benchmark resmi; model/sampling, evidence freshness/hash dan verifier tidak dilemahkan.
+
 ## Baseline retransmit 1 detik dan matriks smoke terbaru — 28 November 2026
 
 Pengguna menyetujui baseline retransmit-interval 1 pada sepuluh interface data OSPF r1–r4 dan redeploy/pengulangan smoke. Hello/dead tetap 1/4. Redeploy menjaga Vector; baseline, capture dan 10/10 marker lulus. Matriks F01/F02/F03 × rule_based/zero_shot/text_rag/graph_rag pulih 12/12 tanpa fallback. Target <10 hanya lulus pada regex (3/3, 2,018–4,300 detik); agen 0/9, 12,301–18,064 detik. [READINESS.md](READINESS.md) memuat rincian, kondisi preload/cache dan bukti privat.

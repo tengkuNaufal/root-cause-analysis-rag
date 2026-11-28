@@ -1,5 +1,6 @@
 """Fresh read-only collection and frozen, privacy-filtered evidence for live RCA."""
 from datetime import datetime, timezone
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 from pathlib import Path
@@ -108,15 +109,19 @@ class ReadOnlyCapture:
         if (max(windows)-min(windows)).total_seconds()>5:raise CaptureError('capture_skew_exceeded')
         facts=network_facts(snapshot,plan)
         baseline_sources={}
-        for node in plan['nodes']:
+        def configuration(node):
             baseline_path=ROOT/'lab/host1/frr/configs'/node['name']/'frr.conf'
-            baseline_sources[node['name']]=hashlib.sha256(baseline_path.read_bytes()).hexdigest()
+            baseline=baseline_path.read_bytes()
             p=self.runner(['docker','exec','clab-rca-'+node['name'],'vtysh','-c','show running-config'],
                           capture_output=True,text=True,timeout=3,check=False)
             if p.returncode:raise CaptureError('configuration_capture_failed')
-            expected=parse(baseline_path.read_text());observed=parse(p.stdout)
-            facts.extend(differences(node['name'],expected,observed))
-            write(directory/(node['name']+'-settings.json'),dict(expected=expected,observed=observed))
+            return node['name'],hashlib.sha256(baseline).hexdigest(),parse(baseline.decode('utf-8')),parse(p.stdout)
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            # map preserves inventory order even if individual router reads finish out of order.
+            for router,sha,expected,observed in pool.map(configuration,plan['nodes']):
+                baseline_sources[router]=sha
+                facts.extend(differences(router,expected,observed))
+                write(directory/(router+'-settings.json'),dict(expected=expected,observed=observed))
         finished=time.monotonic()
         # Conservative bound includes all capture commands, not only the last source.
         if finished-start>5:raise CaptureError('capture_skew_exceeded')
