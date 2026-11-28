@@ -20,6 +20,7 @@ import shlex
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -31,6 +32,7 @@ from check_lab import EXPECTED, check  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 LAB = None
 VARIANTS = ["zero_shot", "text_rag", "graph_rag"]
+BASELINES = ["rule_based"]
 
 
 def load_catalog(path):
@@ -92,14 +94,21 @@ def reset_router(router):
 
 # Mengambil rute terpilih ke alamat ping router lain, buat dibandingin sama kondisi awal.
 # Fault BGP yang ada jalur cadangannya cuma kelihatan dari sini, ping-nya tetap lolos.
-def loopback_routes():
+# Mengambil rute ke loopback router lain. Kalau tabel rute dari snapshot check_lab udah ada, dipakai
+# langsung biar gak query ulang tiap polling.
+def loopback_routes(routes=None):
     targets = {f"{e['addr']}/32": r for r, e in EXPECTED[LAB].items()}
+    if routes is None:
+        def fetch(r):
+            out = subprocess.run(["docker", "exec", container(r), "vtysh", "-c", "show ip route json"],
+                                 capture_output=True, text=True, timeout=20).stdout
+            return json.loads(out or "{}")
+        with ThreadPoolExecutor(len(EXPECTED[LAB])) as pool:
+            routes = dict(zip(EXPECTED[LAB], pool.map(fetch, EXPECTED[LAB])))
     table = {}
     for r in EXPECTED[LAB]:
-        out = subprocess.run(["docker", "exec", container(r), "vtysh", "-c", "show ip route json"],
-                             capture_output=True, text=True, timeout=20).stdout
         rows = {}
-        for prefix, entries in json.loads(out or "{}").items():
+        for prefix, entries in (routes.get(r) or {}).items():
             if targets.get(prefix, r) == r:
                 continue
             best = next((e for e in entries if e.get("selected")), None)
@@ -126,7 +135,8 @@ def fmt_route(x):
 
 def symptoms(base_routes):
     snap = check(LAB)
-    return snap, snap["failures"] + route_diff(base_routes, loopback_routes())
+    routes = {r: d["routes"] for r, d in snap["routers"].items()}
+    return snap, snap["failures"] + route_diff(base_routes, loopback_routes(routes))
 
 
 def wait_for(fn, timeout, interval=1.0):
@@ -251,8 +261,13 @@ def cmd_list(args):
 
 
 def cmd_plan(args):
-    rows = [(f["id"], v, t) for f in load_catalog(args.catalog) for v in VARIANTS for t in range(1, args.trials + 1)]
+    faults = load_catalog(args.catalog)
+    rows = [(f["id"], v, t) for f in faults for v in VARIANTS for t in range(1, args.trials + 1)]
     random.Random(args.seed).shuffle(rows)
+    # Menambahkan baris pembanding regex di belakang biar urutan 450 baris varian agen gak berubah.
+    extra = [(f["id"], v, t) for f in faults for v in BASELINES for t in range(1, args.trials + 1)]
+    random.Random(args.seed).shuffle(extra)
+    rows += extra
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", newline="") as fh:

@@ -7,6 +7,7 @@
 #   export LIVE_API_TOKEN=...       # token dari environment, jangan ditulis ke file
 #   python3 scripts/bench.py --api http://127.0.0.1:8766 --out data/host2/pilot --faults F01,F16,F22 --trials 1
 #   python3 scripts/bench.py --api ... --out data/host2/smoke --execute --faults F01 --variants graph_rag --trials 1
+#   python3 scripts/bench.py --out data/host2/regex --execute --variants rule_based   # pembanding regex, tanpa API
 #   python3 scripts/bench.py --api ... --out data/host2/pilot --retry 12     # ulang baris jadwal 12 secara eksplisit
 #   python3 scripts/bench.py --api ... --out data/host2/mock-test --no-lab --limit 5   # uji client ke mock saja
 #   python3 scripts/bench.py --api ... --out data/host2/pilot --release 12   # lepas baris 12 setelah dipastikan job-nya gak ada
@@ -28,6 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fault_runner as fr  # noqa: E402
 import live_client as lc  # noqa: E402
+import regex_baseline as rb  # noqa: E402
 from check_lab import check  # noqa: E402
 from lab_lock import lab_lock, LabBusy
 
@@ -167,6 +169,8 @@ class Bench:
 
     # Mengecek API siap dan gak ada job lain sebelum inject, biar fault gak dipasang percuma.
     def wait_idle(self):
+        if self.client is None:
+            return
         for _ in range(30):
             health = self.client.health()
             if health.get("ready") is False:
@@ -252,6 +256,20 @@ class Bench:
             mark("t_symptom")
             request = lc.new_request(row["variant"], points["t_symptom"]["utc"], fr.LAB)
             rec["request_id"] = request["request_id"]
+            if row["variant"] == rb.VARIANT:
+                # Menjalankan pembanding regex lokal di runner, gak lewat API jadi gak ada job yang perlu ditahan.
+                mark("t_request")
+                snap = rb.collect(sorted(fr.EXPECTED[fr.LAB]), points["t_inject"]["utc"])
+                job = rb.make_job(request, snap)
+                mark("t_diagnosis_done")
+                n = len(job["evidence"])
+                rec.update(job_id=job["job_id"], diagnosis=job, status="completed",
+                           evidence_check={"total": n, "verified": n, "problems": [], "source": "local"})
+                rec["lint"] = run_lint(job["assessment"]["commands"])
+                mark("t_lint_done")
+                if self.args.execute and rec["lint"]["status"] == "passed":
+                    self.execute(rec, job, mark)
+                return rec
             self.log("request", order, attempt, request=request)
             mark("t_request")
             deadline = time.monotonic() + self.args.budget
@@ -453,7 +471,8 @@ def fmt(v):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--api", required=True, help="root URL API live, misalnya http://127.0.0.1:8766")
+    ap.add_argument("--api", help="root URL API live, misalnya http://127.0.0.1:8766 (gak perlu kalau cuma "
+                                  "varian rule_based)")
     ap.add_argument("--out", required=True, help="folder sesi, misalnya data/host2/pilot")
     ap.add_argument("--catalog", default=str(fr.ROOT / "faults" / "host1.yaml"))
     ap.add_argument("--plan", default=str(fr.ROOT / "data" / "benchmark_plan.csv"))
@@ -486,12 +505,20 @@ def main():
     if unknown:
         sys.exit(f"Fault di jadwal gak ada di katalog: {', '.join(sorted(unknown))}")
 
-    try:
-        client = lc.LiveClient(args.api, os.environ.get("LIVE_API_TOKEN", ""))
-        caps = client.capabilities()
-    except (ValueError, lc.ApiError, *lc.TRANSPORT_ERRORS) as e:
-        sys.exit(f"Gagal menghubungi API: {e}")
-    missing = {r["variant"] for r in rows} - set(caps.get("variants") or [])
+    variants = {r["variant"] for r in rows}
+    if args.no_lab and rb.VARIANT in variants:
+        sys.exit(f"Varian {rb.VARIANT} baca teks langsung dari lab, gak bisa bareng --no-lab")
+    if variants == {rb.VARIANT} and not args.api:
+        client, caps = None, {"mode": "live", "simulation": False, "variants": []}
+    elif not args.api:
+        sys.exit("--api wajib untuk varian zero_shot, text_rag, dan graph_rag")
+    else:
+        try:
+            client = lc.LiveClient(args.api, os.environ.get("LIVE_API_TOKEN", ""))
+            caps = client.capabilities()
+        except (ValueError, lc.ApiError, *lc.TRANSPORT_ERRORS) as e:
+            sys.exit(f"Gagal menghubungi API: {e}")
+    missing = variants - {rb.VARIANT} - set(caps.get("variants") or [])
     if missing:
         sys.exit(f"Varian belum tersedia di API: {', '.join(sorted(missing))}")
     simulated = caps.get("simulation") is not False or caps.get("mode") != "live"

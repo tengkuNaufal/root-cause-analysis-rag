@@ -119,7 +119,7 @@ Angka di `status` cuma pengecekan cepat terhadap katalog. Angka resmi tetap dari
 
 ## Demo satu run live
 
-`demo` menjalankan satu fault lengkap di lab asli: inject, diagnosis agen, lint, penerapan perintah, verifikasi, lalu menampilkan detail run. Token API diminta interaktif dan tidak disimpan.
+`demo` menjalankan satu fault lengkap di lab asli: inject, diagnosis agen, lint, penerapan perintah, verifikasi, lalu menampilkan detail run. Token API diminta interaktif dan tidak disimpan. Varian `rule_based` (pembanding regex) tidak butuh API dan token.
 
 ```powershell
 .\laptop\lab.ps1 demo F01 graph_rag
@@ -129,6 +129,13 @@ Angka di `status` cuma pengecekan cepat terhadap katalog. Angka resmi tetap dari
 Hasil demo disimpan terpisah di `data/host2/demo/<waktu>-<fault>-<varian>/` sehingga tidak tercampur dengan hasil benchmark. `bench.py` mengunci lab, jadi demo ditolak kalau benchmark sedang berjalan, begitu juga sebaliknya. Di host utama perintah yang sama adalah `bash scripts/demo.sh F01 graph_rag`.
 
 Fault yang cocok untuk demo karena gejalanya jelas: F01 (MTU), F04 (link down), F16 (BGP neighbor shutdown), F25 (missing network).
+
+Smoke test MTU (F01-F03, target pulih di bawah 10 detik) juga bisa dijalankan dari laptop:
+
+```powershell
+.\laptop\lab.ps1 smoke graph_rag
+.\laptop\lab.ps1 smoke rule_based    # pembanding regex, gak minta token
+```
 
 ## Persiapan hari presentasi
 

@@ -14,10 +14,12 @@ Bagian ini dipakai untuk menyuntikkan gangguan ke lab, menunggu gejalanya muncul
 | `scripts/live_client.py` | client HTTP untuk API live (kontrak `live.v1-draft2`) |
 | `scripts/bench_status.py` | ringkasan progres sesi benchmark dan detail satu run, cuma baca file hasil |
 | `scripts/demo.sh` | satu run live lengkap untuk demo, hasilnya di `data/host2/demo/` |
+| `scripts/regex_baseline.py` | pembanding regex (varian `rule_based`): diagnosis dan perintah perbaikan dari pola teks log FRR dan output show |
+| `scripts/smoke_mtu.sh` | smoke test MTU F01-F03 dengan target pemulihan di bawah 10 detik |
 | `lab/replica/` | lab replika enam router yang dipakai sebelum topologi Host 1 tersedia |
-| `data/rca-sim/` | hasil uji 30 fault Host 1 di lab tiruan topologi `rca` |
+| `data/rca-sim/` | hasil uji 30 fault Host 1 di lab tiruan topologi `rca`, rekaman teks untuk tes pembanding regex, dan hasil satu trial `rule_based` |
 | `data/replica/` | hasil uji 30 fault di lab replika |
-| `data/benchmark_plan.csv` | jadwal 450 run (30 fault x 3 varian x 5 trial), urutan acak dengan seed 42 |
+| `data/benchmark_plan.csv` | jadwal 600 run: 450 run varian agen (30 fault x 3 varian x 5 trial, urutan acak seed 42) di baris 1-450, lalu 150 run pembanding regex `rule_based` di baris 451-600 |
 
 Ground truth di katalog hanya dibaca runner dan evaluator. Jangan dikirim ke agen.
 
@@ -110,6 +112,49 @@ bash scripts/demo.sh F01 graph_rag                          # satu run live untu
 ```
 
 Dari laptop, perintah yang sama tersedia lewat `laptop\lab.ps1 status`, `watch`, dan `demo` (lihat [akses-dari-laptop.md](akses-dari-laptop.md)).
+
+## Pembanding regex (`rule_based`)
+
+Slide meminta pembanding berbasis regex. Varian ini dijalankan runner langsung tanpa API dan tanpa model. Setelah gejala terdeteksi, runner mengambil teks dari semua router dalam satu `docker exec` per router: `ip -o link`, `ip -o -4 addr`, `show ip ospf neighbor`, `show ip ospf interface`, `show bgp ipv4 unicast summary`, `show bgp ipv4 unicast`, `show running-config bgpd`, dan log `/var/log/frr/events.log` sejak fault di-inject. Sepuluh aturan regex dicek berurutan dari lapisan bawah ke atas, dan aturan pertama yang cocok menjadi diagnosis:
+
+| Urutan | Kelas | Pola yang dicari | Perbaikan |
+|---|---|---|---|
+| 1 | link_down | interface `ethN` tanpa flag `UP` | `ip link set ethN up` |
+| 2 | mtu_mismatch | MTU `ethN` selain 1500 | `ip link set ethN mtu 1500` |
+| 3 | wrong_ip_address | dua subnet /30 yang cuma punya satu anggota; sisi salah dipilih dari neighbor BGP yang gak terhubung atau `KillNbr` di log | ganti alamat ke host pasangan di subnet tetangga |
+| 4 | ospf_hello_mismatch | `Hello Ns` yang beda dari mayoritas interface OSPF | `ip ospf hello-interval <mayoritas>` |
+| 5 | ospf_area_mismatch | `Area` yang beda dari mayoritas | pindah ke area mayoritas |
+| 6 | ospf_auth_mismatch | autentikasi aktif padahal mayoritas tidak | hapus autentikasi dan key 1 |
+| 7 | bgp_neighbor_shutdown | `Idle (Admin)` di summary | `no neighbor X shutdown` |
+| 8 | bgp_wrong_remote_as | `remote-as` beda dengan `local AS number` router pemilik alamat neighbor | `neighbor X remote-as <AS benar>` |
+| 9 | bgp_inbound_filter | route-map inbound punya `deny` sebelum entri terakhir | `no route-map NAMA deny N` |
+| 10 | bgp_missing_network | prefix layanan 10.100.0.0/16 di `lo` gak ada di tabel BGP router itu sendiri | `network <prefix>` |
+
+Kalau gak ada yang cocok, hasilnya abstain dengan `root_cause: unknown` dan tanpa perintah. Hasilnya dibungkus seperti job API live (`mode: local`, evidence berupa baris yang dikutip), jadi linter, executor, `bench_status.py`, dan evaluator memperlakukannya sama dengan varian agen. Satu-satunya pengetahuan lab yang dipakai adalah standar desain: MTU 1500, prefix layanan 10.100.0.0/16, dan nilai mayoritas OSPF.
+
+```bash
+python3 scripts/bench.py --out data/host2/bench --execute --variants rule_based     # tanpa --api
+python3 scripts/regex_baseline.py                                                     # diagnosis kondisi lab sekarang
+```
+
+Di lab tiruan, satu trial untuk 30 fault (`data/rca-sim/rule_based_trial1.jsonl`) menghasilkan akurasi 30/30, semua perintah lolos linter dan memulihkan lab, diagnosis sekitar 0,5 detik, dan pemulihan median 3,8 detik. Lab normal menghasilkan abstain. Angka ini perlu dibaca hati-hati di laporan: aturannya ditulis oleh kelompok yang tahu 10 kelas fault di katalog dan diuji di fault yang sama, jadi ini batas atas pembanding yang dirancang khusus untuk katalog ini, bukan ukuran kemampuan regex umum. Fault di luar 10 pola, atau dua fault sekaligus, akan salah atau abstain. Varian agen tidak diberi aturan per kelas seperti ini.
+
+`tests/test_regex_baseline.py` menguji aturan terhadap rekaman teks lab tiruan saat gejala pertama terdeteksi (`data/rca-sim/regex_snapshots.json.gz`), termasuk lab normal.
+
+## Smoke test MTU
+
+Slide menargetkan pemulihan fault MTU di bawah 10 detik. Smoke test menjalankan F01-F03 dengan `--execute`, lalu menilai `agent_recovery_s`, yaitu waktu dari gejala terdeteksi sampai lab terverifikasi pulih oleh perintah agen. Waktunya dipecah per tahap supaya kelihatan bagian yang paling lama.
+
+```bash
+bash scripts/smoke_mtu.sh graph_rag     # agen live, minta token
+bash scripts/smoke_mtu.sh rule_based    # pembanding regex
+```
+
+Exit code 0 kalau ketiga run memenuhi target. Hasilnya di `data/host2/smoke-mtu/<waktu>-<varian>/`, dan penilaiannya bisa diulang dengan `python3 scripts/bench_status.py <folder> --target 10`.
+
+Hasil di lab tiruan dengan `rule_based`: total 7,9 sampai 8,0 detik (deteksi 0,6, diagnosis 0,5, lint dan apply 0,6, konvergensi 6,8 sampai 6,9). Supaya angka ini akurat, pengecekan lab dipercepat dari sekitar 2,5 detik menjadi 0,6 detik per cek dengan menggabungkan semua query satu router ke satu `docker exec`, karena daemon Docker mengantre tiap exec.
+
+Bagian terbesar adalah konvergensi OSPF setelah MTU dibetulkan. Adjacency yang macet di ExStart baru mengirim ulang paket DD setelah retransmit interval, default 5 detik. Di lab tiruan, menambahkan `ip ospf retransmit-interval 1` di semua interface OSPF menurunkan waktu pulih setelah perbaikan dari 5,5-6,1 detik menjadi 2,3-3,1 detik. Kalau diagnosis model sekitar 5 detik (median replay sebelumnya, belum termasuk pengambilan evidence live), total varian agen diperkirakan sekitar 13 detik tanpa perubahan ini dan sekitar 9 detik dengan perubahan ini, jadi masih tipis. Perubahan konfigurasi lab ini belum diterapkan karena harus disepakati pemilik lab dan diikuti redeploy.
 
 ## Katalog Host 1
 
