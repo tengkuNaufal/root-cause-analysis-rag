@@ -15,7 +15,8 @@ def setting(key,expected,observed,router='r1'):
     f=dict(type='setting',key=key,expected=expected,observed=observed,router=router,anomaly=True)
     if key.startswith(('neighbor/','bgp/','route_map/','prefix_list/')):
         f['configuration_context']={'expected_bgp_asn':65001}
-    if key.startswith(('route_map/','prefix_list/')):f['policy_direction']='inbound'
+    if key.startswith(('route_map/','prefix_list/')):
+        f['policy_direction']='inbound';f['configuration_context']['baseline_policy_entries']=[]
     return f
 
 
@@ -99,6 +100,22 @@ class PilotAgentTests(unittest.TestCase):
         self.assertEqual(parsed['interface/eth1/ospf_key_ids'],[7]);self.assertNotIn('SECRET_SENTINEL',str(parsed))
         delta=differences('r1',{},parsed)
         self.assertIn('interface/eth1/ospf_key_ids',[f['key'] for f in delta])
+
+    def test_inbound_cleanup_preserves_existing_prefix_list_entries(self):
+        fact=setting('prefix_list/TEMP/seq/5',None,'deny 10.100.5.1/32')
+        fact['configuration_context']['baseline_policy_entries']=['prefix_list/TEMP/seq/10']
+        with self.assertRaises(RepairError):
+            validate_repair({'facts':{'observations':[fact]}},draft('bgp_inbound_filter','vtysh',
+                ['configure terminal','no ip prefix-list TEMP']))
+        validate_repair({'facts':{'observations':[fact]}},draft('bgp_inbound_filter','vtysh',
+            ['configure terminal','no ip prefix-list TEMP seq 5']))
+
+    def test_expected_policy_context_does_not_expose_unrelated_configuration(self):
+        baseline=parse('ip prefix-list TEMP seq 10 permit 10.100.1.1/32\n')
+        observed=parse('ip prefix-list TEMP seq 10 permit 10.100.1.1/32\nip prefix-list TEMP seq 5 permit 10.100.5.1/32\n'
+                       'route-map IMPORT deny 5\n match ip address prefix-list TEMP\n')
+        fact=next(f for f in differences('r1',baseline,observed) if f['key']=='prefix_list/TEMP/seq/5')
+        self.assertEqual(fact['configuration_context']['baseline_policy_entries'],['prefix_list/TEMP/seq/10'])
 
     def test_engine_rejects_pilot_style_semantic_error_after_lint(self):
         class Model:

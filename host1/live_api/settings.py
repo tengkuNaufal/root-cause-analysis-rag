@@ -73,6 +73,7 @@ def differences(router,expected,observed):
             fact['configuration_context']={'expected_bgp_asn':expected.get('bgp/asn'),'observed_bgp_asn':observed.get('bgp/asn')}
         if key.startswith(('route_map/','prefix_list/')):
             name=key.split('/')[1]
+            fact['configuration_context']['baseline_policy_entries']=[k for k in expected if k.startswith(key.split('/')[0]+'/'+name+'/')]
             fact['policy_direction']='inbound' if name in (inbound_maps if key.startswith('route_map/') else inbound_lists) else 'other'
         output.append(fact)
     return output

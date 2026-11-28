@@ -65,6 +65,7 @@ def validate_repair(capture,result):
                 auth=next((f['expected'] for f in relevant if f['key'].endswith('/ospf_authentication')),None)
                 auth_lines=[l for l in ls if l.startswith(('ip ospf authentication','no ip ospf authentication'))]
                 require(auth is None and bool(auth_lines) and auth_lines[-1]=='no ip ospf authentication')
+                require(not any(l.startswith('ip ospf message-digest-key ') for l in ls))
                 if key.endswith('/ospf_key_ids'):
                     require(not expected)
                     require(all('no ip ospf message-digest-key '+str(i) in ls for i in observed or []))
@@ -89,4 +90,6 @@ def validate_repair(capture,result):
             bits=key.split('/');ls=lines()
             if bits[0]=='route_map':require('no route-map '+' '.join(bits[1:]) in ls)
             elif bits[0]=='prefix_list':
-                require('no ip prefix-list '+' '.join(bits[1:]) in ls or 'no ip prefix-list '+bits[1] in ls)
+                empty_baseline=fact.get('configuration_context',{}).get('baseline_policy_entries')==[]
+                require('no ip prefix-list '+' '.join(bits[1:]) in ls or
+                        (empty_baseline and 'no ip prefix-list '+bits[1] in ls))
