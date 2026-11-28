@@ -68,10 +68,8 @@ class Executor:
         if not apply:
             write(output/'execution.json',result);return result
         # One executor per lab, including processes using different session directories.
-        import fcntl
-        with (ROOT/'private/live-executor.lock').open('a+b') as lock:
-            try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-            except BlockingIOError:raise ExecutionError('Another executor owns the lab') from None
+        from scripts.lab_lock import lab_lock
+        with lab_lock('rca'):
             ledger=self.ledger_root/(job.job_id+'.json')
             if not ledger.resolve().is_relative_to(ROOT/'private'):raise ExecutionError('Ledger must stay private')
             ledger.parent.mkdir(parents=True,exist_ok=True)

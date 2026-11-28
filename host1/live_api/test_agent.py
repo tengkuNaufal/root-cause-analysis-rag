@@ -54,9 +54,8 @@ class FixtureModel:
     def generate(self,payload):
         self.calls.append(payload)
         if self.error:raise self.error
-        draft=dict(status='hypothesis',root_cause_hypothesis='Synthetic test: current observed condition only.',
-            root_cause_class=self.cause,root_cause_router=self.router,confidence=.5,
-            claims=[dict(statement='Synthetic observed condition.',evidence_ids=self.ids)],missing_evidence=[],proposed_patch=[])
+        draft=dict(root_cause_class=self.cause,root_cause_router=self.router,confidence=.5,
+            explanation='Synthetic observed condition.',evidence_ids=self.ids,commands=[])
         return dict(done=True,done_reason='stop',prompt_eval_count=10,eval_count=20,response=json.dumps(draft))
 
 def engine(fault='mtu',model=None,**kwargs):
@@ -161,13 +160,44 @@ class EngineTests(unittest.TestCase):
         eng.model.generate=generate
         with tempfile.TemporaryDirectory() as tmp,self.assertRaises(ValueError):run_engine(eng,tmp)
 
-    def test_generation_grammar_requires_null_confidence_on_abstain(self):
+    def test_model_receives_structured_current_measurements(self):
+        eng=engine()
+        with tempfile.TemporaryDirectory() as tmp:run_engine(eng,tmp)
+        prompt=eng.model.calls[0]['prompt']
+        body=prompt.split('<|start_header_id|>user<|end_header_id|>\n\n',1)[1].split('<|eot_id|>',1)[0]
+        content=json.loads(body)['evidence'][0]['content']
+        self.assertIsInstance(content,dict)
+        self.assertEqual(content['expected_mtu'],1500)
+        self.assertEqual(content['endpoints'][0]['observed']['mtu'],1400)
+
+    def test_vtysh_proposal_requires_explicit_configuration_mode(self):
+        eng=engine();original=eng.model.generate
+        def generate(payload):
+            raw=original(payload);value=json.loads(raw['response'])
+            value['commands']=[dict(router='r1',interpreter='vtysh',args=['interface eth1','mtu 1500'])]
+            raw['response']=json.dumps(value);return raw
+        eng.model.generate=generate
+        with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(DiagnosisError,'configuration_mode_required'):
+            run_engine(eng,tmp)
+
+    def test_compact_abstention_is_projected_without_inventing_diagnosis(self):
+        from .agent import decision_to_draft
+        value=dict(root_cause_class=None,root_cause_router=None,confidence=0,
+                   explanation='Healthy baseline',evidence_ids=[],commands=[])
+        draft=decision_to_draft(value)
+        self.assertEqual(draft['status'],'abstain');self.assertIsNone(draft['confidence'])
+        value['confidence']=.5
+        with self.assertRaises(DiagnosisError):decision_to_draft(value)
+
+    def test_tool_grammar_requires_vtysh_lines_and_kernel_argv(self):
         import jsonschema
         from .agent import generation_schema
-        value=dict(status='abstain',root_cause_hypothesis=None,root_cause_class=None,
-                   root_cause_router=None,confidence=None,claims=[],missing_evidence=['Healthy baseline'],proposed_patch=[])
+        value=dict(root_cause_class='bgp_neighbor_shutdown',root_cause_router='r1',confidence=.8,
+            explanation='Observed shutdown',evidence_ids=['e1'],commands=[dict(router='r1',interpreter='vtysh',
+            args=['configure terminal','router bgp 65001','no neighbor 10.255.0.4 shutdown'])])
         jsonschema.validate(value,generation_schema())
-        value['confidence']=0
+        with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(value,generation_schema(True))
+        value['commands'][0]['args']=['neighbor','10.255.0.4','shutdown']
         with self.assertRaises(jsonschema.ValidationError):jsonschema.validate(value,generation_schema())
 
 class LiveHttpTests(unittest.TestCase):

@@ -10,6 +10,9 @@ cd "$(dirname "$0")/.."
 fault=${1:-}
 variant=${2:-graph_rag}
 api=${DEMO_API:-http://127.0.0.1:8766}
+python=${HOST1_PYTHON:-private/.venv-retriever-wsl/bin/python}
+if [ ! -x "$python" ]; then python=python3; fi
+export PYTHONPATH="$PWD/host1:$PWD:$PWD/private/live-agent-deps${PYTHONPATH:+:$PYTHONPATH}"
 if [[ ! $fault =~ ^F[0-9]{2}$ ]]; then
     echo "Pakai: bash scripts/demo.sh F01 [graph_rag|text_rag|zero_shot|rule_based]"
     exit 2
@@ -36,10 +39,9 @@ fi
 
 out="data/host2/demo/$(date -u +%Y%m%dT%H%M%SZ)-$fault-$variant"
 rc=0
-python3 scripts/bench.py "${api_args[@]}" --out "$out" --execute --faults "$fault" --variants "$variant" \
-    --trials 1 || rc=$?
+"$python" scripts/bench.py "${api_args[@]}" --out "$out" --execute --faults "$fault" --variants "$variant" --trials 1 || rc=$?
 if [ -s "$out/results.jsonl" ]; then
     echo
-    python3 scripts/bench_status.py "$out" --show last
+    "$python" scripts/bench_status.py "$out" --show last
 fi
 exit $rc

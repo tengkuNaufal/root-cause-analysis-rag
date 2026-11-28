@@ -296,7 +296,15 @@ def main():
     p.add_argument("--trials", type=int, default=5)
     p.add_argument("--out", default="data/benchmark_plan.csv")
     args = ap.parse_args()
-    {"list": cmd_list, "run": cmd_run, "plan": cmd_plan, "revert": cmd_revert}[args.cmd](args)
+    from contextlib import nullcontext
+    from lab_lock import lab_lock, LabBusy
+    if args.cmd in ('run', 'revert'):
+        load_catalog(args.catalog)
+    try:
+        with lab_lock(LAB) if args.cmd in ('run', 'revert') else nullcontext():
+            {"list": cmd_list, "run": cmd_run, "plan": cmd_plan, "revert": cmd_revert}[args.cmd](args)
+    except LabBusy as exc:
+        sys.exit(str(exc))
 
 
 if __name__ == "__main__":

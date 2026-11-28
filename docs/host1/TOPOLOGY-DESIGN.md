@@ -182,3 +182,6 @@ Diakses 19 November 2026; cek lagi terhadap versi FRR yang dipilih saat implemen
 - [Containerlab FRR](https://containerlab.dev/manual/kinds/frr/): integrasi FRR; bukan bukti kompatibilitas image tertentu dengan runtime lokal.
 
 Pilihan AS, subnet, link, cost, policy, serta service pada dokumen ini adalah rancangan untuk tugas, bukan topologi yang disalin dari referensi.
+
+
+Pembaruan baseline 28 November 2026: retransmit OSPF ditetapkan 1 detik pada sepuluh endpoint data OSPF r1–r4 dengan persetujuan pengguna. Hello/dead tetap 1/4. Semua varian menggunakan baseline yang sama; sumber lengkap tetap pada configs dan design-plan. Validasi dan batas smoke ada pada READINESS.md.

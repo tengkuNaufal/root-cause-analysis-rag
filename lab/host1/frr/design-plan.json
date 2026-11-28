@@ -243,6 +243,7 @@
   "timers": {
     "ospf_hello_seconds": 1,
     "ospf_dead_seconds": 4,
+    "ospf_retransmit_seconds": 1,
     "bgp_keepalive_seconds": 3,
     "bgp_hold_seconds": 9
   },

@@ -53,10 +53,16 @@ class ExtendedTests(unittest.TestCase):
         diff=differences('r1',base,current)
         self.assertNotIn('SECRET',json.dumps(diff));self.assertTrue(any(supports('ospf_auth_mismatch',f) for f in diff))
 
+    def test_bgp_change_includes_observed_configuration_context(self):
+        base=parse('router bgp 65001\n neighbor 10.0.35.2 remote-as 65002\n')
+        current=parse('router bgp 65001\n neighbor 10.0.35.2 remote-as 65002\n neighbor 10.0.35.2 shutdown\n')
+        diff=differences('r3',base,current)
+        self.assertEqual(diff[0]['configuration_context'],{'expected_bgp_asn':65001,'observed_bgp_asn':65001})
+
 class ProposingModel(FixtureModel):
     def generate(self,payload):
         raw=super().generate(payload);value=json.loads(raw['response'])
-        value['proposed_patch']=[dict(router='r1',interface='eth1',interpreter='linux_argv',arguments=['ip','link','set','eth1','mtu','1500'],evidence_ids=['e1'],rationale='Restore the expected MTU.',validation_status='unvalidated')]
+        value['commands']=[dict(router='r1',interpreter='ip',args=['link','set','eth1','mtu','1500'])]
         raw['response']=json.dumps(value);return raw
 
 class ExecutorTests(unittest.TestCase):
