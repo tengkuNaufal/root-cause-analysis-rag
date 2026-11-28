@@ -26,7 +26,7 @@ Metrik per varian:
                       revert katalog tidak pernah dihitung sebagai keberhasilan agen.
   t_diagnosis         t_diagnosis_done - t_symptom (median, p90)
   t_recovery          t_verified - t_symptom, hanya run yang dipulihkan agen (median, p90)
-  hallucination_rate  run dengan evidence_ids di luar manifest evidence, ATAU perintah ke
+  hallucination_rate  proxy: sitasi di luar evidence input model (manifest untuk data lama), ATAU perintah ke
                       router/interface/neighbor yang tidak ada di topologi
   abstain_rate, incomplete_rate (router null / kelas unknown), agent_error_rate dicatat terpisah.
 """
@@ -91,15 +91,31 @@ def _agent_view(run: dict) -> dict:
         res = diag.get("result") or {}
         manifest = diag.get("evidence")
         claims = res.get("claims") or []
+        used = list(a.get("evidence_ids") or [])
+        for item in claims + (res.get("proposed_patch") or []):
+            used += [e for e in item.get("evidence_ids", []) if e not in used]
+        available = [e.get("id") for e in manifest if isinstance(e, dict)] if isinstance(manifest, list) else None
+        provenance = diag.get("provenance") or {}
+        scope = "manifest_legacy"
+        if "model_evidence_ids" in provenance:
+            model_ids = provenance["model_evidence_ids"]
+            if not isinstance(model_ids, list) or any(not isinstance(i, str) for i in model_ids):
+                raise ValueError("model_evidence_ids must be a list of evidence IDs")
+            # Empty list is authoritative: never fall back to the full manifest.
+            available = [i for i in model_ids if available is not None and i in available]
+            scope = "model"
+        elif diag.get("variant") == "rule_based":
+            scope = "rule_based"
         return {
             "router": a.get("router"),
             "root_cause": a.get("root_cause"),
             "confidence": a.get("confidence", res.get("confidence")),
-            "evidence_ids": list(a.get("evidence_ids") or []),
+            "evidence_ids": used,
             "commands": a.get("commands") or res.get("proposed_patch") or [],
             "explanation": a.get("explanation") or " ".join(
                 [str(res.get("root_cause_hypothesis") or "")] + [c.get("statement", "") for c in claims]).strip(),
-            "available": [e.get("id") for e in manifest if isinstance(e, dict)] if isinstance(manifest, list) else None,
+            "available": available,
+            "evidence_scope": scope,
             "state": diag.get("state"),
             "status": res.get("status"),
             "variant": diag.get("variant"),
@@ -121,6 +137,7 @@ def _agent_view(run: dict) -> dict:
             [str(_get(agent, "root_cause_hypothesis", default="") or "")]
             + [c.get("statement", "") for c in (_get(agent, "claims", default=[]) or [])]).strip(),
         "available": _get(run, "evidence_ids_available", "evidence.ids", "available_evidence_ids"),
+        "evidence_scope": "legacy",
         "state": None,
         "status": _get(agent, "status"),
         "variant": None,
@@ -243,6 +260,8 @@ def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
         "agent_recovered": agent_recovered,
         "cmd_ok": lint_passed and agent_recovered,
         "halluc_evidence": len(bad_ev) > 0,
+        "halluc_evidence_ids": ",".join(sorted(set(bad_ev))),
+        "evidence_scope": ag["evidence_scope"],
         "halluc_command": len(topo_viol) > 0,
         "halluc": len(bad_ev) > 0 or len(topo_viol) > 0,
         "agent_error": diag_failed,
@@ -412,6 +431,11 @@ def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topolog
         lines += ["> **PERINGATAN: data sintetis** — hanya untuk menguji evaluator, bukan hasil eksperimen.", ""]
     if df["unknown_fault"].any():
         lines += [f"> {int(df['unknown_fault'].sum())} run memakai fault_id yang tidak ada di katalog.", ""]
+    if (df["evidence_scope"] == "manifest_legacy").any():
+        lines += ["> Sebagian respons live lama tidak memiliki model_evidence_ids; pemeriksaan sitasi "
+                  "untuk respons itu hanya memakai manifest, bukan bukti input model.", ""]
+    lines += ["Halusinasi di sini adalah proxy ID evidence dan topologi perintah; "
+              "kebenaran faktual penjelasan tetap dinilai melalui rubrik dengan isi evidence.", ""]
     lines += ["## Ringkasan per varian", "",
               _md_table(head, {HEADLINE[p] for p in pct}, set()), "",
               "Akurasi = router dan kelas akar masalah cocok dengan ground truth. Ketepatan perintah = lolos linter "

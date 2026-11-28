@@ -22,3 +22,16 @@ pada semua baris, termasuk attempt yang tidak dipilih; input lama tanpa hash mas
 `--catalog` memilih katalog eksplisit, termasuk saat mengulang evaluasi arsip lama.
 
 Kelulusan tes offline tidak membuktikan baseline, koneksi dua host, atau latensi live sehat.
+
+## Audit sitasi
+
+Semua sitasi di assessment, claims, dan proposed_patch diperiksa, termasuk yang tidak disalin
+ke daftar assessment. Pada respons live dengan `provenance.model_evidence_ids`, sitasi harus
+ada pada input model **dan** manifest. Daftar input model kosong berarti tidak ada evidence
+yang dapat dikutip; daftar tersebut tidak diganti dengan seluruh manifest.
+
+Data live lama tanpa field tersebut tetap diterima dengan scope `manifest_legacy`, dicatat
+pada runs_scored.csv dan diberi peringatan pada laporan. Varian regex memakai manifest lokalnya;
+bentuk legacy memakai daftar evidence tersedia. `halluc_evidence_ids` mencatat sitasi bermasalah.
+Metrik halusinasi adalah proxy ID dan topologi perintah, bukan pemeriksaan seluruh fakta teks.
+Kontrak API dan proses layanan tidak berubah oleh audit offline ini.

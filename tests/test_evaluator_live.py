@@ -40,7 +40,8 @@ def test_assessment_is_read(catalog, linter):
     s = score_run(host2_row(), catalog, linter)
     assert (s["pred_router"], s["pred_class"]) == ("r1", "mtu_mismatch")
     assert s["rca_ok"] and s["lint_passed"] and not s["incomplete_prediction"]
-    assert not s["halluc"]  # e1 ada di manifest evidence contoh
+    # The mock never calls a model: its empty model_evidence_ids cannot support e1.
+    assert s["halluc_evidence"] and s["synthetic"]
 
 
 def test_timing_from_runner_points(catalog, linter):
@@ -89,6 +90,47 @@ def test_hallucinated_evidence_against_manifest(catalog, linter):
     row = host2_row()
     row["diagnosis"]["assessment"]["evidence_ids"].append("e-tidak-ada")
     assert score_run(row, catalog, linter)["halluc_evidence"]
+
+
+def test_manifest_citation_not_seen_by_model_is_hallucinated(catalog, linter):
+    row = host2_row()
+    row["diagnosis"]["provenance"]["model_evidence_ids"] = []
+    scored = score_run(row, catalog, linter)
+    assert scored["halluc_evidence"] and scored["halluc_evidence_ids"] == "e1"
+    assert scored["evidence_scope"] == "model"
+
+
+def test_citation_present_in_model_input_and_manifest_is_supported(catalog, linter):
+    row = host2_row()
+    row["diagnosis"]["provenance"]["model_evidence_ids"] = ["e1"]
+    assert not score_run(row, catalog, linter)["halluc_evidence"]
+
+
+@pytest.mark.parametrize("section", ["claims", "proposed_patch"])
+def test_every_claim_and_patch_citation_is_checked(catalog, linter, section):
+    row = host2_row()
+    row["diagnosis"]["result"][section][0]["evidence_ids"].append("invented")
+    assert score_run(row, catalog, linter)["halluc_evidence"]
+
+
+def test_model_id_without_manifest_is_not_available(catalog, linter):
+    row = host2_row()
+    row["diagnosis"]["evidence"] = []
+    assert score_run(row, catalog, linter)["halluc_evidence"]
+
+
+def test_legacy_live_fallback_is_explicit(catalog, linter):
+    row = host2_row()
+    row["diagnosis"]["provenance"].pop("model_evidence_ids")
+    scored = score_run(row, catalog, linter)
+    assert not scored["halluc_evidence"] and scored["evidence_scope"] == "manifest_legacy"
+
+
+def test_invalid_model_evidence_scope_rejected(catalog, linter):
+    row = host2_row()
+    row["diagnosis"]["provenance"]["model_evidence_ids"] = "e1"
+    with pytest.raises(ValueError, match="model_evidence_ids"):
+        score_run(row, catalog, linter)
 
 
 def test_abstain_is_incomplete_not_error(catalog, linter):
