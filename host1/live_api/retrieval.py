@@ -18,7 +18,7 @@ def query_from_facts(facts):
                 terms.append('OSPF MTU interface mismatch')
         elif key.endswith('/ospf_hello') or key.endswith('/ospf_dead'):terms.append('OSPF hello-interval dead-interval')
         elif key.endswith('/ospf_area'):terms.append('OSPF interface area')
-        elif 'ospf_auth' in key or key.endswith('/ospf_key_present'):terms.append('OSPF authentication message-digest-key')
+        elif 'ospf_auth' in key or key.endswith(('/ospf_key_present','/ospf_key_ids')):terms.append('OSPF authentication message-digest-key')
         elif key.endswith('/remote_as'):terms.append('BGP neighbor remote-as')
         elif key.endswith('/shutdown'):terms.append('BGP neighbor shutdown')
         elif key.startswith(('route_map/','prefix_list/')):terms.append('BGP inbound route-map prefix-list')
