@@ -112,6 +112,7 @@ Benchmark berjalan di tmux sesi `bench` di host utama dan menulis ke `data/host2
 ```powershell
 .\laptop\lab.ps1 status        # progres per varian, baris bermasalah, baris yang ditahan, 5 run terakhir
 .\laptop\lab.ps1 status 12     # detail baris jadwal 12 (diagnosis, perintah, lint, waktu)
+.\laptop\lab.ps1 status pilot2  # sesi lain di data/host2/pilot2, bisa ditambah nomor baris atau last
 .\laptop\lab.ps1 watch         # nonton layar tmux secara read-only, keluar dengan Ctrl+B lalu D
 ```
 

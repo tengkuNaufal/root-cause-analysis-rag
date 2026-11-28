@@ -8,6 +8,7 @@
 #   .\laptop\lab.ps1 faults --all
 #   .\laptop\lab.ps1 status            # progres benchmark di data/host2/bench
 #   .\laptop\lab.ps1 status 12         # detail baris jadwal 12 (atau last)
+#   .\laptop\lab.ps1 status pilot2     # sesi lain di data/host2/pilot2, bisa ditambah nomor baris
 #   .\laptop\lab.ps1 watch             # nonton tmux benchmark read-only, keluar pakai Ctrl+B lalu D
 #   .\laptop\lab.ps1 demo F01 graph_rag
 #   .\laptop\lab.ps1 smoke graph_rag    # smoke test MTU F01-F03, target pulih < 10 detik
@@ -65,7 +66,7 @@ if ($Action -eq 'reach') {
 $remoteArgs = @{
     'check'  = 'python3 scripts/check_lab.py --lab rca'
     'faults' = 'python3 scripts/fault_runner.py run'
-    'status' = 'python3 scripts/bench_status.py data/host2/bench'
+    'status' = 'python3 scripts/bench_status.py'
     'watch'  = 'tmux attach -r -t bench'
     'demo'   = 'bash scripts/demo.sh'
     'smoke'  = 'bash scripts/smoke_mtu.sh'
@@ -74,7 +75,7 @@ $remoteArgs = @{
 $allowed = @{
     'check'  = @{ Pattern = '^$'; Max = 0 }
     'faults' = @{ Pattern = '^(F\d{2}|--all)$'; Max = 30 }
-    'status' = @{ Pattern = '^(\d{1,3}|last)$'; Max = 1 }
+    'status' = @{ Pattern = '^(\d{1,3}|last|[A-Za-z][A-Za-z0-9_-]{0,40})$'; Max = 2 }
     'watch'  = @{ Pattern = '^$'; Max = 0 }
     'demo'   = @{ Pattern = '^(F\d{2}|zero_shot|text_rag|graph_rag|rule_based)$'; Max = 2 }
     'smoke'  = @{ Pattern = '^(zero_shot|text_rag|graph_rag|rule_based)$'; Max = 1 }
@@ -94,7 +95,16 @@ foreach ($arg in $Rest) {
     }
 }
 $remote = "wsl -d $Distro -u $LinuxUser --cd `"$RepoPath`" -- " + $remoteArgs[$Action]
-if ($Action -eq 'status' -and $Rest) { $remote += ' --show ' + $Rest[0] }
+if ($Action -eq 'status') {
+    # Memisahkan nama sesi (folder di data/host2) dari nomor baris, default-nya sesi bench.
+    $session = 'bench'
+    $row = $null
+    foreach ($arg in $Rest) {
+        if ($arg -match '^(\d{1,3}|last)$') { $row = $arg } else { $session = $arg }
+    }
+    $remote += " data/host2/$session"
+    if ($row) { $remote += ' --show ' + $row }
+}
 elseif ($Rest) { $remote += ' ' + ($Rest -join ' ') }
 
 # Memakai -t buat aksi interaktif: demo dan smoke minta token, watch nampilin tmux.
