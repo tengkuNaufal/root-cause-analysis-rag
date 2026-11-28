@@ -8,6 +8,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
+try:
+    from .proposal_outcome import read_rejection
+except ImportError:
+    from proposal_outcome import read_rejection
 from datetime import datetime, timezone
 
 CONTRACT = "live.v1-draft2"
@@ -190,4 +194,8 @@ def validate_job(job, request, job_id, allow_simulation=False):
             ids.add(item.get("id"))
     missing = set(assessment.get("evidence_ids") or []) - ids
     need(not missing, f"evidence_ids gak ada di manifest: {sorted(missing)}")
+    try:
+        read_rejection(job)
+    except ValueError as exc:
+        problems.append(str(exc))
     return problems

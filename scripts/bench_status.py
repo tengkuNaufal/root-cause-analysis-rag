@@ -119,6 +119,10 @@ def show(out, faults, which):
           f"confidence {'-' if a.get('confidence') is None else a['confidence']}")
     if a.get("explanation"):
         print(f"Penjelasan          : {a['explanation']}")
+    proposal=rec.get('proposal') or {}
+    if proposal.get('status')=='rejected':
+        print(f"Proposal ditolak API: {proposal.get('stage')} / {proposal.get('code')} "
+              f"({proposal.get('candidate_count')} kandidat; diagnosis tetap tersedia)")
     print(f"Evidence dipakai    : {', '.join(a.get('evidence_ids') or []) or '-'}")
     print("Perintah perbaikan  :")
     for c in a.get("commands") or []:

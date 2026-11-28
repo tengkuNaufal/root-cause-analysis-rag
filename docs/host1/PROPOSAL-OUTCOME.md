@@ -16,3 +16,12 @@ Diagnosis tanpa dukungan, binding/citation tidak valid, capture/freshness/hash g
 tidak valid dan exception internal tetap menyebabkan job gagal. Controller tidak membuat
 perintah pengganti. proposal-validation.json lokal menyimpan kandidat dan alasan untuk audit.
 Job tetap execution_allowed=false. Semua perubahan diuji offline sebelum aktivasi terkoordinasi.
+
+Runner memverifikasi envelope dan evidence terlebih dahulu. Catatan penolakan valid disimpan
+ke JSONL `proposal` dengan status rejected, stage, code, candidate_count dan hash kandidat.
+`lint.status=not_requested` karena tidak ada perintah diekspor untuk linter client; ini tidak
+menghapus hasil penolakan server yang tetap tercatat pada proposal. `execution.attempted=false`,
+applied=false dan fallback_revert.reason=api_proposal_rejected. Hash kandidat bukan izin eksekusi
+dan tidak dipakai sebagai hash commands client. Status run tetap completed, bukan job_failed.
+Catatan malformed, duplikat atau penolakan yang masih mengekspor perintah ditolak sebagai
+invalid_response. Penolakan proposal tidak mengurangi pemeriksaan evidence atau aturan terminal.

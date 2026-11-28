@@ -50,6 +50,15 @@ def test_show_prints_diagnosis_and_commands(tmp_path, capsys):
     assert "r1: ip link set eth1 mtu 1500" in out
     assert "pemulihan oleh agen 11.0s" in out
 
+
+def test_show_separates_diagnosis_from_api_proposal_rejection(tmp_path,capsys):
+    rec=row(7,1,recovered=False)
+    rec['proposal']={'status':'rejected','stage':'guard','code':'proposal_does_not_restore_observed_baseline','candidate_count':1}
+    rec['diagnosis']['assessment']['commands']=[]
+    write(tmp_path,[rec]);bench_status.show(tmp_path,FAULTS,'last')
+    out=capsys.readouterr().out
+    assert 'mtu_mismatch di r1' in out and 'Proposal ditolak API: guard' in out
+
 def test_first_held_run_is_visible_without_final_rows(tmp_path, capsys):
     (tmp_path / 'journal.jsonl').write_text(json.dumps({'event':'held','plan_order':12,'attempt':1})+'\n')
     bench_status.summary(tmp_path, FAULTS, 450)

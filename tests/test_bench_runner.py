@@ -205,6 +205,42 @@ def with_commands(commands):
     return make_job
 
 
+def rejected_proposal_job(request, stage='guard'):
+    from scripts.proposal_outcome import rejection_note
+    job=live_job(request)
+    candidate=job['assessment']['commands']
+    code='proposed_patch_rejected_by_linter' if stage=='lint' else 'proposal_does_not_restore_observed_baseline'
+    job['result']['missing_evidence']=[rejection_note(stage,code,candidate,'host1-policy-v2')]
+    job['assessment']['commands']=[];job['result']['proposed_patch']=[]
+    return job
+
+
+@pytest.mark.parametrize('stage',['lint','guard'])
+def test_api_rejection_keeps_diagnosis_skips_client_lint_and_execution_then_reverts(tmp_path,lab,monkeypatch,stage):
+    def forbidden(*args):pytest.fail('Rejected API proposal must never be linted or executed')
+    monkeypatch.setattr(bench,'run_lint',forbidden)
+    make(tmp_path,FakeApi(submit=lambda req:rejected_proposal_job(req,stage)),execute=True).run(ROWS[:1])
+    rec=results(tmp_path)[0]
+    assert rec['status']=='completed' and rec['error'] is None
+    assert rec['diagnosis']['assessment']['root_cause']=='mtu_mismatch'
+    assert rec['proposal']['stage']==stage and rec['proposal']['candidate_count']==1
+    assert rec['lint']['status']=='not_requested' and rec['lint']['commands_sha256'] is None
+    assert rec['execution']['attempted'] is False and rec['applied'] is False
+    assert rec['fallback_revert']['reason']=='api_proposal_rejected' and rec['recovered'] is True
+    assert rec['timing']['t_verified'] is None
+    assert lab==[('inject','F01'),('revert','F01')]
+
+
+def test_rejection_with_commands_is_invalid_response_and_never_executed(tmp_path,lab):
+    def invalid(req):
+        job=rejected_proposal_job(req)
+        job['assessment']['commands']=[{'router':'r1','interpreter':'ip','args':['link','set','eth1','up']}]
+        return job
+    with pytest.raises(bench.Stop):make(tmp_path,FakeApi(submit=invalid),execute=True).run(ROWS[:1])
+    assert results(tmp_path)[0]['status']=='invalid_response'
+    assert lab==[('inject','F01'),('revert','F01')]
+
+
 def test_execute_applies_linted_commands_and_skips_fallback(tmp_path, lab, monkeypatch):
     monkeypatch.setattr(bench, "run_lint", lambda c: {"status": "passed", "violations": [],
                                                       "commands_sha256": lc.canonical_sha256(c)})
