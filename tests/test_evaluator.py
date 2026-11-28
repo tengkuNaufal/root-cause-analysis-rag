@@ -63,6 +63,10 @@ def test_wilson_interval():
 def test_end_to_end(tmp_path):
     runs = [_run(variant=v, t_diagnosis_s=t) for v, t in [("zero_shot", 1), ("zero_shot", 3), ("graph_rag", 5)]]
     runs.append(_run(variant="graph_rag", router="r9", recovered=False))
+    # Independent scheduled trials, not repeated attempts of the same cell.
+    for trial, run in enumerate(runs, 1):
+        run["trial"] = trial
+        run["run_id"] = f"fixture-{trial}"
     p = tmp_path / "runs.jsonl"
     p.write_text("\n".join(json.dumps(r) for r in runs), encoding="utf-8")
     res = evaluate(p, tmp_path / "out")

@@ -26,7 +26,7 @@ Metrik per varian:
                       revert katalog tidak pernah dihitung sebagai keberhasilan agen.
   t_diagnosis         t_diagnosis_done - t_symptom (median, p90)
   t_recovery          t_verified - t_symptom, hanya run yang dipulihkan agen (median, p90)
-  hallucination_rate  run dengan evidence_ids di luar manifest evidence, ATAU perintah ke
+  hallucination_rate  proxy: sitasi di luar evidence input model (manifest untuk data lama), ATAU perintah ke
                       router/interface/neighbor yang tidak ada di topologi
   abstain_rate, incomplete_rate (router null / kelas unknown), agent_error_rate dicatat terpisah.
 """
@@ -41,7 +41,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from rca.catalog import load_catalog, catalog_path as default_catalog_path
+from rca.evaluation_inputs import ATTEMPT_POLICIES, checked_catalog, select_attempts
 from rca.linter import CommandLinter
 from rca.topology import Topology
 
@@ -91,15 +91,31 @@ def _agent_view(run: dict) -> dict:
         res = diag.get("result") or {}
         manifest = diag.get("evidence")
         claims = res.get("claims") or []
+        used = list(a.get("evidence_ids") or [])
+        for item in claims + (res.get("proposed_patch") or []):
+            used += [e for e in item.get("evidence_ids", []) if e not in used]
+        available = [e.get("id") for e in manifest if isinstance(e, dict)] if isinstance(manifest, list) else None
+        provenance = diag.get("provenance") or {}
+        scope = "manifest_legacy"
+        if "model_evidence_ids" in provenance:
+            model_ids = provenance["model_evidence_ids"]
+            if not isinstance(model_ids, list) or any(not isinstance(i, str) for i in model_ids):
+                raise ValueError("model_evidence_ids must be a list of evidence IDs")
+            # Empty list is authoritative: never fall back to the full manifest.
+            available = [i for i in model_ids if available is not None and i in available]
+            scope = "model"
+        elif diag.get("variant") == "rule_based":
+            scope = "rule_based"
         return {
             "router": a.get("router"),
             "root_cause": a.get("root_cause"),
             "confidence": a.get("confidence", res.get("confidence")),
-            "evidence_ids": list(a.get("evidence_ids") or []),
+            "evidence_ids": used,
             "commands": a.get("commands") or res.get("proposed_patch") or [],
             "explanation": a.get("explanation") or " ".join(
                 [str(res.get("root_cause_hypothesis") or "")] + [c.get("statement", "") for c in claims]).strip(),
-            "available": [e.get("id") for e in manifest if isinstance(e, dict)] if isinstance(manifest, list) else None,
+            "available": available,
+            "evidence_scope": scope,
             "state": diag.get("state"),
             "status": res.get("status"),
             "variant": diag.get("variant"),
@@ -121,6 +137,7 @@ def _agent_view(run: dict) -> dict:
             [str(_get(agent, "root_cause_hypothesis", default="") or "")]
             + [c.get("statement", "") for c in (_get(agent, "claims", default=[]) or [])]).strip(),
         "available": _get(run, "evidence_ids_available", "evidence.ids", "available_evidence_ids"),
+        "evidence_scope": "legacy",
         "state": None,
         "status": _get(agent, "status"),
         "variant": None,
@@ -243,6 +260,8 @@ def score_run(run: dict, catalog, linter: CommandLinter) -> dict:
         "agent_recovered": agent_recovered,
         "cmd_ok": lint_passed and agent_recovered,
         "halluc_evidence": len(bad_ev) > 0,
+        "halluc_evidence_ids": ",".join(sorted(set(bad_ev))),
+        "evidence_scope": ag["evidence_scope"],
         "halluc_command": len(topo_viol) > 0,
         "halluc": len(bad_ev) > 0 or len(topo_viol) > 0,
         "agent_error": diag_failed,
@@ -383,19 +402,18 @@ def boxplot(df: pd.DataFrame, col: str, title: str, path: Path) -> None:
     plt.close(fig)
 
 
-def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topology_path: Path | None = None) -> dict:
-    selected_catalog = catalog_path or default_catalog_path()
-    catalog = load_catalog(selected_catalog)
-    catalog_sha = hashlib.sha256(Path(selected_catalog).read_bytes()).hexdigest()
+def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topology_path: Path | None = None,
+             *, attempt_policy: str = "reject") -> dict:
     linter = CommandLinter(Topology.load(topology_path))
     runs = load_runs(results)
-    for run in runs:
-        if run.get("catalog_sha256") is not None and run["catalog_sha256"] != catalog_sha:
-            raise ValueError("catalog_sha256 does not match evaluator catalog")
+    catalog, catalog_sha = checked_catalog(runs, catalog_path)
     if not runs:
         raise SystemExit(f"{results}: tidak ada run")
+    runs, selection = select_attempts(runs, attempt_policy)
+    selection.update(source_sha256=hashlib.sha256(results.read_bytes()).hexdigest(), catalog_sha256=catalog_sha)
     df = pd.DataFrame([score_run(r, catalog, linter) for r in runs])
     out.mkdir(parents=True, exist_ok=True)
+    (out / "selection.json").write_text(json.dumps(selection, indent=2) + "\n", encoding="utf-8")
 
     m = metrics_by_variant(df)
     c = accuracy_by_class(df)
@@ -405,11 +423,19 @@ def evaluate(results: Path, out: Path, catalog_path: Path | None = None, topolog
 
     pct = {"rca_accuracy", "command_correctness", "fix_success_rate", "hallucination_rate"}
     head = m[list(HEADLINE)].rename(columns=HEADLINE)
-    lines = [f"# Hasil evaluasi: {results.name}", ""]
+    lines = [f"# Hasil evaluasi: {results.name}", "",
+             f"Kebijakan attempt: **{attempt_policy}**; {selection['selected_rows']} cell dari "
+             f"{selection['input_rows']} baris, {selection['excluded_rows']} attempt tidak disertakan. "
+             "Audit pemilihan dan hash sumber: `selection.json`.", ""]
     if df["synthetic"].any():
         lines += ["> **PERINGATAN: data sintetis** — hanya untuk menguji evaluator, bukan hasil eksperimen.", ""]
     if df["unknown_fault"].any():
         lines += [f"> {int(df['unknown_fault'].sum())} run memakai fault_id yang tidak ada di katalog.", ""]
+    if (df["evidence_scope"] == "manifest_legacy").any():
+        lines += ["> Sebagian respons live lama tidak memiliki model_evidence_ids; pemeriksaan sitasi "
+                  "untuk respons itu hanya memakai manifest, bukan bukti input model.", ""]
+    lines += ["Halusinasi di sini adalah proxy ID evidence dan topologi perintah; "
+              "kebenaran faktual penjelasan tetap dinilai melalui rubrik dengan isi evidence.", ""]
     lines += ["## Ringkasan per varian", "",
               _md_table(head, {HEADLINE[p] for p in pct}, set()), "",
               "Akurasi = router dan kelas akar masalah cocok dengan ground truth. Ketepatan perintah = lolos linter "
@@ -441,9 +467,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--catalog", type=Path, default=None)
     ap.add_argument("--topology", type=Path, default=None)
+    ap.add_argument("--attempt-policy", choices=ATTEMPT_POLICIES, default="reject")
     args = ap.parse_args(argv)
     out = args.out or Path("results") / "eval" / args.results.stem
-    res = evaluate(args.results, out, args.catalog, args.topology)
+    res = evaluate(args.results, out, args.catalog, args.topology, attempt_policy=args.attempt_policy)
     pd.set_option("display.width", 160)
     print(res["metrics"][["variant", "runs", "rca_accuracy", "command_correctness", "fix_success_rate",
                           "t_diag_median_s", "t_diag_p90_s", "t_recovery_median_s", "hallucination_rate"]]
