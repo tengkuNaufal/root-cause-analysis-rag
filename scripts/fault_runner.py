@@ -13,6 +13,7 @@
 # Exit code run: 0 semua ok, 1 ada fault tanpa gejala, 2 error, 3 lab gak pulih.
 import argparse
 import csv
+import hashlib
 import json
 import random
 import shlex
@@ -46,19 +47,47 @@ def container(router):
 def apply_steps(router, steps):
     for step in steps:
         if step["type"] == "shell":
-            cmd = ["docker", "exec", container(router), *shlex.split(step["cmd"])]
+            run_argv(router, shlex.split(step["cmd"]))
         elif step["type"] == "vtysh":
-            cmd = ["docker", "exec", container(router), "vtysh"]
-            for line in step["lines"]:
-                cmd += ["-c", line]
+            run_argv(router, vtysh_argv(step["lines"]))
         else:
             raise ValueError(f"tipe langkah tidak dikenal: {step['type']}")
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-        # Mengabaikan catatan mgmtd "applied with notes" soalnya perintahnya tetap kepasang.
-        errors = [l for l in p.stdout.splitlines()
-                  if l.startswith("%") and not l.startswith("% Configuration applied with notes")]
-        if p.returncode != 0 or errors:
-            raise RuntimeError(f"{router}: {' '.join(cmd[3:])} gagal: {p.stdout.strip()} {p.stderr.strip()}")
+
+
+def vtysh_argv(lines):
+    argv = ["vtysh"]
+    for line in lines:
+        argv += ["-c", line]
+    return argv
+
+
+def run_argv(router, argv):
+    cmd = ["docker", "exec", container(router), *argv]
+    p = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+    # Mengabaikan catatan mgmtd "applied with notes" soalnya perintahnya tetap kepasang.
+    errors = [l for l in p.stdout.splitlines()
+              if l.startswith("%") and not l.startswith("% Configuration applied with notes")]
+    if p.returncode != 0 or errors:
+        raise RuntimeError(f"{router}: {' '.join(argv)} gagal: {p.stdout.strip()} {p.stderr.strip()}")
+    return p.stdout
+
+
+# Mengambil hash running-config tiap router, buat ngecek konfigurasi FRR masih sama dengan baseline.
+def config_digests():
+    out = {}
+    for r in EXPECTED[LAB]:
+        text = run_argv(r, ["vtysh", "-c", "show running-config"])
+        body = text[text.find("frr version"):] if "frr version" in text else text
+        out[r] = hashlib.sha256(body.encode()).hexdigest()
+    return out
+
+
+# Mengembalikan satu router ke baseline: semua interface data MTU 1500 dan up, lalu konfigurasi FRR
+# disamakan lagi dengan startup-config lewat frr-reload.
+def reset_router(router):
+    for ifc in EXPECTED[LAB][router]["ifaces"]:
+        run_argv(router, ["ip", "link", "set", ifc, "mtu", "1500", "up"])
+    run_argv(router, ["python3", "/usr/lib/frr/frr-reload.py", "--reload", "/etc/frr/frr.conf"])
 
 
 # Mengambil rute terpilih ke alamat ping router lain, buat dibandingin sama kondisi awal.
