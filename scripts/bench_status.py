@@ -81,12 +81,13 @@ def summary(out, faults, plan_total):
               f"{fmt(statistics.median(heal) if heal else None):>11}")
     print("(kelas/router = cocok dengan katalog, cuma cek cepat; angka resmi tetap dari evaluator)")
 
-    bad = [r for r in rows if r["status"] != "completed" or r.get("recovered") is not True]
+    bad = [r for r in rows if r["status"] != "completed" or r.get("recovered") is not True
+           or (r.get('proposal') or {}).get('status') == 'rejected']
     if bad:
         print("\nBaris yang perlu dicek:")
         for r in bad[-10:]:
             print(f"  [{r['plan_order']}] {r['fault_id']} {r['variant']} status={r['status']} "
-                  f"pulih={r.get('recovered')} {(r.get('error') or '')[:80]}")
+                  f"pulih={r.get('recovered')} {(r.get('error') or (r.get('proposal') or {}).get('code') or '')[:80]}")
 
     print("\nRun terakhir:")
     for r in rows[-5:]:

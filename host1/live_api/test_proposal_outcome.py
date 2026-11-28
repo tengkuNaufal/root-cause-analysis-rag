@@ -62,6 +62,16 @@ class ProposalOutcomeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(DiagnosisError,'not_supported'):
             run_engine(eng,tmp)
 
+    def test_unknown_evidence_reference_remains_fatal(self):
+        eng=proposal_engine('ospf_area_mismatch',['configure terminal','interface eth1','ip ospf area 0'])
+        original=eng.model.generate
+        def generate(payload):
+            result=original(payload);value=json.loads(result['response']);value['evidence_ids']=['e999']
+            result['response']=json.dumps(value);return result
+        eng.model.generate=generate
+        with tempfile.TemporaryDirectory() as tmp,self.assertRaisesRegex(ValueError,'Unknown evidence reference'):
+            run_engine(eng,tmp)
+
     def test_unexpected_validator_error_remains_fatal(self):
         eng=proposal_engine('ospf_area_mismatch',['configure terminal','interface eth1','ip ospf area 0'])
         with tempfile.TemporaryDirectory() as tmp,patch('rca.linter.lint',side_effect=RuntimeError('synthetic bug')):

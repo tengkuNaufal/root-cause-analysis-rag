@@ -59,6 +59,14 @@ def test_show_separates_diagnosis_from_api_proposal_rejection(tmp_path,capsys):
     out=capsys.readouterr().out
     assert 'mtu_mismatch di r1' in out and 'Proposal ditolak API: guard' in out
 
+
+def test_recovered_fallback_does_not_hide_rejected_proposal_in_summary(tmp_path,capsys):
+    rec=row(7,1)
+    rec['proposal']={'status':'rejected','code':'proposal_does_not_restore_observed_baseline'}
+    write(tmp_path,[rec]);bench_status.summary(tmp_path,FAULTS,450)
+    out=capsys.readouterr().out
+    assert 'Baris yang perlu dicek' in out and 'proposal_does_not_restore_observed_baseline' in out
+
 def test_first_held_run_is_visible_without_final_rows(tmp_path, capsys):
     (tmp_path / 'journal.jsonl').write_text(json.dumps({'event':'held','plan_order':12,'attempt':1})+'\n')
     bench_status.summary(tmp_path, FAULTS, 450)

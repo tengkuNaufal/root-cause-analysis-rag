@@ -66,6 +66,20 @@ def test_packet_contains_verified_anonymous_evidence_and_reproducible_key(tmp_pa
     assert json.loads((out / "selection.json").read_text())["overlap"] == 1
 
 
+def test_rubric_packet_keeps_diagnosis_and_names_rejection_without_exposing_candidate(tmp_path):
+    from scripts.proposal_outcome import rejection_note
+    row,archive,_=archived(tmp_path);job=row['diagnosis']
+    job['result']['missing_evidence']=[rejection_note('guard','proposal_does_not_restore_observed_baseline',
+        job['assessment']['commands'],'host1-policy-v2')]
+    job['assessment']['commands']=[];job['result']['proposed_patch']=[]
+    out=tmp_path/'rubric'
+    sample(write_runs(tmp_path,[row]),out,['a'],42,0,evidence_root=archive)
+    rating=read_csv(out/'penilaian_a.csv')[0]
+    assert rating['pred_root_cause']=='mtu_mismatch' and rating['commands']=='[]'
+    assert rating['proposal_status']=='rejected' and rating['proposal_rejection_stage']=='guard'
+    assert rating['explanation']==job['assessment']['explanation']
+
+
 @pytest.mark.parametrize("damage", ["bytes", "fragment", "binding", "escape", "duplicate"])
 def test_corrupt_evidence_rejected_before_any_packet_is_written(tmp_path, damage):
     row, archive, jobdir = archived(tmp_path)

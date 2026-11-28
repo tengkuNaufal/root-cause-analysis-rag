@@ -24,6 +24,8 @@ def rejection_note(stage, code, commands, policy_version):
 def read_rejection(job):
     result = job.get('result') or {}
     notes = result.get('missing_evidence') or []
+    if not isinstance(notes, list):
+        raise ValueError('missing_evidence must be a list of notes')
     markers = [s for s in notes if isinstance(s, str) and s.startswith('proposal_rejected:')]
     if not markers:
         return None

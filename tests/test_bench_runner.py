@@ -241,6 +241,23 @@ def test_rejection_with_commands_is_invalid_response_and_never_executed(tmp_path
     assert lab==[('inject','F01'),('revert','F01')]
 
 
+def test_rejected_runner_jsonl_evaluates_diagnosis_and_commands_separately(tmp_path,lab):
+    import hashlib
+    from rca.evaluator import evaluate
+    def rejected(req):
+        job=rejected_proposal_job(req)
+        job['provenance']['model_evidence_ids']=['e1']
+        return job
+    driver=make(tmp_path,FakeApi(submit=rejected),execute=True)
+    driver.catalog_sha=hashlib.sha256((ROOT/'faults/host1.yaml').read_bytes()).hexdigest()
+    driver.run(ROWS[:1])
+    metrics=evaluate(tmp_path/'results.jsonl',tmp_path/'evaluation')['metrics'].iloc[0]
+    assert metrics['rca_accuracy']==1 and metrics['proposal_rejection_rate']==1
+    assert metrics['command_correctness']==0 and metrics['command_approval_rate']==0
+    assert metrics['applied_rate']==0 and metrics['fallback_revert_rate']==1
+    assert lab==[('inject','F01'),('revert','F01')]
+
+
 def test_execute_applies_linted_commands_and_skips_fallback(tmp_path, lab, monkeypatch):
     monkeypatch.setattr(bench, "run_lint", lambda c: {"status": "passed", "violations": [],
                                                       "commands_sha256": lc.canonical_sha256(c)})
