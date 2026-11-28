@@ -48,6 +48,17 @@ def summary(out, faults, plan_total):
     rows = latest(read_jsonl(out / "results.jsonl"))
     journal = read_jsonl(out / "journal.jsonl")
     print(f"Sesi {out}: {len(rows)} baris selesai" + (f" dari {plan_total} jadwal penuh" if plan_total else ""))
+    # A held attempt may exist before the first final row, or after retrying an older final row.
+    done = {(r['plan_order'], r.get('attempt', 1)) for r in read_jsonl(out / 'results.jsonl')}
+    pending = {}
+    for event in journal:
+        order = event.get('plan_order', event.get('order'))
+        key = (order, event.get('attempt', 1))
+        if event.get('event') == 'held' and key not in done:
+            pending[key] = event
+    for (order, attempt), event in pending.items():
+        print(f"\nPERINGATAN: baris {order} attempt {attempt} ditahan (fault mungkin masih terpasang); "
+              "resume sesi yang sama untuk rekonsiliasi, jangan mulai sesi baru")
     if not rows:
         return
     print(f"\n{'varian':<10}{'run':>5}{'kelas':>7}{'router':>8}{'lint ok':>9}{'agen':>6}{'pulih':>7}"
@@ -74,13 +85,6 @@ def summary(out, faults, plan_total):
         for r in bad[-10:]:
             print(f"  [{r['plan_order']}] {r['fault_id']} {r['variant']} status={r['status']} "
                   f"pulih={r.get('recovered')} {(r.get('error') or '')[:80]}")
-
-    done = {r["plan_order"] for r in rows}
-    held = [e for e in journal if e.get("event") == "held" and e.get("order") not in done]
-    if held:
-        e = held[-1]
-        print(f"\nPERINGATAN: baris {e.get('order')} ditahan (fault masih terpasang), jalankan ulang perintah "
-              f"bench yang sama untuk rekonsiliasi")
 
     print("\nRun terakhir:")
     for r in rows[-5:]:

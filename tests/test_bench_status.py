@@ -39,7 +39,7 @@ def test_summary_warns_about_held_row(tmp_path, capsys):
     write(tmp_path, [row(1, 1)])
     (tmp_path / "journal.jsonl").write_text(json.dumps({"event": "held", "order": 2}) + "\n")
     bench_status.summary(tmp_path, FAULTS, None)
-    assert "baris 2 ditahan" in capsys.readouterr().out
+    assert "baris 2 attempt 1 ditahan" in capsys.readouterr().out
 
 
 def test_show_prints_diagnosis_and_commands(tmp_path, capsys):
@@ -49,3 +49,14 @@ def test_show_prints_diagnosis_and_commands(tmp_path, capsys):
     assert "mtu_mismatch di r1" in out
     assert "r1: ip link set eth1 mtu 1500" in out
     assert "pemulihan oleh agen 11.0s" in out
+
+def test_first_held_run_is_visible_without_final_rows(tmp_path, capsys):
+    (tmp_path / 'journal.jsonl').write_text(json.dumps({'event':'held','plan_order':12,'attempt':1})+'\n')
+    bench_status.summary(tmp_path, FAULTS, 450)
+    assert 'baris 12 attempt 1 ditahan' in capsys.readouterr().out
+
+def test_held_retry_is_not_hidden_by_earlier_completed_attempt(tmp_path, capsys):
+    write(tmp_path, [row(7,1)])
+    (tmp_path / 'journal.jsonl').write_text(json.dumps({'event':'held','plan_order':7,'attempt':2})+'\n')
+    bench_status.summary(tmp_path, FAULTS, 450)
+    assert 'baris 7 attempt 2 ditahan' in capsys.readouterr().out

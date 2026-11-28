@@ -18,7 +18,6 @@
 # dan fault sengaja ditahan.
 import argparse
 import csv
-import fcntl
 import hashlib
 import json
 import os
@@ -30,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fault_runner as fr  # noqa: E402
 import live_client as lc  # noqa: E402
 from check_lab import check  # noqa: E402
+from lab_lock import lab_lock, LabBusy
 
 
 STOP_STATUS = {"error", "admission_error", "invalid_response", "evidence_error"}
@@ -501,16 +501,12 @@ def main():
     if simulated:
         print(f"Catatan: API berjalan dalam mode {caps.get('mode')}, hasil diagnosis bukan dari agen sungguhan")
 
-    if not args.no_lab:
-        # Mengunci lab biar demo dan benchmark gak inject ke lab yang sama barengan.
-        lock = open(f"/tmp/bench-{fr.LAB}.lock", "w")
-        try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            sys.exit(f"Lab {fr.LAB} lagi dipakai proses bench lain (benchmark atau demo), tunggu sampai selesai")
-
     try:
-        Bench(args, client, faults, catalog_sha).run(rows)
+        from contextlib import nullcontext
+        with nullcontext() if args.no_lab else lab_lock(fr.LAB):
+            Bench(args, client, faults, catalog_sha).run(rows)
+    except LabBusy as e:
+        sys.exit(str(e))
     except Stop as e:
         print(str(e))
         sys.exit(e.code)
