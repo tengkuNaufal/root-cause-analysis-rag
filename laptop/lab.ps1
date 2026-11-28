@@ -10,9 +10,10 @@
 #   .\laptop\lab.ps1 status 12         # detail baris jadwal 12 (atau last)
 #   .\laptop\lab.ps1 watch             # nonton tmux benchmark read-only, keluar pakai Ctrl+B lalu D
 #   .\laptop\lab.ps1 demo F01 graph_rag
+#   .\laptop\lab.ps1 smoke graph_rag    # smoke test MTU F01-F03, target pulih < 10 detik
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet('doctor', 'reach', 'check', 'faults', 'status', 'watch', 'demo')]
+    [ValidateSet('doctor', 'reach', 'check', 'faults', 'status', 'watch', 'demo', 'smoke')]
     [string]$Action,
     [Parameter(Position = 1, ValueFromRemainingArguments = $true)]
     [string[]]$Rest
@@ -67,6 +68,7 @@ $remoteArgs = @{
     'status' = 'python3 scripts/bench_status.py data/host2/bench'
     'watch'  = 'tmux attach -r -t bench'
     'demo'   = 'bash scripts/demo.sh'
+    'smoke'  = 'bash scripts/smoke_mtu.sh'
 }
 # Membatasi argumen per aksi karena string ini dieksekusi di host utama.
 $allowed = @{
@@ -74,7 +76,8 @@ $allowed = @{
     'faults' = @{ Pattern = '^(F\d{2}|--all)$'; Max = 30 }
     'status' = @{ Pattern = '^(\d{1,3}|last)$'; Max = 1 }
     'watch'  = @{ Pattern = '^$'; Max = 0 }
-    'demo'   = @{ Pattern = '^(F\d{2}|zero_shot|text_rag|graph_rag)$'; Max = 2 }
+    'demo'   = @{ Pattern = '^(F\d{2}|zero_shot|text_rag|graph_rag|rule_based)$'; Max = 2 }
+    'smoke'  = @{ Pattern = '^(zero_shot|text_rag|graph_rag|rule_based)$'; Max = 1 }
 }
 if (($Action -eq 'faults' -or $Action -eq 'demo') -and -not $Rest) {
     Write-Host 'Sebutkan ID fault, misalnya F01 (faults juga bisa --all).'
@@ -94,9 +97,9 @@ $remote = "wsl -d $Distro -u $LinuxUser --cd `"$RepoPath`" -- " + $remoteArgs[$A
 if ($Action -eq 'status' -and $Rest) { $remote += ' --show ' + $Rest[0] }
 elseif ($Rest) { $remote += ' ' + ($Rest -join ' ') }
 
-# Memakai -t buat aksi interaktif: demo minta token, watch nampilin tmux.
+# Memakai -t buat aksi interaktif: demo dan smoke minta token, watch nampilin tmux.
 $sshArgs = @()
-if ($Action -eq 'demo' -or $Action -eq 'watch') { $sshArgs += '-t' }
+if ($Action -in 'demo', 'watch', 'smoke') { $sshArgs += '-t' }
 
 $sw = [Diagnostics.Stopwatch]::StartNew()
 ssh @sshArgs "$WinUser@$HostIp" $remote

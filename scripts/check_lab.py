@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DESIGN_PLAN = ROOT / "lab" / "host1" / "frr" / "design-plan.json"
 EXPECTED_MTU = 1500
+SEP = "@@cek@@"
 
 
 # Menyusun kondisi normal lab rca dari design-plan.json, biar gak ada dua sumber topologi Host 1.
@@ -75,17 +76,34 @@ def check(lab):
     snapshot = {"lab": lab, "taken_at_utc": datetime.now(timezone.utc).isoformat(), "routers": {}, "ping": {}}
     failures = []
 
+    # Mengambil semua data satu router dalam satu docker exec, soalnya daemon Docker ngantri tiap exec
+    # (sekitar 30 ms per exec) dan polling pemulihan jadi lambat kalau exec-nya puluhan.
     def collect(r):
-        c = f"clab-{lab}-{r}"
-        _, link_out, _ = run(c, "ip", "-j", "link", "show")
-        # Melewati query OSPF di router yang gak jalanin ospfd (r5/r6 di lab rca).
-        ospf = vtysh_json(c, "show ip ospf neighbor json").get("neighbors", {}) if expected[r]["ospf"] else {}
-        return {"links": {l["ifname"]: l for l in json.loads(link_out or "[]")}, "ospf_neighbors": ospf,
-                "bgp_peers": vtysh_json(c, "show bgp summary json").get("ipv4Unicast", {}).get("peers", {}),
-                "routes": vtysh_json(c, "show ip route json")}
+        cmds = ["ip -j link show",
+                "vtysh -c 'show ip ospf neighbor json'" if expected[r]["ospf"] else "echo '{}'",
+                "vtysh -c 'show bgp summary json'", "vtysh -c 'show ip route json'"]
+        code, out, err = run(f"clab-{lab}-{r}", "sh", "-c", f"; echo {SEP}; ".join(cmds))
+        parts = out.split(SEP)
+        if code != 0 or len(parts) != len(cmds):
+            raise RuntimeError(f"clab-{lab}-{r}: pengambilan data gagal: {err.strip()}")
+        link, ospf, bgp, routes = (json.loads(x.strip() or "{}") for x in parts)
+        return {"links": {l["ifname"]: l for l in link or []}, "ospf_neighbors": ospf.get("neighbors", {}),
+                "bgp_peers": bgp.get("ipv4Unicast", {}).get("peers", {}), "routes": routes}
 
-    with ThreadPoolExecutor(max_workers=len(expected)) as pool:
+    # Menjalankan ping ke semua router lain dari dalam container secara paralel, satu exec per router
+    # sumber, biar satu cek gak makan 1 detik per ping yang gagal.
+    def ping(src):
+        targets = [expected[d]["addr"] for d in expected if d != src]
+        script = (f"for d in {' '.join(targets)}; do (ping -c 1 -W 1 -I {expected[src]['addr']} $d "
+                  ">/dev/null 2>&1; echo \"$d $?\") & done; wait")
+        out = run(f"clab-{lab}-{src}", "sh", "-c", script)[1]
+        codes = dict(line.split() for line in out.splitlines() if line.strip())
+        return {d: codes.get(expected[d]["addr"]) == "0" for d in expected if d != src}
+
+    with ThreadPoolExecutor(max_workers=2 * len(expected)) as pool:
+        pings = pool.map(ping, expected)
         snapshot["routers"] = dict(zip(expected, pool.map(collect, expected)))
+        reach = dict(zip(expected, pings))
 
     for r, exp in expected.items():
         links = snapshot["routers"][r]["links"]
@@ -112,20 +130,10 @@ def check(lab):
             if state != "Established":
                 failures.append(f"{r}: BGP ke {peer} {state}")
 
-    # Menjalankan 30 ping paralel, biar satu cek gak makan 1 detik per ping yang gagal. Ini penting
-    # buat ngukur waktu pemulihan, karena durasi cek ikut kehitung.
-    pairs = list(itertools.permutations(expected, 2))
-
-    def ping(pair):
-        src, dst = pair
-        return run(f"clab-{lab}-{src}", "ping", "-c", "1", "-W", "1", "-I", expected[src]["addr"],
-                   expected[dst]["addr"])[0]
-
-    with ThreadPoolExecutor(max_workers=len(pairs)) as pool:
-        codes = list(pool.map(ping, pairs))
-    for (src, dst), code in zip(pairs, codes):
-        snapshot["ping"][f"{src}->{dst}"] = code == 0
-        if code != 0:
+    for src, dst in itertools.permutations(expected, 2):
+        ok = reach[src][dst]
+        snapshot["ping"][f"{src}->{dst}"] = ok
+        if not ok:
             failures.append(f"ping {src} ({expected[src]['addr']}) -> {dst} ({expected[dst]['addr']}) gagal")
 
     snapshot["failures"] = failures

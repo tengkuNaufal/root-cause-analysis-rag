@@ -5,6 +5,7 @@
 #   python3 scripts/bench_status.py data/host2/bench
 #   python3 scripts/bench_status.py data/host2/bench --show 12      # detail baris jadwal 12
 #   python3 scripts/bench_status.py data/host2/demo --show last
+#   python3 scripts/bench_status.py data/host2/smoke-mtu/... --target 10   # cek target waktu pulih smoke test
 import argparse
 import json
 import statistics
@@ -110,14 +111,17 @@ def show(out, faults, which):
     for s in (rec.get("symptoms") or [])[:6]:
         print(f"  - {s}")
     print(f"\nDiagnosis agen      : {a.get('root_cause', '-')} di {a.get('router', '-')}, "
-          f"confidence {a.get('confidence', '-')}")
+          f"confidence {'-' if a.get('confidence') is None else a['confidence']}")
     if a.get("explanation"):
         print(f"Penjelasan          : {a['explanation']}")
     print(f"Evidence dipakai    : {', '.join(a.get('evidence_ids') or []) or '-'}")
     print("Perintah perbaikan  :")
     for c in a.get("commands") or []:
         args = c.get("args") or []
-        line = "ip " + " ".join(args) if c.get("interpreter") == "ip" else "vtysh " + " ".join(f'-c "{a}"' for a in args)
+        if c.get("interpreter") == "ip":
+            line = "ip " + " ".join(args)
+        else:
+            line = "vtysh " + " ".join(f'-c "{a}"' for a in args)
         print(f"  {c.get('router')}: {line}")
     print(f"Linter              : {lint.get('status', '-')}" +
           (f" ({'; '.join(map(str, lint.get('violations') or []))})" if lint.get("violations") else ""))
@@ -135,14 +139,52 @@ def show(out, faults, which):
         print(f"Error: {rec['error']}")
 
 
+def elapsed(t, name):
+    return (t.get(name) or {}).get("elapsed_s")
+
+
+def span(t, a, b):
+    x, y = elapsed(t, a), elapsed(t, b)
+    return None if x is None or y is None else y - x
+
+
+# Menilai smoke test: total dihitung dari gejala terdeteksi sampai lab terverifikasi pulih oleh perintah
+# agen (agent_recovery_s), lalu dipecah per tahap biar kelihatan bagian mana yang makan waktu.
+def smoke(out, target):
+    rows = latest(read_jsonl(out / "results.jsonl"))
+    if not rows:
+        sys.exit(f"Belum ada hasil di {out}")
+    print(f"Smoke test {out}, target pemulihan < {target:g} detik sejak gejala terdeteksi\n")
+    print(f"{'fault':<6}{'varian':<11}{'deteksi':>9}{'diagnosis':>11}{'lint+apply':>12}{'konvergensi':>13}"
+          f"{'total':>8}  hasil")
+    passed = 0
+    for r in rows:
+        t = r.get("timing") or {}
+        total = t.get("agent_recovery_s")
+        ok = total is not None and total < target
+        passed += ok
+        if ok or total is not None:
+            verdict = "LULUS" if ok else "GAGAL"
+        else:
+            verdict = f"GAGAL ({r['status']}, agen gak memulihkan lab)"
+        print(f"{r['fault_id']:<6}{r['variant']:<11}{fmt(t.get('detection_s')):>9}{fmt(t.get('diagnosis_s')):>11}"
+              f"{fmt(span(t, 't_diagnosis_done', 't_apply_done')):>12}{fmt(span(t, 't_apply_done', 't_verified')):>13}"
+              f"{fmt(total):>8}  {verdict}")
+    print(f"\n{passed}/{len(rows)} run memenuhi target")
+    return passed == len(rows)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("out", help="folder sesi bench.py, misalnya data/host2/bench")
     ap.add_argument("--show", help="nomor baris jadwal atau 'last' untuk detail satu run")
+    ap.add_argument("--target", type=float, help="nilai smoke test terhadap batas waktu pulih ini (detik)")
     ap.add_argument("--catalog", default=str(fr.ROOT / "faults" / "host1.yaml"))
     ap.add_argument("--plan", default=str(fr.ROOT / "data" / "benchmark_plan.csv"))
     args = ap.parse_args()
     out = Path(args.out)
+    if args.target:
+        sys.exit(0 if smoke(out, args.target) else 1)
     faults = {f["id"]: f for f in fr.load_catalog(args.catalog)}
     if args.show:
         show(out, faults, args.show)
