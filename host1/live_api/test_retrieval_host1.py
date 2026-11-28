@@ -24,9 +24,14 @@ class RetrievalSetTests(unittest.TestCase):
         doc=_pinned(folder,manifest,'frr-ospf-vty.c',9853,9860)
         self.assertEqual(doc['content_kind'],'frr_source_code')
         self.assertIn('MTU mismatch',doc['content']);self.assertTrue(doc['original_source_sha256'])
+        rfc=_pinned(folder,manifest,'rfc2328.txt',4925,4929)
+        self.assertIn('Interface MTU',rfc['content'])
+        self.assertIn('rejected',rfc['content'])
+        check=_pinned(folder,manifest,'frr-ospf-packet.c',1224,1232)
+        self.assertIn('ntohs(dd->mtu) > oi->ifp->mtu',check['content'])
 
     def test_policy_version_present(self):
         from rca.linter import POLICY_VERSION
-        self.assertEqual(POLICY_VERSION,'host1-policy-v1')
+        self.assertEqual(POLICY_VERSION,'host1-policy-v2')
 
 if __name__=='__main__':unittest.main()

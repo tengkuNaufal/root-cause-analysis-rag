@@ -14,7 +14,9 @@ def parse(text):
         if line.startswith('interface '):
             iface=line.split()[1];bgp=False;route=None;continue
         if line.startswith('router '):
-            iface=None;route=None;bgp=line.startswith('router bgp ');address_family=False;continue
+            iface=None;route=None;bgp=line.startswith('router bgp ');address_family=False
+            if bgp:settings['bgp/asn']=int(line.split()[2])
+            continue
         if line.startswith('route-map '):
             parts=line.split();iface=None;bgp=False;route='/'.join(parts[1:4]);settings['route_map/'+route]=[];continue
         if line.startswith('ip prefix-list '):
@@ -64,6 +66,8 @@ def differences(router,expected,observed):
         # FRR may omit implicit AF activation on unchanged peers; retain it as context,
         # but a missing activation alone is outside the supported diagnosis vocabulary.
         fact=dict(type='setting',router=router,key=key,expected=a,observed=b,anomaly=True)
+        if key.startswith(('neighbor/','bgp/','route_map/','prefix_list/')):
+            fact['configuration_context']={'expected_bgp_asn':expected.get('bgp/asn'),'observed_bgp_asn':observed.get('bgp/asn')}
         if key.startswith(('route_map/','prefix_list/')):
             name=key.split('/')[1]
             fact['policy_direction']='inbound' if name in (inbound_maps if key.startswith('route_map/') else inbound_lists) else 'other'

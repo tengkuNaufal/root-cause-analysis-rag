@@ -33,7 +33,7 @@ from typing import Callable
 from rca.topology import Topology
 
 # Bump on any policy/allowlist semantic change; source digest is recorded separately.
-POLICY_VERSION = 'host1-policy-v1'
+POLICY_VERSION = 'host1-policy-v2'
 POLICY_SOURCE_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 # ------------------------------------------------------------------ hasil
@@ -406,7 +406,7 @@ class CommandLinter:
         # ---------------- interface
         @on("interface", r"(?:ip )?mtu (\d+)")
         def _mtu(_, st, m):
-            return _mtu_value(int(m.group(1)))
+            return _mtu_value(int(m.group(1))) or ('wrong_interpreter', 'Kernel MTU harus memakai ip link; mtu/ip mtu tidak didukung vtysh pada build Host 1')
 
         @on("interface", r"no shutdown")
         def _noshut(_, st, m):

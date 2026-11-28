@@ -103,6 +103,8 @@ BAD = [
     ("r1", ["configure terminal", "router rip"], "not_allowed"),
     ("r1", ["ip addr add 10.0.12.1/30 dev eth1"], "not_allowed"),
     ("r1", ["mtu 1500"], "not_allowed"),  # mtu di luar konteks interface
+    ("r1", ["configure terminal", "interface eth1", "mtu 1500"], "wrong_interpreter"),
+    ("r1", ["configure terminal", "interface eth1", "ip mtu 1500"], "wrong_interpreter"),
 ]
 
 

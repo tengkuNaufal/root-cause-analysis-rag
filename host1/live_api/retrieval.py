@@ -25,7 +25,8 @@ def _pinned(folder,manifest,name,start,end):
     entry=next(e for e in manifest if e['filename']==name)
     data=(folder/name).read_bytes()
     if hashlib.sha256(data).hexdigest()!=entry['sha256']:raise ValueError('Pinned live reference changed')
-    lines=data.decode('utf-8').splitlines()
+    # RFC form feeds are page separators, not source line boundaries.
+    lines=data.decode('utf-8').split('\n')
     return dict(content='\n'.join(lines[start-1:end]),citation_url=entry.get('source_url',entry.get('url')),
         original_source_sha256=entry['sha256'],original_locator=f'lines:{start}-{end}',
         content_kind=entry['content_kind'],document_version=entry.get('document_version',entry.get('version')),
@@ -58,7 +59,7 @@ def retrieve(query,limit=2,full_text=False):
     if 'mtu' in q or 'exstart' in q:
         folder=ROOT/'host1/knowledge/supplemental-mtu';manifest=json.loads((folder/'manifest.json').read_text())
         # Source code proves a mismatch check exists, not that bypassing it is a valid repair.
-        extras.append(_pinned(folder,manifest,'frr-ospf-vty.c',9853,9860))
+        extras.append(_pinned(folder,manifest,'frr-ospf-packet.c',1224,1232))
         extras.append(_pinned(folder,manifest,'rfc2328.txt',4925,4929))
     if ('neighbor' in q and 'shutdown' in q) or ('idle' in q and 'admin' in q):
         folder=ROOT/'host1/knowledge/sources';manifest=json.loads((ROOT/'host1/knowledge/sources-manifest.json').read_text())
