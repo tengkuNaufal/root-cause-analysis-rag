@@ -1,77 +1,82 @@
 # Kesiapan Host 1 untuk pengujian bersama
 
-Pembaruan 28 November 2026. Semua hasil berikut adalah commissioning/pengembangan, bukan benchmark resmi. Login Tailscale ditunda pengguna; Windows Update tetap aktif sesuai pilihan pengguna.
+Pembaruan 28 November 2026. Kode dan baseline lokal siap untuk uji integrasi terkontrol. Target pemulihan agen <10 detik belum lulus. Login Tailscale ditunda pengguna, Windows Update tetap aktif, dan akses layar langsung dihentikan sesuai permintaan pengguna.
 
-## Yang sudah disiapkan
+## Kondisi akhir yang diperiksa
 
-- Branch monitoring/demo Fayyaz sudah diintegrasikan lokal, termasuk status per run dan monitoring tmux.
-- Satu lock `private/lab-locks/rca.lock` dipakai CLI benchmark, demo, fault runner/revert, dan executor standalone. Monitoring tidak mengambil lock.
-- API diagnosis tetap loopback `127.0.0.1:8766`, tanpa endpoint apply. Ollama hanya di loopback `11434`. Replay tidak dibuka atau dipakai paralel.
-- API dan model berjalan dalam tmux milik user layanan; sesi benchmark detached dapat berjalan sebagai user Linux yang memiliki akses Docker. Nama sesi layanan `rca-api`/`rca-model`, runner `bench`.
-- OpenSSH Server dan Tailscale Windows terpasang, service otomatis berjalan. TCP 22 lokal merespons. Firewall SSH dibatasi LAN dan rentang Tailscale; API live tidak dibuka ke LAN.
-- User Linux runner diberi akses Docker dengan persetujuan pengguna. Sleep/hibernate AC dinonaktifkan; pengaturan baterai tidak diubah. Kapasitas disk diperiksa sebelum uji.
-- Token, konfigurasi mesin, log instalasi, hasil run dan process metadata berada di `private/` atau `data/host2/` yang di-ignore.
+- Enam FRR dan Vector berjalan; delapan link, lima adjacency OSPF FULL, sembilan sesi BGP Established. Verifier baseline lulus termasuk ping 30/30 arah, 120/120 paket; capture akhir tidak menemukan anomali.
+- Baseline baru memakai `ip ospf retransmit-interval 1` pada sepuluh interface data OSPF r1–r4, setelah persetujuan pengguna dan redeploy terkontrol. Hello/dead tetap 1/4 detik. `design-plan.json` dan konfigurasi sumber konsisten. Vector dipertahankan dan menerima 10/10 marker dari enam router.
+- API loopback 8766 melaporkan mode live, simulation=false, ready=true, active=false. Ollama loopback 11434 dan API berada di tmux `rca-model`/`rca-api`. Replay tidak diubah atau dinyalakan paralel.
+- Branch monitoring/demo dan regex PR #12 sudah diintegrasikan. Jadwal tersedia untuk 450 run agen ditambah 150 rule_based. Benchmark resmi belum dijalankan.
+- Shared lock privat dipakai CLI benchmark, demo, fault runner/revert dan executor standalone. Benchmark memakai executor runner; jangan menjalankan standalone --apply lagi untuk diagnosis yang sama.
+- Runner detached diuji sebagai user Linux yang memiliki akses Docker: launcher selesai lebih dahulu, runner tetap berjalan di tmux hingga exit 0. Ini detachment lokal, belum uji putus SSH dari laptop asli.
+- OpenSSH Server dan Tailscale Windows terpasang dengan service otomatis. Port 22 loopback merespons; firewall dibatasi LAN/rentang Tailscale. Sleep/hibernate AC Never; baterai tidak diubah.
+- Token, alamat/koneksi pribadi, PID/log instalasi, model, environment, runtime dan hasil run tetap di private/ atau data/host2/ yang di-ignore. Fixture baru rca-sim adalah data sintetis upstream yang dipakai tes, bukan hasil lokal mesin ini.
 
-## Hasil live yang sudah ada
+## Model dan kontrak
 
-Tiga varian memakai model terpin `llama3.1:8b`, temperature 0, seed 42, context 8192, output maksimum 768 dan num_gpu 20. Format keputusan model diringkas lalu diproyeksikan secara deterministik ke kontrak `live.v1-draft2`; label, router, penjelasan, citation dan argumen tetap berasal dari model. Tidak membaca katalog/revert/ground truth di runtime agen.
+Ketiga varian memakai llama3.1:8b dengan digest terpin, temperature 0, seed 42, context 8192, output maksimum 768, num_gpu 20. Profil replay/setup tidak diubah. Profil full GPU 33 diuji pada prompt beku tanpa fault/apply, terlalu lambat, dibatalkan dan tidak diadopsi. Backend profil stabil sudah dipulihkan dan inferensi diverifikasi ulang.
 
-| Smoke F01 | Diagnosis | Pemulihan oleh agen dari gejala | Fallback |
-|---|---:|---:|---|
-| zero_shot | 9,587 dtk | 19,448 dtk | tidak |
-| text_rag | 11,673 dtk | 22,758 dtk | tidak |
-| graph_rag | 24,070 dtk | 37,635 dtk | tidak |
+Keputusan model ringkas diproyeksikan secara deterministik ke kontrak live.v1-draft2: label/router, penjelasan, evidence IDs dan seluruh argumen berasal dari model. Tidak mengarang command yang ditolak. Tool ip memakai argv, vtysh memakai baris CLI lengkap dengan mode konfigurasi. Policy host1-policy-v2 menolak MTU melalui vtysh yang terbukti tidak didukung build Host 1. Saat tidak ada penyimpangan yang didukung, gate baseline abstain tanpa memanggil model. API tetap tanpa endpoint apply. Katalog/ground truth/revert tidak dibaca runtime agen.
 
-Ketiganya mengidentifikasi MTU r1 dan mengusulkan `ip link set dev eth1 mtu 1500`. Evidence/schema/lint lulus, apply berhasil, verifier runner menyatakan lab pulih. Run text RAG diluncurkan lewat `start-benchmark.sh` sebagai user runner; perintah peluncur sudah selesai sebelum runner selesai, sedangkan proses tmux tetap berjalan hingga exit 0. Ini menguji detachment lokal, bukan putusnya SSH dari laptop nyata.
+Rule_based adalah pembanding lokal di runner, bukan varian endpoint API dan bukan job yang lolos schema Live Job. Evaluator membaca assessment/label/timing yang sama. Aturan ditulis dengan pengetahuan kelas/kondisi katalog, sehingga bukan evaluasi generalisasi terhadap fault tak dikenal.
 
-**Target pemulihan <10 detik belum lulus.** Inferensi, retrieval awal, pemeriksaan precondition dan konvergensi OSPF masih memakan waktu. Angka di tabel tidak dapat dipakai untuk membandingkan varian: hanya satu sampel per varian, keadaan cache/warmup berbeda, dan prompt masih dikembangkan. Tidak mengubah timer baseline atau menonaktifkan pengecekan MTU untuk mengejar angka.
+## Hasil smoke pada baseline baru
 
-Percobaan pengembangan sebelumnya juga disimpan: abstain keliru dan command vtysh yang tidak didukung menyebabkan fallback; semuanya kembali sehat. Jangan menghitung run tersebut sebagai benchmark final atau sukses repair agen. Policy `host1-policy-v2` sekarang menolak MTU melalui vtysh; perbaikan kernel menggunakan interpreter ip. Blok vtysh proposal harus masuk mode konfigurasi terlebih dahulu.
+F01/F02/F03 dijalankan sekali per varian sebagai pengembangan, bukan benchmark final. Model dipreload di luar pengukuran fault; keadaan cache retrieval tidak sepenuhnya seragam. Semua 12 diagnosis/command lolos lint, diterapkan, dan lab pulih tanpa fallback.
 
-Retrieval terbaru menggunakan locator baris newline yang benar untuk RFC (form feed bukan baris baru), dan potongan FRR yang benar-benar memeriksa MTU. Hasil proxy pengembangan corrected expansion adalah 52/60 hit@5. Hasil lama 58/60 sebelum koreksi locator tidak mewakili implementasi saat ini. Ini bukan akurasi diagnosis atau evaluasi relevansi manusia.
+| Varian | Run pulih tanpa fallback | Pemulihan min–max dari gejala | Median | Lulus <10 detik |
+|---|---|---|---|---|
+| rule_based | 3/3 | 2,018–4,300 dtk | 4,141 dtk | 3/3 |
+| zero_shot | 3/3 | 12,301–13,944 dtk | 12,437 dtk | 0/3 |
+| text_rag | 3/3 | 13,484–18,064 dtk | 13,601 dtk | 0/3 |
+| graph_rag | 3/3 | 12,534–15,985 dtk | 14,739 dtk | 0/3 |
 
-F16 BGP neighbor shutdown juga berhasil diperbaiki tanpa fallback dalam 29,597 detik, memakai konteks ASN dari telemetry dan baris vtysh lengkap. Baseline sehat menggunakan gate abstain tanpa inferensi, sehingga model tidak menuduh router saat tidak ada penyimpangan yang didukung.
+**Pemulihan fungsional lulus 12/12; target waktu agen belum lulus.** Jangan menyatakan semua varian sudah mencapai <10 detik. Inferensi/collection/polling masih membatasi. Tidak menonaktifkan validasi MTU atau melemahkan verifier untuk mengejar angka.
 
-## Menjalankan layanan
+Sebelum baseline baru, ketiga varian juga berhasil memperbaiki F01; satu smoke BGP F16 berhasil melalui vtysh tanpa fallback. Kegagalan development sebelumnya (abstain keliru, format command salah) tetap disimpan dan tidak dihitung sebagai sukses atau benchmark. Pilot seluruh kelas belum dilakukan.
 
-Di WSL dari root repo, dengan user layanan yang sama:
+Tes akhir: 362 tes repo dan 85 tes Host 1/kontrak/agen/executor/workflow/replay lulus, total 447. Evaluator berhasil membaca 12 hasil nyata termasuk regex dan menghasilkan laporan privat. Ini validasi format/metrik pada smoke terbatas, bukan angka akurasi untuk seluruh katalog.
+
+Retrieval corrected expansion adalah 52/60 keyword hit@5 setelah perbaikan locator RFC (form feed bukan newline) dan potongan source FRR. Angka lama 58/60 tidak mewakili versi ini. Ini bukan akurasi diagnosis atau penilaian relevansi manusia.
+
+Bukti privat utama:
+
+- `private/host1-readiness/baseline-rto1-20261128T063352Z/`: redeploy, baseline, timer, capture dan marker Vector.
+- `private/host1-readiness/matrix-rto1-20261128T063655Z/`: 12 hasil, preload, ringkasan dan evaluasi development.
+- `private/host1-readiness/final-20261128T064630Z/`: verifier/capture/health akhir, hash konfigurasi dan inventory.
+- `private/host1-readiness/model-profile-recovery.json`: pemulihan profil stabil setelah profiling GPU.
+- `private/host1-access/`: instalasi/konfigurasi Windows lokal; tanpa kredensial di Git.
+
+## Operasi dari terminal
+
+Di WSL, dari root repo, gunakan user layanan yang sama untuk memeriksa tmux API/model:
 
 ```bash
 bash host1/live_api/manage.sh status
-# Hanya bila belum ada listener/proses yang memakai port tersebut:
+# Hanya jika belum ada listener di port bersangkutan:
 bash host1/live_api/manage.sh start-model
 bash host1/live_api/manage.sh start-api
 ```
 
-Startup API mengecek baseline dan tidak me-redeploy lab. Jangan restart layanan di tengah job. Setelah crash/timeout, periksa marker backend dan rekonsiliasi request sebelum mengubah lab; jangan menghapus checkpoint untuk memaksa lanjut.
+Startup API mengecek baseline dan tidak me-redeploy lab. Jangan restart saat job aktif. Jika ada marker backend completion unknown, pastikan backend selesai sebelum clear dan rekonsiliasi request; jangan menghapus checkpoint untuk memaksa lanjut.
 
-## Menjalankan satu uji lokal yang persisten
-
-Perintah berikut benar-benar inject dan apply satu fault. Jalankan hanya setelah baseline/API siap dan lab sedang tidak dipakai:
+Perintah berikut benar-benar inject dan apply, bukan monitoring. Gunakan sesi output baru dan pastikan lab idle:
 
 ```bash
 bash scripts/start-benchmark.sh --out data/host2/demo/nama-sesi-baru \
   --execute --faults F01 --variants graph_rag --trials 1 --limit 1
 tmux attach -r -t bench
 python3 scripts/bench_status.py data/host2/demo/nama-sesi-baru --show last
+# Tiga lokasi MTU, verdict target diperiksa ketat:
+bash scripts/smoke_mtu.sh rule_based
 ```
 
-Sesi `bench` yang selesai tetap dapat dilihat. Periksa `private/live-runner/latest.txt` dan `process.json`: exit_code harus sudah terisi, hasil final lengkap, tidak ada held attempt dan lab sehat. Baru tutup pane selesai dengan `tmux kill-session -t bench` sebelum sesi baru. Jangan memakai perintah itu pada runner aktif. Resume memakai argumen/output yang sama; runner tidak mengirim ulang request yang belum jelas selesai.
+Launcher regex-only tidak membutuhkan API/token. Untuk agen, token dibaca lokal dari private/live-agent/latest.txt. Sesi bench selesai tetap dapat dilihat. Periksa process.json melalui private/live-runner/latest.txt: exit_code terisi, hasil lengkap, tidak ada held attempt dan lab sehat. Baru tutup pane selesai sebelum sesi baru. Jangan kill runner aktif. Resume memakai output/argumen sama dan tidak POST ulang request yang completion-nya belum jelas.
 
-Benchmark memakai executor di `scripts/bench.py`. Jangan menjalankan `live_api.executor --apply` lagi untuk diagnosis yang sudah dieksekusi runner. Executor standalone adalah jalur alternatif dan berbagi lock yang sama, bukan langkah kedua benchmark.
+## Langkah yang perlu pengguna/Host 2
 
-## Akses dari Host 2
-
-`scripts/prepare-host1-access.ps1` dapat dijalankan Administrator untuk setup Windows yang sudah disetujui. Token/pengaturan pribadi tidak ditanam di script. Detail instalasi ada di `private/host1-access/`.
-
-Untuk LAN yang sama, gunakan IP Windows Host 1 dan akun Windows yang sah. Public key laptop dapat dipasang oleh pengguna melalui panduan SSH. Jangan kirim private key atau password ke repo/chat. Authentication SSH dan akses dari laptop asli masih harus diuji bersama Host 2; port yang terbuka saja tidak membuktikannya.
-
-Untuk akses luar rumah, pengguna menyelesaikan login Tailscale sendiri, memilih tailnet bersama Fayyaz, lalu menjalankan `tailscale ip -4`. Saat ini NeedsLogin; belum ada IP Tailscale yang dapat dipakai. Tidak perlu membuka port API, port forwarding router atau mematikan firewall.
-
-## Syarat sebelum benchmark resmi
-
-1. Review commit lokal dan integrasikan lewat PR saat pengguna mengizinkan push. Tidak ada push pada tahap ini.
-2. Selesaikan login/uji SSH Host 2 bila akses luar rumah dibutuhkan.
-3. Optimalkan dan ulang smoke MTU secara jujur; target <10 detik masih terbuka.
-4. Sepakati katalog/model/profil/policy final, varian regex dan format evaluator. Regex/600 run belum dijalankan di sini.
-5. Pilot seluruh fault/varian dan review hasil sebelum benchmark penuh. Jangan menggabungkan hasil pengembangan dengan hasil resmi.
+1. Untuk LAN yang sama, gunakan SSH ke IP Windows dan akun yang sah. Uji autentikasi dari Host 2; port 22 terbuka saja belum membuktikannya. Public key laptop boleh dipasang pengguna, private key/password jangan dibagikan ke repo/chat.
+2. Untuk luar rumah, selesaikan login aplikasi Tailscale sendiri, pilih tailnet bersama Fayyaz, lalu tailscale ip -4. Login ditunda pengguna; belum ada alamat Tailscale yang bisa dipakai. Tidak membuka port API atau port forwarding router.
+3. Windows Update tetap aktif sesuai keputusan pengguna. Akses layar langsung dihentikan; setup aplikasi/login interaktif diserahkan ke pengguna.
+4. Review commit lokal sebelum PR/push; tidak ada push pada pekerjaan ini. Sepakati model/profil/policy final, perbaiki latency agen bila target <10 wajib, lalu pilot semua fault/varian sebelum benchmark 600 run.

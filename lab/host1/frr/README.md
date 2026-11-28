@@ -74,3 +74,8 @@ Referensi:
 - https://containerlab.dev/manual/kinds/frr/
 - https://raw.githubusercontent.com/srl-labs/containerlab/v0.82.0/nodes/frr/frr.go
 - https://raw.githubusercontent.com/srl-labs/containerlab/v0.82.0/schemas/clab.schema.json
+
+
+## Baseline retransmit untuk smoke MTU
+
+Pada 28 November 2026, pengguna menyetujui retransmit OSPF 1 detik pada sepuluh interface data r1–r4, disamakan untuk semua varian. Hello/dead tetap 1/4 detik; loopback tidak diubah. Sumber dan design-plan mencatatnya; redeploy terkontrol, pemeriksaan runtime timer, baseline/ping/capture dan marker Vector lulus. Jangan membandingkan hasil sebelum/sesudah perubahan sebagai satu konfigurasi eksperimen. Hasil terbaru ada di docs/host1/READINESS.md.

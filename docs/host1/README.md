@@ -1,6 +1,6 @@
 # Dokumentasi Host 1
 
-Host 1 menyediakan lab FRR, telemetry/Vector/NetworkX, retrieval Chroma, agen tiga varian, API diagnosis live dan executor lokal berotorisasi. Kesiapan lokal diperbarui pada 28 November 2026. Tiga varian berhasil memperbaiki fault MTU F01 nyata; target pemulihan di bawah 10 detik belum lulus. Akses Windows sudah dipasang, login Tailscale ditunda pengguna. Status aktual ada pada [STATUS.md](STATUS.md).
+Host 1 menyediakan lab FRR, telemetry/Vector/NetworkX, retrieval Chroma, agen tiga varian, API diagnosis live dan executor lokal berotorisasi. Kesiapan lokal diperbarui pada 28 November 2026. Tiga varian dan regex berhasil memulihkan F01–F03 pada baseline retransmit 1 detik; target <10 detik baru lulus pada regex. Akses Windows sudah dipasang, login Tailscale ditunda pengguna. Status aktual ada pada [STATUS.md](STATUS.md).
 
 | Dokumen | Kegunaan |
 |---|---|

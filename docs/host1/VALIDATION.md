@@ -2,6 +2,12 @@
 
 Dokumen ini membedakan validasi terbaru dan laporan historis. Laporan lengkap serta artefak mesin tetap lokal di `private/` yang di-ignore.
 
+## Baseline retransmit 1 detik dan matriks smoke terbaru — 28 November 2026
+
+Pengguna menyetujui baseline retransmit-interval 1 pada sepuluh interface data OSPF r1–r4 dan redeploy/pengulangan smoke. Hello/dead tetap 1/4. Redeploy menjaga Vector; baseline, capture dan 10/10 marker lulus. Matriks F01/F02/F03 × rule_based/zero_shot/text_rag/graph_rag pulih 12/12 tanpa fallback. Target <10 hanya lulus pada regex (3/3, 2,018–4,300 detik); agen 0/9, 12,301–18,064 detik. [READINESS.md](READINESS.md) memuat rincian, kondisi preload/cache dan bukti privat.
+
+Tes akhir 362 repo + 85 Host 1 = 447 lulus. Evaluator membaca 12 hasil nyata termasuk regex. Tidak ada benchmark resmi atau pilot seluruh kelas. Profil GPU 33 pada prompt beku terlalu lambat dan tidak diadopsi; backend stabil num_gpu20 dipulihkan. Verifikasi akhir: tujuh container running, API ready=true/active=false, capture tanpa anomali, baseline ping 120/120. Sumber/hasil/kredensial mesin tetap privat. Tabel berikutnya merekam baseline/perkembangan sebelumnya, bukan kondisi timer terakhir.
+
 ## Kesiapan lokal dan smoke fault nyata — 28 November 2026
 
 Hasil terbaru dirangkum pada [READINESS.md](READINESS.md). Ketiga varian berhasil mendiagnosis dan memulihkan F01 dengan model asli, evidence baru, lint policy v2, apply dan verifikasi runner tanpa fallback. Waktu pemulihan monotonic dari gejala: zero-shot 19,448 detik; text RAG sekitar 22,8 detik; graph RAG 37,635 detik. Target <10 detik **belum lulus**. Hasil development berbeda keadaan cache/warmup dan tidak dapat dibandingkan sebagai benchmark.
